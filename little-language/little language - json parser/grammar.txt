@@ -1,0 +1,1 @@
+For a full description of the JSON grammar, see http://rfc7159.net/rfc7159#rfc.section.2

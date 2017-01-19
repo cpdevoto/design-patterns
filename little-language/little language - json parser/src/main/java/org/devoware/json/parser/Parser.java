@@ -1,22 +1,22 @@
-package org.devoware.dieroll.parser;
+package org.devoware.json.parser;
 
 import java.io.Reader;
 
-import org.devoware.dieroll.lexer.LexicalAnalyzerFactory;
-import org.devoware.dieroll.model.ValueGenerator;
+import org.devoware.json.lexer.LexicalAnalyzerFactory;
+import org.devoware.json.model.JsonNode;
 
 public interface Parser {
   
   public static Parser create () {
     return create(LexicalAnalyzerFactory.create());
   }
-
+  
   public static Parser create (LexicalAnalyzerFactory factory) {
     return ParserImpl.create(factory);
   }
   
-  public ValueGenerator parse (String expression);
+  public <T extends JsonNode> T parse (String expression);
   
-  public ValueGenerator parse (Reader in);
+  public <T extends JsonNode> T parse (Reader in);
 
 }

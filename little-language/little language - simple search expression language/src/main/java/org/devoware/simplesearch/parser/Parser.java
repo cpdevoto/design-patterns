@@ -7,6 +7,10 @@ import org.devoware.simplesearch.model.Expression;
 
 public interface Parser {
   
+  public static Parser create () {
+    return create(LexicalAnalyzerFactory.create());
+  }
+  
   public static Parser create (LexicalAnalyzerFactory factory) {
     return ParserImpl.create(factory);
   }
