@@ -1,11 +1,12 @@
 package org.devoware.json.parser;
 
+import java.io.IOException;
 import java.io.Reader;
 
 import org.devoware.json.lexer.LexicalAnalyzerFactory;
 import org.devoware.json.model.JsonNode;
 
-public interface Parser {
+interface Parser {
   
   public static Parser create () {
     return create(LexicalAnalyzerFactory.create());
@@ -17,6 +18,6 @@ public interface Parser {
   
   public <T extends JsonNode> T parse (String expression);
   
-  public <T extends JsonNode> T parse (Reader in);
+  public <T extends JsonNode> T parse (Reader in) throws IOException;
 
 }

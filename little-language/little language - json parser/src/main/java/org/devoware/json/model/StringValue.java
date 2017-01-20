@@ -31,7 +31,7 @@ public class StringValue extends AbstractValue<String> implements JsonNode {
       case '\\':
         return "\\\\";
       case '/':
-        return "\\/";
+        return "/";
       case '\b':
         return "\\b";
       case '\f':

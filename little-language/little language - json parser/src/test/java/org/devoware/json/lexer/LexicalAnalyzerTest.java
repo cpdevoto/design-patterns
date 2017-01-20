@@ -1,17 +1,30 @@
 package org.devoware.json.lexer;
 
+import static org.devoware.json.symbols.Token.Type.COLON;
+import static org.devoware.json.symbols.Token.Type.COMMA;
+import static org.devoware.json.symbols.Token.Type.DOUBLE;
+import static org.devoware.json.symbols.Token.Type.EOF;
+import static org.devoware.json.symbols.Token.Type.FALSE;
+import static org.devoware.json.symbols.Token.Type.LEFT_CURLY_BRACKET;
+import static org.devoware.json.symbols.Token.Type.LEFT_SQUARE_BRACKET;
+import static org.devoware.json.symbols.Token.Type.LONG;
+import static org.devoware.json.symbols.Token.Type.NULL;
+import static org.devoware.json.symbols.Token.Type.RIGHT_CURLY_BRACKET;
+import static org.devoware.json.symbols.Token.Type.RIGHT_SQUARE_BRACKET;
+import static org.devoware.json.symbols.Token.Type.STRING;
+import static org.devoware.json.symbols.Token.Type.TRUE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.*;
-
-import static org.devoware.json.symbols.Token.Type.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.devoware.json.symbols.NumberToken;
+import org.devoware.json.symbols.DoubleToken;
+import org.devoware.json.symbols.LongToken;
 import org.devoware.json.symbols.StringToken;
 import org.devoware.json.symbols.Token;
 import org.junit.Test;
@@ -44,8 +57,8 @@ public class LexicalAnalyzerTest {
       assertThat((token = lexer.nextToken()).getType(), equalTo(STRING));
       assertThat(((StringToken) token).value(), equalTo("number1"));
       assertThat(lexer.nextToken().getType(), equalTo(COLON));
-      assertThat((token = lexer.nextToken()).getType(), equalTo(NUMBER));
-      assertThat(((NumberToken) token).value(), equalTo(0.0125));
+      assertThat((token = lexer.nextToken()).getType(), equalTo(DOUBLE));
+      assertThat(((DoubleToken) token).value(), equalTo(0.0125));
       assertThat(lexer.nextToken().getType(), equalTo(COMMA));
       assertThat((token = lexer.nextToken()).getType(), equalTo(STRING));
       assertThat(((StringToken) token).value(), equalTo("boolean1"));
@@ -75,8 +88,8 @@ public class LexicalAnalyzerTest {
       assertThat((token = lexer.nextToken()).getType(), equalTo(STRING));
       assertThat(((StringToken) token).value(), equalTo("string"));
       assertThat(lexer.nextToken().getType(), equalTo(COMMA));
-      assertThat((token = lexer.nextToken()).getType(), equalTo(NUMBER));
-      assertThat(((NumberToken) token).value(), equalTo(0.0));
+      assertThat((token = lexer.nextToken()).getType(), equalTo(LONG));
+      assertThat(((LongToken) token).value(), equalTo(0L));
       assertThat(lexer.nextToken().getType(), equalTo(RIGHT_SQUARE_BRACKET));
       assertThat(lexer.nextToken().getType(), equalTo(COMMA));
       assertThat((token = lexer.nextToken()).getType(), equalTo(STRING));
@@ -162,66 +175,66 @@ public class LexicalAnalyzerTest {
   
   @Test
   public void test_number_tokenization () throws IOException {
-    assertThat(tokenizeNumber("1"), equalTo(1.0)); 
-    assertThat(tokenizeNumber("0"), equalTo(0.0)); 
-    assertThat(tokenizeNumber("-1"), equalTo(-1.0)); 
-    assertThat(tokenizeNumber("17"), equalTo(17.0)); 
+    assertThat(tokenizeLong("1"), equalTo(1L)); 
+    assertThat(tokenizeLong("0"), equalTo(0L)); 
+    assertThat(tokenizeLong("-1"), equalTo(-1L)); 
+    assertThat(tokenizeLong("17"), equalTo(17L)); 
     
     try {
-      tokenizeNumber("07");
+      tokenizeDouble("07");
       fail("Expected a LexicalAnalysisException because multi-digit numbers cannot start with 0");
     } catch (LexicalAnalysisException ex) {
       assertTrue("Invalid exception message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 0"));
     }
     
-    assertThat(tokenizeNumber("1.25"), equalTo(1.25)); 
-    assertThat(tokenizeNumber("0.0"), equalTo(0.0)); 
-    assertThat(tokenizeNumber("-1.0"), equalTo(-1.0)); 
-    assertThat(tokenizeNumber("17.5"), equalTo(17.5)); 
+    assertThat(tokenizeDouble("1.25"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("0.0"), equalTo(0.0)); 
+    assertThat(tokenizeDouble("-1.0"), equalTo(-1.0)); 
+    assertThat(tokenizeDouble("17.5"), equalTo(17.5)); 
     
     try {
-      tokenizeNumber("-17.");
+      tokenizeDouble("-17.");
       fail("Expected a LexicalAnalysisException because at least one digit is expected after the .");
     } catch (LexicalAnalysisException ex) {
       assertTrue("Invalid exception message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 0"));
     }
 
-    assertThat(tokenizeNumber("1.25E+02"), equalTo(125.0)); 
-    assertThat(tokenizeNumber("1.25e+02"), equalTo(125.0)); 
-    assertThat(tokenizeNumber("1.25E02"), equalTo(125.0)); 
-    assertThat(tokenizeNumber("1.25e02"), equalTo(125.0)); 
-    assertThat(tokenizeNumber("1.25E2"), equalTo(125.0)); 
-    assertThat(tokenizeNumber("1.25e2"), equalTo(125.0)); 
+    assertThat(tokenizeLong("1.25E+02"), equalTo(125L)); 
+    assertThat(tokenizeLong("1.25e+02"), equalTo(125L)); 
+    assertThat(tokenizeLong("1.25E02"), equalTo(125L)); 
+    assertThat(tokenizeLong("1.25e02"), equalTo(125L)); 
+    assertThat(tokenizeLong("1.25E2"), equalTo(125L)); 
+    assertThat(tokenizeLong("1.25e2"), equalTo(125L)); 
     
-    assertThat(tokenizeNumber("1.25E-02"), equalTo(0.0125)); 
-    assertThat(tokenizeNumber("1.25e-02"), equalTo(0.0125)); 
-    assertThat(tokenizeNumber("1.25E-2"), equalTo(0.0125)); 
-    assertThat(tokenizeNumber("1.25e-2"), equalTo(0.0125)); 
+    assertThat(tokenizeDouble("1.25E-02"), equalTo(0.0125)); 
+    assertThat(tokenizeDouble("1.25e-02"), equalTo(0.0125)); 
+    assertThat(tokenizeDouble("1.25E-2"), equalTo(0.0125)); 
+    assertThat(tokenizeDouble("1.25e-2"), equalTo(0.0125)); 
 
-    assertThat(tokenizeNumber("1.25E+0"), equalTo(1.25)); 
-    assertThat(tokenizeNumber("1.25E+00"), equalTo(1.25)); 
-    assertThat(tokenizeNumber("1.25E0"), equalTo(1.25)); 
-    assertThat(tokenizeNumber("1.25E00"), equalTo(1.25)); 
-    assertThat(tokenizeNumber("1.25E-0"), equalTo(1.25)); 
-    assertThat(tokenizeNumber("1.25E-00"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("1.25E+0"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("1.25E+00"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("1.25E0"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("1.25E00"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("1.25E-0"), equalTo(1.25)); 
+    assertThat(tokenizeDouble("1.25E-00"), equalTo(1.25)); 
 
     
     try {
-      tokenizeNumber("\n\t  1.25E");
+      tokenizeDouble("\n\t  1.25E");
       fail("Expected a LexicalAnalysisException because at least one digit is expected after the E");
     } catch (LexicalAnalysisException ex) {
       assertTrue("Invalid exception message: " + ex.getMessage(), ex.getMessage().contains("line 2, character 3"));
     }
 
     try {
-      tokenizeNumber("1.25E+");
+      tokenizeDouble("1.25E+");
       fail("Expected a LexicalAnalysisException because at least one digit is expected after the E");
     } catch (LexicalAnalysisException ex) {
       assertTrue("Invalid exception message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 0"));
     }
   
     try {
-      tokenizeNumber(" 1.25E-");
+      tokenizeDouble(" 1.25E-");
       fail("Expected a LexicalAnalysisException because at least one digit is expected after the E");
     } catch (LexicalAnalysisException ex) {
       assertTrue("Invalid exception message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 1"));
@@ -244,12 +257,22 @@ public class LexicalAnalyzerTest {
     }
   }
 
-  private double tokenizeNumber(String string) throws IOException {
+  private double tokenizeDouble(String string) throws IOException {
     try (Reader in = new StringReader(string)) {
       LexicalAnalyzer lexer = factory.create(in);
       Token token = lexer.nextToken();
-      assertThat(token, instanceOf(NumberToken.class));
-      return NumberToken.class.cast(token).value();
+      assertThat(token, instanceOf(DoubleToken.class));
+      return DoubleToken.class.cast(token).value();
     }
   }
+  
+  private long tokenizeLong(String string) throws IOException {
+    try (Reader in = new StringReader(string)) {
+      LexicalAnalyzer lexer = factory.create(in);
+      Token token = lexer.nextToken();
+      assertThat(token, instanceOf(LongToken.class));
+      return LongToken.class.cast(token).value();
+    }
+  }
+
 }

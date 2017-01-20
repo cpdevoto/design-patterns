@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Set;
 
-import org.devoware.json.symbols.NumberToken;
+import org.devoware.json.symbols.DoubleToken;
+import org.devoware.json.symbols.LongToken;
 import org.devoware.json.symbols.StringToken;
 import org.devoware.json.symbols.Token;
 import org.devoware.json.symbols.Token.Type;
@@ -64,164 +65,163 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
   }
 
   @Override
-  public Token nextToken() {
-    try {
-      // skip whitespace
-      for (;; readChar()) {
-        if (peek == ' ' || peek == '\t' || peek == '\n' || peek == '\r') {
-          if (peek == '\n' || peek == '\r') {
-            position.advanceLine();
-          }
-          continue;
-        } else {
-          break;
+  public Token nextToken() throws IOException {
+    // skip whitespace
+    for (;; readChar()) {
+      if (peek == ' ' || peek == '\t' || peek == '\n' || peek == '\r') {
+        if (peek == '\n' || peek == '\r') {
+          position.advanceLine();
+        }
+        continue;
+      } else {
+        break;
+      }
+    }
+    
+    // Identify tokens representing operators
+    switch (peek) {
+      case '[':
+        return getToken(LEFT_SQUARE_BRACKET, position);
+      case ']':
+        return getToken(Type.RIGHT_SQUARE_BRACKET, position);
+      case '{':
+        return getToken(LEFT_CURLY_BRACKET, position);
+      case '}':
+        return getToken(Type.RIGHT_CURLY_BRACKET, position);
+      case ':':
+        return getToken(Type.COLON, position);
+      case ',':
+        return getToken(Type.COMMA, position);
+      case -1:
+        return getToken(EOF, position);
+    }
+
+    // Identify tokens representing numbers
+    if (Character.isDigit(peek) || peek == '-') {
+      Position numberStart = Position.copyOf(position);
+      boolean unaryMinus = false;
+      if (peek == '-') {
+        unaryMinus = true;
+        readChar();
+        if (!Character.isDigit(peek)) {
+          throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected a digit after the minus symbol");
         }
       }
-      
-      // Identify tokens representing operators
-      switch (peek) {
-        case '[':
-          return getToken(LEFT_SQUARE_BRACKET, position);
-        case ']':
-          return getToken(Type.RIGHT_SQUARE_BRACKET, position);
-        case '{':
-          return getToken(LEFT_CURLY_BRACKET, position);
-        case '}':
-          return getToken(Type.RIGHT_CURLY_BRACKET, position);
-        case ':':
-          return getToken(Type.COLON, position);
-        case ',':
-          return getToken(Type.COMMA, position);
-        case -1:
-          return getToken(EOF, position);
+      long v = 0;
+      boolean firstLoop = true;
+      do {
+        if (firstLoop) {
+          firstLoop = false;
+        } else if (v == 0) {
+          throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": numbers with multiple digits cannot start with 0");
+        }
+        v = (10 * v) + Character.digit(peek, 10);
+        readChar();
+      } while (Character.isDigit(peek));
+      if (unaryMinus) {
+        v  = v * -1;
       }
-
-      // Identify tokens representing numbers
-      if (Character.isDigit(peek) || peek == '-') {
-        Position numberStart = Position.copyOf(position);
-        boolean unaryMinus = false;
-        if (peek == '-') {
-          unaryMinus = true;
+      if (peek !=  '.' && peek != 'E' && peek != 'e') {
+        return getLongToken(v, numberStart);
+      }
+      double x = v;
+      if (peek == '.') {
+        StringBuilder buf = new StringBuilder(String.valueOf(v)).append('.');
+        int fracDigits = 0;
+        while (true) {
           readChar();
           if (!Character.isDigit(peek)) {
-            throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected a digit after the minus symbol");
+            break;
           }
-        }
-        int v = 0;
-        boolean firstLoop = true;
-        do {
-          if (firstLoop) {
-            firstLoop = false;
-          } else if (v == 0) {
-            throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": numbers with multiple digits cannot start with 0");
-          }
-          v = (10 * v) + Character.digit(peek, 10);
-          readChar();
-        } while (Character.isDigit(peek));
-        if (unaryMinus) {
-          v  = v * -1;
-        }
-        if (peek !=  '.' && peek != 'E' && peek != 'e') {
-          return getNumberToken(v, numberStart);
-        }
-        double x = v;
-        if (peek == '.') {
-          StringBuilder buf = new StringBuilder(String.valueOf(v)).append('.');
-          int fracDigits = 0;
-          while (true) {
-            readChar();
-            if (!Character.isDigit(peek)) {
-              break;
-            }
-            buf.append((char) peek);
-            fracDigits += 1;
-          }
-          if (fracDigits == 0) {
-            throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected at least one digit after the '.'");
-          }
-          try {
-            x = Double.parseDouble(buf.toString());
-          } catch (NumberFormatException ex) {
-            throw new LexicalAnalysisException(ex);
-          }
-        }
-        if (peek != 'E' && peek != 'e') {
-          return getNumberToken(x, numberStart);
-        } 
-
-        StringBuilder buf = new StringBuilder(String.valueOf(x));
-        buf.append((char) peek);
-        readChar();
-        if (peek == '+' || peek == '-') {
           buf.append((char) peek);
-          readChar();
+          fracDigits += 1;
         }
-        if (!Character.isDigit(peek)) {
-          throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected at least one digit after the 'E'");
-        }
-        while (Character.isDigit(peek)) {
-          buf.append((char) peek);
-          readChar();
+        if (fracDigits == 0) {
+          throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected at least one digit after the '.'");
         }
         try {
-          return new NumberToken(Double.parseDouble(buf.toString()), numberStart);
+          x = Double.parseDouble(buf.toString());
         } catch (NumberFormatException ex) {
           throw new LexicalAnalysisException(ex);
         }
       }
-      
-      // Identify tokens representing reserved words
-      if (Character.isLetter(peek)) {
-        Position wordStart = Position.copyOf(position);
-        StringBuilder buf = new StringBuilder();
-        
-        do {
-          buf.append((char) peek);
-          readChar();
-        } while (Character.isLetterOrDigit(peek));
-        String s = buf.toString();
-        
-        if ("true".equals(s)) {
-          return getToken(TRUE, position, false);
-        } else if ("false".equals(s)) {
-          return getToken(FALSE, position, false);
-        } else if ("null".equals(s)) {
-          return getToken(NULL, position, false);
-        }
-        
-        throw new LexicalAnalysisException("Unrecognized token starting at " + wordStart + ": " + s);
-      }
+      if (peek != 'E' && peek != 'e') {
+        return getDoubleToken(x, numberStart);
+      } 
 
-      // Identify tokens representing quoted strings
-      if (peek == '"') {
-        Position wordStart = Position.copyOf(position);
-        StringBuilder buf = new StringBuilder();
+      StringBuilder buf = new StringBuilder(String.valueOf(x));
+      buf.append((char) peek);
+      readChar();
+      if (peek == '+' || peek == '-') {
+        buf.append((char) peek);
         readChar();
-        while (peek == '\\' || STRING_CHARS.contains(peek)) {
-          if (peek == '\\') {
-            Position escapeStart = Position.copyOf(position);
-            readChar();
-            buf.append(convertEscapeSequence(escapeStart));
-          } else {
-            buf.append((char) peek);
-          }
-          readChar();
-        }
-        if (peek != '"') {
-          throw new LexicalAnalysisException("Invalid quoted string starting at " + wordStart + ": expected a '\"\'");
-        }
+      }
+      if (!Character.isDigit(peek)) {
+        throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected at least one digit after the 'E'");
+      }
+      while (Character.isDigit(peek)) {
+        buf.append((char) peek);
         readChar();
-        return getStringToken(buf.toString(), wordStart);
       }
-
-      if (peek == -1) {
-        throw new LexicalAnalysisException("Unexpected end of string");
+      try {
+        x = Double.parseDouble(buf.toString());
+        if (x == (long) x) {
+          return getLongToken((long) x, numberStart);
+        }
+        return getDoubleToken(x, numberStart);
+      } catch (NumberFormatException ex) {
+        throw new LexicalAnalysisException(ex);
       }
-      throw new LexicalAnalysisException("Unexpected character '" + (char) peek + "' at " + position);
-
-    } catch (IOException io) {
-      throw new LexicalAnalysisException(io);
     }
+    
+    // Identify tokens representing reserved words
+    if (Character.isLetter(peek)) {
+      Position wordStart = Position.copyOf(position);
+      StringBuilder buf = new StringBuilder();
+      
+      do {
+        buf.append((char) peek);
+        readChar();
+      } while (Character.isLetterOrDigit(peek));
+      String s = buf.toString();
+      
+      if ("true".equals(s)) {
+        return getToken(TRUE, position, false);
+      } else if ("false".equals(s)) {
+        return getToken(FALSE, position, false);
+      } else if ("null".equals(s)) {
+        return getToken(NULL, position, false);
+      }
+      
+      throw new LexicalAnalysisException("Unrecognized token starting at " + wordStart + ": " + s);
+    }
+
+    // Identify tokens representing quoted strings
+    if (peek == '"') {
+      Position wordStart = Position.copyOf(position);
+      StringBuilder buf = new StringBuilder();
+      readChar();
+      while (peek == '\\' || STRING_CHARS.contains(peek)) {
+        if (peek == '\\') {
+          Position escapeStart = Position.copyOf(position);
+          readChar();
+          buf.append(convertEscapeSequence(escapeStart));
+        } else {
+          buf.append((char) peek);
+        }
+        readChar();
+      }
+      if (peek != '"') {
+        throw new LexicalAnalysisException("Invalid quoted string starting at " + wordStart + ": expected a '\"\'");
+      }
+      readChar();
+      return getStringToken(buf.toString(), wordStart);
+    }
+
+    if (peek == -1) {
+      throw new LexicalAnalysisException("Unexpected end of string");
+    }
+    throw new LexicalAnalysisException("Unexpected character '" + (char) peek + "' at " + position);
   }
   
   @Override
@@ -249,10 +249,14 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
     return new StringToken(value, position);
   }
 
-  private Token getNumberToken(double value, Position position) {
-    return new NumberToken(value, position);
+  private Token getDoubleToken(double value, Position position) {
+    return new DoubleToken(value, position);
   }
   
+  private Token getLongToken(long value, Position position) {
+    return new LongToken(value, position);
+  }
+
   private char convertEscapeSequence(Position escapeStart) throws IOException {
     switch (peek) {
       case '"':

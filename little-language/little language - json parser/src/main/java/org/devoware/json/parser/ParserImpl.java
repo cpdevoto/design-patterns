@@ -20,13 +20,15 @@ import java.util.Map.Entry;
 import org.devoware.json.lexer.LexicalAnalyzer;
 import org.devoware.json.lexer.LexicalAnalyzerFactory;
 import org.devoware.json.model.BooleanValue;
+import org.devoware.json.model.DoubleValue;
 import org.devoware.json.model.JsonArray;
 import org.devoware.json.model.JsonNode;
 import org.devoware.json.model.JsonObject;
+import org.devoware.json.model.LongValue;
 import org.devoware.json.model.NullValue;
-import org.devoware.json.model.NumberValue;
 import org.devoware.json.model.StringValue;
-import org.devoware.json.symbols.NumberToken;
+import org.devoware.json.symbols.DoubleToken;
+import org.devoware.json.symbols.LongToken;
 import org.devoware.json.symbols.StringToken;
 import org.devoware.json.symbols.Token;
 import org.devoware.json.symbols.Token.Type;
@@ -34,7 +36,7 @@ import org.devoware.json.symbols.Token.Type;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-public class ParserImpl implements Parser {
+class ParserImpl implements Parser {
 
   private final LexicalAnalyzerFactory factory;
   private LexicalAnalyzer lexer;
@@ -53,13 +55,14 @@ public class ParserImpl implements Parser {
     try (Reader in = new StringReader(expression)) {
       return parse(in);
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      // This should never happen, but if it does, throw an assertion error
+      throw new AssertionError("Unexpected exception", e);
     }
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T extends JsonNode> T parse(Reader in) {
+  public <T extends JsonNode> T parse(Reader in) throws IOException {
     lexer = this.factory.create(in);
     nextToken();
     JsonNode c = jsonObject();
@@ -67,7 +70,7 @@ public class ParserImpl implements Parser {
     return (T) c;
   }
   
-  private JsonNode jsonObject() {
+  private JsonNode jsonObject() throws IOException {
     if (token.getType() == LEFT_CURLY_BRACKET) {
       nextToken();
       Map<StringValue,JsonNode> properties = Maps.newLinkedHashMap();
@@ -90,7 +93,7 @@ public class ParserImpl implements Parser {
     return jsonArray();
   }
   
-  private JsonNode jsonArray() {
+  private JsonNode jsonArray() throws IOException {
     if (token.getType() == LEFT_SQUARE_BRACKET) {
       nextToken();
       List<JsonNode> elements = Lists.newArrayList();
@@ -112,7 +115,7 @@ public class ParserImpl implements Parser {
     return jsonValue();
   }
   
-  private Entry<StringValue, JsonNode> jsonProperty () {
+  private Entry<StringValue, JsonNode> jsonProperty () throws IOException {
     expect(STRING);
     StringValue key = new StringValue(((StringToken) token).value());
     nextToken();
@@ -139,7 +142,7 @@ public class ParserImpl implements Parser {
     };
   }
   
-  private JsonNode jsonValue() {
+  private JsonNode jsonValue() throws IOException {
     switch (token.getType()) {
       case TRUE:
         nextToken();
@@ -150,10 +153,14 @@ public class ParserImpl implements Parser {
       case NULL:
         nextToken();
         return NullValue.NULL;
-      case NUMBER:
-        NumberToken n = NumberToken.class.cast(token);
+      case DOUBLE:
+        DoubleToken d = DoubleToken.class.cast(token);
         nextToken();
-        return new NumberValue(n.value());
+        return new DoubleValue(d.value());
+      case LONG:
+        LongToken l = LongToken.class.cast(token);
+        nextToken();
+        return new LongValue(l.value());
       case STRING:
         StringToken s = StringToken.class.cast(token);
         nextToken();
@@ -163,7 +170,7 @@ public class ParserImpl implements Parser {
     }
   }
 
-  private void nextToken () {
+  private void nextToken () throws IOException {
     token = lexer.nextToken();
   }
 

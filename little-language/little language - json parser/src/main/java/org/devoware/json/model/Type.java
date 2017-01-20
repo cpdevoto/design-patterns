@@ -2,7 +2,8 @@ package org.devoware.json.model;
 
 public enum Type {
   BOOLEAN,
-  NUMBER,
+  DOUBLE,
+  LONG,
   STRING,
   OBJECT,
   ARRAY,

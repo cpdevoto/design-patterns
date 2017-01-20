@@ -2,12 +2,12 @@ package org.devoware.json.symbols;
 
 import org.devoware.json.lexer.Position;
 
-public class NumberToken extends Token {
+public class DoubleToken extends Token {
 
-  private final Double value;
+  private final double value;
   
-  public NumberToken(double value, Position position) {
-    super(Type.NUMBER, position);
+  public DoubleToken(double value, Position position) {
+    super(Type.DOUBLE, position);
     this.value = value;
   }
   

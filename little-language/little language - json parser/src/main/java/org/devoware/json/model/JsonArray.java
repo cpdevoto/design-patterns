@@ -6,10 +6,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class JsonArray extends AbstractJsonNode implements Iterable<JsonNode> {
   private final List<JsonNode> elements;
 
+  public static Builder builder () {
+    return new Builder();
+  }
+  
   public JsonArray(List<JsonNode> elements) {
     super(Type.ARRAY);
     requireNonNull(elements, "elements cannot be null");
@@ -54,4 +59,51 @@ public class JsonArray extends AbstractJsonNode implements Iterable<JsonNode> {
     return (T) node;
   }
 
+  public static class Builder {
+    private final List<JsonNode> elements = Lists.newArrayList();
+    
+    private Builder () {}
+    
+    public Builder withElement(JsonObject value) {
+      if (value == null) {
+        this.elements.add(NullValue.NULL);
+      } else {
+        this.elements.add(value);
+      }
+      return this;
+    }
+    
+    public Builder withElement(JsonArray value) {
+      if (value == null) {
+        this.elements.add(NullValue.NULL);
+      } else {
+        this.elements.add(value);
+      }
+      return this;
+    }
+    
+    public Builder withElement(String value) {
+      if (value == null) {
+        this.elements.add(NullValue.NULL);
+      } else {
+        this.elements.add(new StringValue(value));
+      }
+      return this;
+    }
+    
+    public Builder withElement(double value) {
+      this.elements.add(new DoubleValue(value));
+      return this;
+    }
+
+    public Builder withElement(boolean value) {
+      this.elements.add(BooleanValue.get(value));
+      return this;
+    }
+
+    public JsonArray build () {
+      return new JsonArray(this.elements);
+    }
+
+  }
 }

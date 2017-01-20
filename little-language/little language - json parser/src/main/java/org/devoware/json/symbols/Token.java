@@ -16,7 +16,8 @@ public class Token {
     RIGHT_CURLY_BRACKET("'}'"),
     COLON("':'"),
     COMMA("','"),
-    NUMBER("a number"),
+    DOUBLE("a floating point number"),
+    LONG("an integer"),
     STRING("a quoted string"),
     EOF("end of JSON string");
     
