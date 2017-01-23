@@ -27,28 +27,6 @@ public class JsonParserTest {
     parser = Parser.create();
   }
 
-
-  @Test
-  public void test_parse () {
-    
-    test_parse_boolean();
-    
-    test_parse_null();
-    
-    test_parse_double();
-        
-    test_parse_long();
-
-    test_parse_string();
-     
-    
-    test_parse_array();
-    
-    test_parse_object();
-
-  }
-
-
   @Test
   public void test_parse_object() {
     JsonObject object = parser.parse("{}");
