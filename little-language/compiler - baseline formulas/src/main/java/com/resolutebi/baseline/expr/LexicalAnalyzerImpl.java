@@ -41,6 +41,7 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
   private final Reader in;
   private int peek = ' ';
   private BasicPosition position;
+  private Position startPosition;
 
   
   static {
@@ -85,68 +86,67 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
         break;
       }
     }
-    
+    startPosition = Position.copyOf(position);
     // Identify tokens representing operators
     switch (peek) {
       case '(':
-        return getToken(LEFT_PAREN, position);
+        return getToken(LEFT_PAREN, startPosition);
       case ')':
-        return getToken(Type.RIGHT_PAREN, position);
+        return getToken(Type.RIGHT_PAREN, startPosition);
       case '=':
         if (readChar('=')) {
-          return getToken(EQUALS, position);
+          return getToken(EQUALS, startPosition);
         }
       case '!':
         if (readChar('=')) {
-          return getToken(NOT_EQUALS, position);
+          return getToken(NOT_EQUALS, startPosition);
         }
-        return getToken(NOT, position, false);
+        return getToken(NOT, startPosition, false);
       case '&':
         if (readChar('&')) {
-          return getToken(AND, position);
+          return getToken(AND, startPosition);
         }
       case '|':
         if (readChar('|')) {
-          return getToken(OR, position);
+          return getToken(OR, startPosition);
         }
       case '>':
         if (readChar('=')) {
-          return getToken(GREATER_THAN_OR_EQUALS, position);
+          return getToken(GREATER_THAN_OR_EQUALS, startPosition);
         }
-        return getToken(GREATER_THAN, position, false);
+        return getToken(GREATER_THAN, startPosition, false);
       case '<':
         if (readChar('=')) {
-          return getToken(LESS_THAN_OR_EQUALS, position);
+          return getToken(LESS_THAN_OR_EQUALS, startPosition);
         }
-        return getToken(LESS_THAN, position, false);
+        return getToken(LESS_THAN, startPosition, false);
       case '+':
-        return getToken(PLUS, position);
+        return getToken(PLUS, startPosition);
       case '-':
-        return getToken(MINUS, position);
+        return getToken(MINUS, startPosition);
       case '*':
-        return getToken(MULTIPLY, position);
+        return getToken(MULTIPLY, startPosition);
       case '/':
-        return getToken(DIVIDE, position);
+        return getToken(DIVIDE, startPosition);
       case -1:
-        return getToken(EOF, position);
+        return getToken(EOF, startPosition, false);
     }
 
     // Identify tokens representing numbers
     if (Character.isDigit(peek)) {
-      Position numberStart = Position.copyOf(position);
       long v = 0;
       boolean firstLoop = true;
       do {
         if (firstLoop) {
           firstLoop = false;
         } else if (v == 0) {
-          throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": numbers with multiple digits cannot start with 0");
+          throw new LexicalAnalysisException("Invalid number starting at " + startPosition + ": numbers with multiple digits cannot start with 0");
         }
         v = (10 * v) + Character.digit(peek, 10);
         readChar();
       } while (Character.isDigit(peek));
       if (peek !=  '.' && peek != 'E' && peek != 'e') {
-        return getDoubleToken(v, numberStart);
+        return getDoubleToken(v, startPosition);
       }
       double x = v;
       if (peek == '.') {
@@ -161,7 +161,7 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
           fracDigits += 1;
         }
         if (fracDigits == 0) {
-          throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected at least one digit after the '.'");
+          throw new LexicalAnalysisException("Invalid number starting at " + startPosition + ": expected at least one digit after the '.'");
         }
         try {
           x = Double.parseDouble(buf.toString());
@@ -170,7 +170,7 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
         }
       }
       if (peek != 'E' && peek != 'e') {
-        return getDoubleToken(x, numberStart);
+        return getDoubleToken(x, startPosition);
       } 
 
       StringBuilder buf = new StringBuilder(String.valueOf(x));
@@ -181,7 +181,7 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
         readChar();
       }
       if (!Character.isDigit(peek)) {
-        throw new LexicalAnalysisException("Invalid number starting at " + numberStart + ": expected at least one digit after the 'E'");
+        throw new LexicalAnalysisException("Invalid number starting at " + startPosition + ": expected at least one digit after the 'E'");
       }
       while (Character.isDigit(peek)) {
         buf.append((char) peek);
@@ -189,7 +189,7 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
       }
       try {
         x = Double.parseDouble(buf.toString());
-        return getDoubleToken(x, numberStart);
+        return getDoubleToken(x, startPosition);
       } catch (NumberFormatException ex) {
         throw new LexicalAnalysisException(ex);
       }
@@ -197,7 +197,6 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
     
     // Identify tokens representing reserved words
     if (Character.isLetter(peek)) {
-      Position wordStart = Position.copyOf(position);
       StringBuilder buf = new StringBuilder();
       
       do {
@@ -207,27 +206,27 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
       String s = buf.toString().toLowerCase();
       
       if ("true".equals(s)) {
-        return getToken(TRUE, position, false);
+        return getToken(TRUE, startPosition, false);
       } else if ("false".equals(s)) {
-        return getToken(FALSE, position, false);
+        return getToken(FALSE, startPosition, false);
       } else if ("if".equals(s)) {
-        return getToken(IF, position, false);
+        return getToken(IF, startPosition, false);
       } else if ("else".equals(s)) {
-        return getToken(ELSE, position, false);
+        return getToken(ELSE, startPosition, false);
       } else {
         VariableId<?> id = VariableId.get(s);
         if (id != null) {
-          return getVariableToken(id, position);
+          return getVariableToken(id, startPosition);
         }
       }
       
-      throw new LexicalAnalysisException("Unrecognized token starting at " + wordStart + ": " + s);
+      throw new LexicalAnalysisException("Unrecognized token starting at " + startPosition + ": " + s);
     }
 
     if (peek == -1) {
       throw new LexicalAnalysisException("Unexpected end of string");
     }
-    throw new LexicalAnalysisException("Unexpected character '" + (char) peek + "' at " + position);
+    throw new LexicalAnalysisException("Unexpected character '" + (char) peek + "' at " + startPosition);
   }
   
   @Override

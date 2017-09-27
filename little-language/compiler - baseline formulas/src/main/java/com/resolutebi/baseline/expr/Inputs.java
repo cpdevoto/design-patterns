@@ -23,6 +23,36 @@ public class Inputs {
   public <T> T getValue(VariableId<T> id) {
     return (T) inputs.get(id);
   }
+  
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((inputs == null) ? 0 : inputs.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Inputs other = (Inputs) obj;
+    if (inputs == null) {
+      if (other.inputs != null)
+        return false;
+    } else if (!inputs.equals(other.inputs))
+      return false;
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return "Inputs [inputs=" + inputs + "]";
+  }
 
   public static class Builder {
     private Map<VariableId<?>, Object> inputs = Maps.newHashMap();

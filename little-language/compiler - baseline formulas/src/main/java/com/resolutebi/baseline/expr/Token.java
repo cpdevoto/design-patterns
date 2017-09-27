@@ -26,7 +26,7 @@ class Token {
     DIVIDE("'/'"),
     VARIABLE("a variable"),
     WORD("an unrecognized string"),
-    DOUBLE("a floating point number"),
+    DOUBLE("a number"),
     EOF("end of baseline expression");
     
     private final String stringValue;
@@ -57,4 +57,36 @@ class Token {
     return position;
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((position == null) ? 0 : position.hashCode());
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Token other = (Token) obj;
+    if (position == null) {
+      if (other.position != null)
+        return false;
+    } else if (!position.equals(other.position))
+      return false;
+    if (type != other.type)
+      return false;
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return "Token [type=" + type + ", position=" + position + "]";
+  }
 }

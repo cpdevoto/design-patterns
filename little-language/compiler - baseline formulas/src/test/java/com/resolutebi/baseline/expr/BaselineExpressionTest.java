@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,12 +15,12 @@ import org.junit.Test;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
-public class BaselineExpressionParserTest {
+public class BaselineExpressionTest {
 
   @Test
   public void test_all() throws IOException {
     String expressionString = null;
-    try (InputStream in = BaselineExpressionParserTest.class.getResourceAsStream("actual-baseline-expr.txt")) {
+    try (InputStream in = BaselineExpressionTest.class.getResourceAsStream("actual-baseline-expr.txt")) {
       expressionString = CharStreams.toString(new InputStreamReader(
           in, Charsets.UTF_8));
       
@@ -285,9 +286,271 @@ public class BaselineExpressionParserTest {
   }
   
   @Test
+  public void test_type_checks() {
+    // Test that "or" requires two boolean expressions
+    try {
+      BaselineExpression.parse("IF (1.0 || TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 9"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '||' operator following a non-boolean expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE || 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 13"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
+    }
+
+    // Test that "and" requires two boolean expressions
+    try {
+      BaselineExpression.parse("IF (1.0 && TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 9"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '&&' operator following a non-boolean expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE && 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 13"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
+    }
+    
+    // Test that "not" requires a boolean expression
+    try {
+      BaselineExpression.parse("IF (!1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 6"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
+    }
+    
+    // Test that "equals" requires two expressions of the same type
+    try {
+      BaselineExpression.parse("IF (1.0 == TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE == 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 13"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
+    }
+    
+    // Test that "not equals" requires two expressions of the same type
+    try {
+      BaselineExpression.parse("IF (1.0 != TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE != 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 13"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
+    }
+    
+    // Test that "greater than" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE > 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 10"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '>' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (1.0 > TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 11"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+    
+    // Test that "greater than or equals" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE >= 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 10"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '>=' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (1.0 >= TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+
+    // Test that "less than" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE < 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 10"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '<' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (1.0 < TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 11"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+    
+    // Test that "less than or equals" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE <= 1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 10"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '<=' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (1.0 <= TRUE) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+
+    // Test that "addition" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE) TRUE + 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '+' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE) 50 + TRUE ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+    
+    // Test that "subtraction" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE) TRUE - 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '-' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE) 50 - TRUE ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+    
+    // Test that "multiplication" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE) TRUE * 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '*' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE) 50 * TRUE ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+    
+    // Test that "division" requires two numeric expressions
+    try {
+      BaselineExpression.parse("IF (TRUE) TRUE / 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected '/' operator following a non-numeric expression"), equalTo(true));
+    }
+      
+    try {
+      BaselineExpression.parse("IF (TRUE) 50 / TRUE ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 16"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
+    }
+
+    // Test that unary minus must be followed by a numeric literal
+    try {
+      BaselineExpression.parse("IF (TRUE) -TRUE ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("found true when expecting a number"), equalTo(true));
+    }
+      
+    // Test that an if-condition must be a boolean expression
+    try {
+      BaselineExpression.parse("IF (1.0) 50 ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 5"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("expected a boolean expression"), equalTo(true));
+    }
+
+    // Test that an if-body must be a numeric expression
+    try {
+      BaselineExpression.parse("IF (TRUE) FALSE ELSE 100").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 11"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("expected a numeric expression"), equalTo(true));
+    }
+
+    // Test that an else-body must be a numeric expression
+    try {
+      BaselineExpression.parse("IF (TRUE) 1.0 ELSE TRUE").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 20"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("expected a numeric expression"), equalTo(true));
+    }
+  
+    // Test that the entire expression is a numeric expression
+    try {
+      BaselineExpression.parse("10 > 5").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 1"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("expected a numeric expression"), equalTo(true));
+    }
+    
+  }
+  
+  @Test
   public void test_parse_file () throws IOException {
     String expressionString = null;
-    try (InputStream in = BaselineExpressionParserTest.class.getResourceAsStream("baseline-expression.txt")) {
+    try (InputStream in = BaselineExpressionTest.class.getResourceAsStream("baseline-expression.txt")) {
       expressionString = CharStreams.toString(new InputStreamReader(
           in, Charsets.UTF_8));
       

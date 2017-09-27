@@ -2,7 +2,7 @@ package com.resolutebi.baseline.expr;
 
 class BasicPosition implements Position {
   private int line = 1;
-  private int character = -1;
+  private int character = 0;
   
   BasicPosition(int line, int character) {
     this.line = line;
@@ -18,7 +18,7 @@ class BasicPosition implements Position {
 
   Position advanceLine () {
     line += 1;
-    character = -1;
+    character = 0;
     return this;
   }
 
@@ -29,9 +29,34 @@ class BasicPosition implements Position {
 
   @Override
   public int getCharacter() {
-    return Math.max(character, 0);
+    return character;
   }
   
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + character;
+    result = prime * result + line;
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    BasicPosition other = (BasicPosition) obj;
+    if (character != other.character)
+      return false;
+    if (line != other.line)
+      return false;
+    return true;
+  }
+
   @Override
   public String toString() {
     return "line " + line + ", character " + character;

@@ -30,6 +30,7 @@ import com.resolutebi.baseline.expr.Token.Type;
 class ParserImpl implements Parser {
 
   private final LexicalAnalyzerFactory factory;
+  private final TokenList tokens = TokenList.create();
   private LexicalAnalyzer lexer;
   private Token token;
   
@@ -58,7 +59,7 @@ class ParserImpl implements Parser {
     nextToken();
     Expression<?> e = ifExpression();
     if (e.getType() != Double.class) {
-      throw new SyntaxException("Syntax error: expected a numeric expression");
+      throw new SyntaxException("Syntax error at " + tokens.get(0).getPosition() + ": expected a numeric expression");
     }
     expect(EOF);
     return (Expression<Double>) e;
@@ -73,21 +74,21 @@ class ParserImpl implements Parser {
       nextToken();
       Expression<?> condition = orExpression();
       if (condition.getType() != Boolean.class) {
-        throw new SyntaxException("Syntax error at " + start.getPosition() + ": expected a boolean expression");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": expected a boolean expression");
       }
       expect(RIGHT_PAREN);
-      nextToken();
       start = token;
+      nextToken();
       Expression<?> ifBody = ifExpression();
       if (ifBody.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + start.getPosition() + ": expected a numeric expression");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": expected a numeric expression");
       }
       expect(ELSE);
-      nextToken();
       start = token;
+      nextToken();
       Expression<?> elseBody = ifExpression();
       if (elseBody.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + start.getPosition() + ": expected a numeric expression");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": expected a numeric expression");
       }
 
       Expression<Double> ifExpression = IfExpression.create((Expression<Boolean>) condition, (Expression<Double>) ifBody, (Expression<Double>) elseBody);
@@ -101,13 +102,13 @@ class ParserImpl implements Parser {
     Expression<?> expression = andExpression();
     while (token.getType() == OR) {
       if (expression.getType() != Boolean.class) {
-        throw new SyntaxException("Syntax error at " + token.getPosition() + ": the logical " + token.getType() + " operator can only be used with two boolean expressions");
+        throw new SyntaxException("Syntax error at " + token.getPosition() + ": unexpected " + token.getType() + " operator following a non-boolean expression");
       }
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression2 = andExpression();
       if (expression2.getType() != Boolean.class) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the logical " + opToken.getType() + " operator can only be used with two numeric expressions");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-boolean expression");
       }
       expression = OrOperator.create((Expression<Boolean>) expression, (Expression<Boolean>) expression2);
     }
@@ -119,13 +120,13 @@ class ParserImpl implements Parser {
     Expression<?> expression = equalityExpression();
     while (token.getType() == AND) {
       if (expression.getType() != Boolean.class) {
-        throw new SyntaxException("Syntax error at " + token.getPosition() + ": the logical " + token.getType() + " operator can only be used with two boolean expressions");
+        throw new SyntaxException("Syntax error at " + token.getPosition() + ": unexpected " + token.getType() + " operator following a non-boolean expression");
       }
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression2 = equalityExpression();
       if (expression2.getType() != Boolean.class) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the logical " + opToken.getType() + " operator can only be used with two boolean expressions");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-boolean expression");
       }
       expression = AndOperator.create((Expression<Boolean>) expression, (Expression<Boolean>) expression2);
     }
@@ -136,13 +137,14 @@ class ParserImpl implements Parser {
   private Expression<?> equalityExpression() throws IOException {
     Expression<?> expression = relationalExpression();
     while (token.getType() == EQUALS || token.getType() == NOT_EQUALS) {
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression2 = relationalExpression();
       if (!expression.getType().equals(expression2.getType())) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the logical " + opToken.getType() + " operator can only be used with two expressions of the same type (i.e. numeric to numeric or boolean to boolean)");
+        String expected = expression.getType() == Boolean.class ? "boolean" : "numeric";
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-" + expected + " expression");
       }
-      switch (opToken.getType()) {
+      switch (start.getType()) {
         case EQUALS:
           if (expression.getType().equals(Boolean.class)) {
             expression = EqualsOperator.create((Expression<Boolean>) expression, (Expression<Boolean>) expression2);
@@ -169,15 +171,15 @@ class ParserImpl implements Parser {
     Expression<?> expression = arithmeticExpression();
     while (token.getType() == GREATER_THAN || token.getType() == GREATER_THAN_OR_EQUALS || token.getType() == LESS_THAN || token.getType() == LESS_THAN_OR_EQUALS) {
       if (expression.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + token.getPosition() + ": the logical " + token.getType() + " operator can only be used to compare two numeric expressions");
+        throw new SyntaxException("Syntax error at " + token.getPosition() + ": unexpected " + token.getType() + " operator following a non-numeric expression");
       }
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression2 = arithmeticExpression();
       if (expression2.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the logical " + opToken.getType() + " operator can only be used to compare two numeric expressions");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-numeric expression");
       }
-      switch (opToken.getType()) {
+      switch (start.getType()) {
         case GREATER_THAN:
           expression = GreaterThanOperator.create((Expression<Double>) expression, (Expression<Double>) expression2);
           break;
@@ -202,15 +204,15 @@ class ParserImpl implements Parser {
     Expression<?> expression = termExpression();
     while (token.getType() == PLUS || token.getType() == MINUS) {
       if (expression.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + token.getPosition() + ": the arithmetic " + token.getType() + " operator can only be used to with two numeric expressions");
+        throw new SyntaxException("Syntax error at " + token.getPosition() + ": unexpected " + token.getType() + " operator following a non-numeric expression");
       }
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression2 = termExpression();
       if (expression2.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the arithmetic " + opToken.getType() + " operator can only be used with two numeric expressions");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-numeric expression");
       }
-      switch (opToken.getType()) {
+      switch (start.getType()) {
         case PLUS:
           expression = AdditionOperator.create((Expression<Double>) expression, (Expression<Double>) expression2);
           break;
@@ -229,15 +231,15 @@ class ParserImpl implements Parser {
     Expression<?> expression = unaryExpression();
     while (token.getType() == MULTIPLY || token.getType() == DIVIDE) {
       if (expression.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + token.getPosition() + ": the arithmetic " + token.getType() + " operator can only be used to with two numeric expressions");
+        throw new SyntaxException("Syntax error at " + token.getPosition() + ": unexpected " + token.getType() + " operator following a non-numeric expression");
       }
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression2 = unaryExpression();
       if (expression2.getType() != Double.class) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the arithmetic " + opToken.getType() + " operator can only be used with two numeric expressions");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-numeric expression");
       }
-      switch (opToken.getType()) {
+      switch (start.getType()) {
         case MULTIPLY:
           expression = MultiplicationOperator.create((Expression<Double>) expression, (Expression<Double>) expression2);
           break;
@@ -260,11 +262,11 @@ class ParserImpl implements Parser {
       nextToken();
       return expression;
     } else if (token.getType() == NOT) {
-      Token opToken = token;
+      Token start = token;
       nextToken();
       Expression<?> expression = unaryExpression();
       if (expression.getType() != Boolean.class) {
-        throw new SyntaxException("Syntax error at " + opToken.getPosition() + ": the logical " + opToken.getType() + " operator can only be used with boolean expressions");
+        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-boolean expression");
       }
       return NotOperator.create((Expression<Boolean>) expression);
     }
@@ -303,6 +305,7 @@ class ParserImpl implements Parser {
 
   private void nextToken () throws IOException {
     token = lexer.nextToken();
+    tokens.add(token);
   }
 
   private void expect(Type type) {
