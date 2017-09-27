@@ -18,7 +18,7 @@ import com.google.common.io.CharStreams;
 public class BaselineExpressionTest {
 
   @Test
-  public void test_all() throws IOException {
+  public void test_parse_file_and_get_value() throws IOException {
     String expressionString = null;
     try (InputStream in = BaselineExpressionTest.class.getResourceAsStream("actual-baseline-expr.txt")) {
       expressionString = CharStreams.toString(new InputStreamReader(
@@ -286,7 +286,7 @@ public class BaselineExpressionTest {
   }
   
   @Test
-  public void test_type_checks() {
+  public void test_parse_enforces_type_checks() {
     // Test that "or" requires two boolean expressions
     try {
       BaselineExpression.parse("IF (1.0 || TRUE) 50 ELSE 100").getExpr();
@@ -543,6 +543,29 @@ public class BaselineExpressionTest {
     } catch (ParseException ex) {
       assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 1"), equalTo(true));
       assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("expected a numeric expression"), equalTo(true));
+    }
+    
+  }
+  
+  @Test
+  public void test_parse_if_requires_else() {
+    try {
+      BaselineExpression.parse("IF (TRUE) 1.0").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 14"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("found end of baseline expression when expecting else"), equalTo(true));
+    }
+    
+  }
+
+  @Test
+  public void test_parse_invalid_token() {
+    try {
+      BaselineExpression.parse("IF (TRUE) hello").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Unrecognized token starting at line 1, character 11: hello"), equalTo(true));
     }
     
   }
