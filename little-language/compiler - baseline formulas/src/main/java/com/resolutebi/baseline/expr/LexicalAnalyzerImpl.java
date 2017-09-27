@@ -220,11 +220,11 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
         }
       }
       
-      throw new LexicalAnalysisException("Unrecognized token starting at " + startPosition + ": " + s);
+      throw new LexicalAnalysisException("Unrecognized string '" + s + "' at " + startPosition);
     }
 
     if (peek == -1) {
-      throw new LexicalAnalysisException("Unexpected end of string");
+      throw new LexicalAnalysisException("Unexpected end of baseline expression string");
     }
     throw new LexicalAnalysisException("Unexpected character '" + (char) peek + "' at " + startPosition);
   }

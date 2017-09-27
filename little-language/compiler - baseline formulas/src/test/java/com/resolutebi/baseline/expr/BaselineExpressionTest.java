@@ -565,11 +565,47 @@ public class BaselineExpressionTest {
       BaselineExpression.parse("IF (TRUE) hello").getExpr();
       fail("Expected a ParseException");
     } catch (ParseException ex) {
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Unrecognized token starting at line 1, character 11: hello"), equalTo(true));
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Unrecognized string 'hello' at line 1, character 11"), equalTo(true));
     }
     
   }
   
+  @Test
+  public void test_parse_invalid_character() {
+    try {
+      BaselineExpression.parse("IF (TRUE @ FALSE) 1.0").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Unexpected character '@' at line 1, character 10"), equalTo(true));
+    }
+    
+  }
+
+  @Test
+  public void test_parse_invalid_number() {
+    try {
+      BaselineExpression.parse("IF (TRUE) 08").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Invalid number starting at line 1, character 11: numbers with multiple digits cannot start with 0"), equalTo(true));
+    }
+    
+    try {
+      BaselineExpression.parse("IF (TRUE) 8.").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Invalid number starting at line 1, character 11: expected at least one digit after the '.'"), equalTo(true));
+    }
+    
+    try {
+      BaselineExpression.parse("IF (TRUE) 1.25E").getExpr();
+      fail("Expected a ParseException");
+    } catch (ParseException ex) {
+      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().equals("Invalid number starting at line 1, character 11: expected at least one digit after the 'E'"), equalTo(true));
+    }
+    
+  }
+
   @Test
   public void test_parse_file () throws IOException {
     String expressionString = null;
