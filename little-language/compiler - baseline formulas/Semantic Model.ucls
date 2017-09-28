@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.1" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <interface id="1" language="java" name="com.resolutebi.baseline.expr.Expression" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Expression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="667" y="134"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="2" language="java" name="com.resolutebi.baseline.expr.ArithmeticOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/ArithmeticOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="454" y="605"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <interface id="3" language="java" name="com.resolutebi.baseline.expr.LogicalOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LogicalOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="698" y="351"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="4" language="java" name="com.resolutebi.baseline.expr.AdditionOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/AdditionOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="278" y="899"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="5" language="java" name="com.resolutebi.baseline.expr.LexicalAnalyzerFactory" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LexicalAnalyzerFactory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="481" y="1225"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="6" language="java" name="com.resolutebi.baseline.expr.MultiplicationOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/MultiplicationOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="499" y="900"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="7" language="java" name="com.resolutebi.baseline.expr.RelationalOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/RelationalOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="998" y="507"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="8" language="java" name="com.resolutebi.baseline.expr.ParserImpl" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/ParserImpl.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="937" y="1229"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.resolutebi.baseline.expr.SyntaxException" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/SyntaxException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1362" y="1277"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.resolutebi.baseline.expr.LexicalAnalyzerImpl" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LexicalAnalyzerImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="456" y="1661"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.resolutebi.baseline.expr.VariableId" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/VariableId.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1190" y="428"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.resolutebi.baseline.expr.BaselineExpression" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/BaselineExpression.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="332" y="136"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.resolutebi.baseline.expr.GreaterThanOrEqualsOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/GreaterThanOrEqualsOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="776" y="681"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="14" language="java" name="com.resolutebi.baseline.expr.Token.Type" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Token.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1035" y="2429"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="15" language="java" name="com.resolutebi.baseline.expr.DivisionOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/DivisionOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="389" y="846"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.resolutebi.baseline.expr.ParseException" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/ParseException.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1569" y="978"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="17" language="java" name="com.resolutebi.baseline.expr.LexicalAnalyzer" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LexicalAnalyzer.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="660" y="1423"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="18" language="java" name="com.resolutebi.baseline.expr.OrOperator" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/OrOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="612" y="483"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.resolutebi.baseline.expr.Variable" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Variable.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="988" y="297"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.resolutebi.baseline.expr.Inputs" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Inputs.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="319" y="239"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.resolutebi.baseline.expr.LexicalAnalysisException" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LexicalAnalysisException.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1744" y="1297"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.resolutebi.baseline.expr.NotOperator" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/NotOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="678" y="571"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.resolutebi.baseline.expr.NumericLiteral" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/NumericLiteral.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1757" y="516"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="24" language="java" name="com.resolutebi.baseline.expr.BasicPosition" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/BasicPosition.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="139" y="1927"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="com.resolutebi.baseline.expr.LessThanOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LessThanOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="865" y="747"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="com.resolutebi.baseline.expr.VariableToken" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/VariableToken.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="757" y="2240"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="com.resolutebi.baseline.expr.EqualsOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/EqualsOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1004" y="687"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="28" language="java" name="com.resolutebi.baseline.expr.Parser" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Parser.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="929" y="1035"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="29" language="java" name="com.resolutebi.baseline.expr.AndOperator" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/AndOperator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="778" y="503"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="com.resolutebi.baseline.expr.BooleanLiteral" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/BooleanLiteral.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1455" y="286"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="com.resolutebi.baseline.expr.DoubleToken" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/DoubleToken.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1278" y="2207"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="com.resolutebi.baseline.expr.IfExpression" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/IfExpression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="427" y="306"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="com.resolutebi.baseline.expr.LessThanOrEqualsOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LessThanOrEqualsOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1135" y="755"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="34" language="java" name="com.resolutebi.baseline.expr.Position" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Position.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="516" y="2222"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="35" language="java" name="com.resolutebi.baseline.expr.TokenList" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/TokenList.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="992" y="1598"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="36" language="java" name="com.resolutebi.baseline.expr.UnaryMinusOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/UnaryMinusOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1743" y="138"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="37" language="java" name="com.resolutebi.baseline.expr.GreaterThanOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/GreaterThanOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1234" y="689"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="38" language="java" name="com.resolutebi.baseline.expr.LexicalAnalyzerFactoryImpl" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/LexicalAnalyzerFactoryImpl.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="236" y="1449"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="39" language="java" name="com.resolutebi.baseline.expr.NotEqualsOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/NotEqualsOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1453" y="749"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="40" language="java" name="com.resolutebi.baseline.expr.SubtractionOperator" 
+    project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/SubtractionOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="608" y="847"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="41" language="java" name="com.resolutebi.baseline.expr.Token" project="compiler - baseline formulas" 
+    file="/compiler - baseline formulas/src/main/java/com/resolutebi/baseline/expr/Token.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="993" y="1946"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="42">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="43">    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="44" name="tokens">        
+        <position height="19" width="44" x="930" y="1861"/>      
+      </attribute>      
+      <multiplicity id="45" minimum="0" maximum="2147483647">        
+        <position height="17" width="23" x="967" y="1882"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="41" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="46">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <realization id="47">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <association id="48">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="49" name="factory">        
+        <position height="19" width="44" x="377" y="1164"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="51">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="17"/>  
+  </realization>  
+  <association id="52">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="53" name="tokens">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="54" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="55">    
+    <end type="SOURCE" refId="40"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="56">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <generalization id="57">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <realization id="58">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="28"/>  
+  </realization>  
+  <association id="59">    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="60" name="id">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="61" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="false" multiplicity="true"/>  
+  </association>  
+  <realization id="62">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <realization id="63">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="64">    
+    <end type="SOURCE" refId="39"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <association id="65">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="66" name="position">        
+        <position height="19" width="51" x="162" y="1848"/>      
+      </attribute>      
+      <multiplicity id="67" minimum="0" maximum="1">        
+        <position height="17" width="25" x="220" y="1856"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="68">    
+    <end type="SOURCE" refId="36"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <realization id="69">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <realization id="70">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="34"/>  
+  </realization>  
+  <realization id="71">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <realization id="72">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <realization id="73">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <generalization id="74">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <association id="75">    
+    <bendpoint x="444" y="1860"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="76" name="startPosition">        
+        <position height="19" width="75" x="494" y="2102"/>      
+      </attribute>      
+      <multiplicity id="77" minimum="0" maximum="1">        
+        <position height="17" width="25" x="506" y="2133"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="78">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <generalization id="79">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="41"/>  
+  </generalization>  
+  <generalization id="80">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="41"/>  
+  </generalization>  
+  <realization id="81">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="1"/>  
+  </realization>  
+  <realization id="82">    
+    <end type="SOURCE" refId="37"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <association id="83">    
+    <bendpoint x="966" y="2080"/>    
+    <end type="SOURCE" refId="41" navigable="false">      
+      <attribute id="84" name="type">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="85" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="86">    
+    <bendpoint x="1038" y="2078"/>    
+    <end type="SOURCE" refId="41"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <association id="87">    
+    <end type="SOURCE" refId="41" navigable="false">      
+      <attribute id="88" name="position">        
+        <position height="19" width="51" x="541" y="2162"/>      
+      </attribute>      
+      <multiplicity id="89" minimum="0" maximum="1">        
+        <position height="17" width="25" x="596" y="2175"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="90">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="7"/>  
+  </realization>  
+  <association id="91">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="92" name="lexer">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="93" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="94">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="16"/>  
+  </generalization>  
+  <realization id="95">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="2"/>  
+  </realization>  
+  <association id="96">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="97" name="literal">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="98" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="99">    
+    <bendpoint x="1098" y="1503"/>    
+    <bendpoint x="1114" y="1842"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="100" name="token">        
+        <position height="19" width="38" x="1035" y="1910"/>      
+      </attribute>      
+      <multiplicity id="101" minimum="0" maximum="1">        
+        <position height="17" width="25" x="1063" y="1890"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="41" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="102">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="103" name="expr">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="104" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="105">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <realization id="106">    
+    <end type="SOURCE" refId="38"/>    
+    <end type="TARGET" refId="5"/>  
+  </realization>  
+  <realization id="107">    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="3"/>  
+  </realization>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
