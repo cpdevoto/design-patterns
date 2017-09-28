@@ -13,7 +13,7 @@ class BooleanLiteral implements Expression<Boolean> {
   }
 
   @Override
-  public Boolean value(Inputs inputs) {
+  public Boolean evaluate(Inputs inputs) {
     requireNonNull(inputs, "inputs cannot be null");
     return value;
   }

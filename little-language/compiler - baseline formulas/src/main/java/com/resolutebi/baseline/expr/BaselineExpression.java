@@ -26,8 +26,8 @@ public class BaselineExpression {
     this.expr = requireNonNull(expr, "expr cannot be null");
   }
 
-  public double value(Inputs inputs) {
-    return expr.value(inputs);
+  public double evaluate(Inputs inputs) {
+    return expr.evaluate(inputs);
   }
 
   Expression<Double> getExpr() {

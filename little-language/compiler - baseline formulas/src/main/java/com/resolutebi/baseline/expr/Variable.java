@@ -15,7 +15,7 @@ class Variable <T> implements Expression<T> {
   }
 
   @Override
-  public T value(Inputs inputs) {
+  public T evaluate(Inputs inputs) {
     requireNonNull(inputs, "inputs cannot be null");
     return inputs.getValue(id);
   }

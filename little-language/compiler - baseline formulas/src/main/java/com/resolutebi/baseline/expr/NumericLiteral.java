@@ -17,7 +17,7 @@ class NumericLiteral implements Expression<Double> {
   }
 
   @Override
-  public Double value(Inputs inputs) {
+  public Double evaluate(Inputs inputs) {
     requireNonNull(inputs, "inputs cannot be null");
     return value;
   }

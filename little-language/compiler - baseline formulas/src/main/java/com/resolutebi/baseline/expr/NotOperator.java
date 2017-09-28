@@ -15,9 +15,9 @@ class NotOperator implements LogicalOperator {
   }
 
   @Override
-  public Boolean value(Inputs inputs) {
+  public Boolean evaluate(Inputs inputs) {
     requireNonNull(inputs, "inputs cannot be null");
-    return !expr.value(inputs);
+    return !expr.evaluate(inputs);
   }
 
   @Override

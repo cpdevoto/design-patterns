@@ -32,28 +32,28 @@ public class BaselineExpressionTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 32.0)
         .build();
     
-    assertThat(exp.value(inputs), equalTo(39789.6332));
+    assertThat(exp.evaluate(inputs), equalTo(39789.6332));
     
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 75.0)
         .build();
     
-    assertThat(exp.value(inputs), equalTo(55457.0024));
+    assertThat(exp.evaluate(inputs), equalTo(55457.0024));
     
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 32.0)
         .build();
 
-    assertThat(exp.value(inputs), equalTo(37543.0328));
+    assertThat(exp.evaluate(inputs), equalTo(37543.0328));
     
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 75.0)
         .build();
 
-    assertThat(exp.value(inputs), equalTo(53256.6604));
+    assertThat(exp.evaluate(inputs), equalTo(53256.6604));
   }
   
   @Test

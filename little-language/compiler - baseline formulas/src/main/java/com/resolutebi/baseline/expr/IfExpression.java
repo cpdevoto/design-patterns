@@ -20,11 +20,11 @@ class IfExpression implements Expression<Double> {
   }
 
   @Override
-  public Double value(Inputs inputs) {
-    if (condition.value(inputs)) {
-      return ifBody.value(inputs);
+  public Double evaluate(Inputs inputs) {
+    if (condition.evaluate(inputs)) {
+      return ifBody.evaluate(inputs);
     }
-    return elseBody.value(inputs);
+    return elseBody.evaluate(inputs);
   }
 
   @Override

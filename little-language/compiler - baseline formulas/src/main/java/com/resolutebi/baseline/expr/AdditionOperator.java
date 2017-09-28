@@ -17,9 +17,9 @@ class AdditionOperator implements ArithmeticOperator {
   }
 
   @Override
-  public Double value(Inputs inputs) {
+  public Double evaluate(Inputs inputs) {
     requireNonNull(inputs, "inputs cannot be null");
-    return expr1.value(inputs) + expr2.value(inputs);
+    return expr1.evaluate(inputs) + expr2.evaluate(inputs);
   }
 
   @Override

@@ -17,9 +17,9 @@ class EqualsOperator <T> implements RelationalOperator {
   }
 
   @Override
-  public Boolean value(Inputs inputs) {
+  public Boolean evaluate(Inputs inputs) {
     requireNonNull(inputs, "inputs cannot be null");
-    return expr1.value(inputs).equals(expr2.value(inputs));
+    return expr1.evaluate(inputs).equals(expr2.evaluate(inputs));
   }
 
   @Override

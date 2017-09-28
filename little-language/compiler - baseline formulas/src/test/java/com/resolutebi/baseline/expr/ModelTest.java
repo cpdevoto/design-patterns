@@ -40,14 +40,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 5.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(25.0));
+    assertThat(expr.evaluate(inputs), equalTo(25.0));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 5.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(50.0));
+    assertThat(expr.evaluate(inputs), equalTo(50.0));
   
   }
 
@@ -66,21 +66,21 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(125.0));
+    assertThat(expr.evaluate(inputs), equalTo(125.0));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 20.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(200.0));
+    assertThat(expr.evaluate(inputs), equalTo(200.0));
   
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 10.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(200.0));
+    assertThat(expr.evaluate(inputs), equalTo(200.0));
   }
   
   @Test
@@ -92,14 +92,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 20.0)
         .build();
 
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
     
     expr = EqualsOperator.create(Variable.create(VariableId.AVG_DAILY_TEMP), NumericLiteral.create(25.0));
 
@@ -108,14 +108,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 20.0)
         .build();
 
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
   
   }
   
@@ -128,14 +128,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 20.0)
         .build();
 
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
     
     expr = NotEqualsOperator.create(Variable.create(VariableId.AVG_DAILY_TEMP), NumericLiteral.create(25.0));
 
@@ -144,14 +144,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 20.0)
         .build();
 
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
   }
   
   @Test
@@ -163,14 +163,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 30.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
   }
   
@@ -183,21 +183,21 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 30.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
   }
   
   @Test
@@ -209,14 +209,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
   }
   
@@ -229,21 +229,21 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 30.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
   }
   
   @Test
@@ -257,28 +257,28 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
   }
 
   @Test
@@ -292,28 +292,28 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, true)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 24.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
   }
   
   @Test
@@ -326,14 +326,14 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
 
     inputs = Inputs.builder()
         .withInput(VariableId.WEEK_DAY, false)
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
   }
  
   @Test
@@ -345,7 +345,7 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(50.0));
+    assertThat(expr.evaluate(inputs), equalTo(50.0));
 
   }
   
@@ -358,7 +358,7 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(0.0));
+    assertThat(expr.evaluate(inputs), equalTo(0.0));
 
   }
   
@@ -371,7 +371,7 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(125.0));
+    assertThat(expr.evaluate(inputs), equalTo(125.0));
 
   }
 
@@ -384,7 +384,7 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(5.0));
+    assertThat(expr.evaluate(inputs), equalTo(5.0));
 
   }
 
@@ -398,8 +398,8 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr1.value(inputs), equalTo(25.0));
-    assertThat(expr2.value(inputs), equalTo(true));
+    assertThat(expr1.evaluate(inputs), equalTo(25.0));
+    assertThat(expr2.evaluate(inputs), equalTo(true));
 
   }
 
@@ -412,7 +412,7 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(10.0));
+    assertThat(expr.evaluate(inputs), equalTo(10.0));
 
   }
 
@@ -425,11 +425,11 @@ public class ModelTest {
         .withInput(VariableId.AVG_DAILY_TEMP, 25.0)
         .build();
     
-    assertThat(expr.value(inputs), equalTo(true));
+    assertThat(expr.evaluate(inputs), equalTo(true));
     
     expr = BooleanLiteral.FALSE;
     
-    assertThat(expr.value(inputs), equalTo(false));
+    assertThat(expr.evaluate(inputs), equalTo(false));
     
 
   }

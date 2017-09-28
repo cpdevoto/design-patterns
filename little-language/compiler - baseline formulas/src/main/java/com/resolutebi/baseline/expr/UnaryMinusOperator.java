@@ -15,8 +15,8 @@ class UnaryMinusOperator implements Expression<Double> {
   }
 
   @Override
-  public Double value(Inputs inputs) {
-    return -1 * literal.value(inputs);
+  public Double evaluate(Inputs inputs) {
+    return -1 * literal.evaluate(inputs);
   }
 
   @Override
