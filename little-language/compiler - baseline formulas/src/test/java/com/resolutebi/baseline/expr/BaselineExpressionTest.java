@@ -120,7 +120,7 @@ public class BaselineExpressionTest {
       // Test equals operator with booleans
       exp = BaselineExpression.parse("IF (TRUE == FALSE) 50 ELSE 100").getExpr();
       assertThat(getCondition(exp), instanceOf(EqualsOperator.class));
-      EqualsOperator<?> equals = EqualsOperator.class.cast(getCondition(exp));
+      EqualsOperator equals = EqualsOperator.class.cast(getCondition(exp));
       assertThat(equals.getExpr1(), equalTo(BooleanLiteral.TRUE));
       assertThat(equals.getExpr2(), equalTo(BooleanLiteral.FALSE));
   
@@ -131,20 +131,34 @@ public class BaselineExpressionTest {
       assertThat(equals.getExpr1(), equalTo(NumericLiteral.create(10)));
       assertThat(equals.getExpr2(), equalTo(NumericLiteral.create(5)));
 
-      // Test not equals operator
+      // Test equals operator with boolean and number
+      exp = BaselineExpression.parse("IF (TRUE == 5) 50 ELSE 100").getExpr();
+      assertThat(getCondition(exp), instanceOf(EqualsOperator.class));
+      equals = EqualsOperator.class.cast(getCondition(exp));
+      assertThat(equals.getExpr1(), equalTo(BooleanLiteral.TRUE));
+      assertThat(equals.getExpr2(), equalTo(NumericLiteral.create(5)));
+
+      // Test not equals operator with booleans
       exp = BaselineExpression.parse("IF (TRUE != FALSE) 50 ELSE 100").getExpr();
       assertThat(getCondition(exp), instanceOf(NotEqualsOperator.class));
-      NotEqualsOperator<?> notEquals = NotEqualsOperator.class.cast(getCondition(exp));
+      NotEqualsOperator notEquals = NotEqualsOperator.class.cast(getCondition(exp));
       assertThat(notEquals.getExpr1(), equalTo(BooleanLiteral.TRUE));
       assertThat(notEquals.getExpr2(), equalTo(BooleanLiteral.FALSE));
 
-      // Test equals operator with numbers
+      // Test not equals operator with numbers
       exp = BaselineExpression.parse("IF (10 != 5) 50 ELSE 100").getExpr();
       assertThat(getCondition(exp), instanceOf(NotEqualsOperator.class));
       notEquals = NotEqualsOperator.class.cast(getCondition(exp));
       assertThat(notEquals.getExpr1(), equalTo(NumericLiteral.create(10)));
       assertThat(notEquals.getExpr2(), equalTo(NumericLiteral.create(5)));
 
+      // Test not equals operator with boolean and number
+      exp = BaselineExpression.parse("IF (TRUE != 5) 50 ELSE 100").getExpr();
+      assertThat(getCondition(exp), instanceOf(NotEqualsOperator.class));
+      notEquals = NotEqualsOperator.class.cast(getCondition(exp));
+      assertThat(notEquals.getExpr1(), equalTo(BooleanLiteral.TRUE));
+      assertThat(notEquals.getExpr2(), equalTo(NumericLiteral.create(5)));
+      
       // Test addition operator
       exp = BaselineExpression.parse("IF (TRUE) 50 + 60 ELSE 100").getExpr();
       assertThat(getIfBody(exp), instanceOf(AdditionOperator.class));
@@ -220,7 +234,7 @@ public class BaselineExpressionTest {
     and = AndOperator.class.cast(getCondition(exp));
     assertThat(and.getExpr1(), instanceOf(EqualsOperator.class));
     assertThat(and.getExpr2(), equalTo(BooleanLiteral.TRUE));
-    EqualsOperator<?> eq = EqualsOperator.class.cast(and.getExpr1());
+    EqualsOperator eq = EqualsOperator.class.cast(and.getExpr1());
     assertThat(eq.getExpr1(), equalTo(BooleanLiteral.TRUE));
     assertThat(eq.getExpr2(), equalTo(BooleanLiteral.FALSE));
   
@@ -327,40 +341,6 @@ public class BaselineExpressionTest {
       fail("Expected a ParseException");
     } catch (ParseException ex) {
       assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 6"), equalTo(true));
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
-    }
-    
-    // Test that "equals" requires two expressions of the same type
-    try {
-      BaselineExpression.parse("IF (1.0 == TRUE) 50 ELSE 100").getExpr();
-      fail("Expected a ParseException");
-    } catch (ParseException ex) {
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
-    }
-      
-    try {
-      BaselineExpression.parse("IF (TRUE == 1.0) 50 ELSE 100").getExpr();
-      fail("Expected a ParseException");
-    } catch (ParseException ex) {
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 13"), equalTo(true));
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
-    }
-    
-    // Test that "not equals" requires two expressions of the same type
-    try {
-      BaselineExpression.parse("IF (1.0 != TRUE) 50 ELSE 100").getExpr();
-      fail("Expected a ParseException");
-    } catch (ParseException ex) {
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 12"), equalTo(true));
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-numeric expression"), equalTo(true));
-    }
-      
-    try {
-      BaselineExpression.parse("IF (TRUE != 1.0) 50 ELSE 100").getExpr();
-      fail("Expected a ParseException");
-    } catch (ParseException ex) {
-      assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("line 1, character 13"), equalTo(true));
       assertThat("Invalid error message: " + ex.getMessage(), ex.getMessage().contains("unexpected non-boolean expression"), equalTo(true));
     }
     

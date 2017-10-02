@@ -140,10 +140,6 @@ class ParserImpl implements Parser {
       Token start = token;
       nextToken();
       Expression<?> expression2 = relationalExpression();
-      if (!expression.getType().equals(expression2.getType())) {
-        String expected = expression.getType() == Boolean.class ? "boolean" : "numeric";
-        throw new SyntaxException("Syntax error at " + tokens.next(start).getPosition() + ": unexpected non-" + expected + " expression");
-      }
       switch (start.getType()) {
         case EQUALS:
           if (expression.getType().equals(Boolean.class)) {

@@ -2,16 +2,16 @@ package com.resolutebi.baseline.expr;
 
 import static java.util.Objects.requireNonNull;
 
-class NotEqualsOperator <T> implements RelationalOperator {
+class NotEqualsOperator implements RelationalOperator {
   
-  private final Expression<T> expr1;
-  private final Expression<T> expr2;
+  private final Expression<?> expr1;
+  private final Expression<?> expr2;
 
-  static <T> NotEqualsOperator<T> create(Expression<T> expr1, Expression<T> expr2) {
-    return new NotEqualsOperator<>(expr1, expr2);
+  static NotEqualsOperator create(Expression<?> expr1, Expression<?> expr2) {
+    return new NotEqualsOperator(expr1, expr2);
   }
   
-  private NotEqualsOperator(Expression<T> expr1, Expression<T> expr2) {
+  private NotEqualsOperator(Expression<?> expr1, Expression<?> expr2) {
     this.expr1 = requireNonNull(expr1, "expr1 cannot be null");
     this.expr2 = requireNonNull(expr2, "expr2 cannot be null");
   }
@@ -27,11 +27,11 @@ class NotEqualsOperator <T> implements RelationalOperator {
     return Boolean.class;
   }
 
-  Expression<T> getExpr1() {
+  Expression<?> getExpr1() {
     return expr1;
   }
 
-  Expression<T> getExpr2() {
+  Expression<?> getExpr2() {
     return expr2;
   }
 
@@ -52,7 +52,7 @@ class NotEqualsOperator <T> implements RelationalOperator {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    NotEqualsOperator<?> other = (NotEqualsOperator<?>) obj;
+    NotEqualsOperator other = (NotEqualsOperator) obj;
     if (expr1 == null) {
       if (other.expr1 != null)
         return false;
