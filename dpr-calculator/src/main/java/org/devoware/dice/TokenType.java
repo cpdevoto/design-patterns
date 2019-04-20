@@ -1,16 +1,12 @@
 package org.devoware.dice;
 
-import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
-
 enum TokenType {
   // @formatter:off
   PLUS("'+'"),
   MINUS("'-'"),
   DIE("'d'"),
   NUMBER("a number"),
-  REROLL_ONCE("'ro<"),
+  REROLL_ONCE("'ro<'"),
   EOE("end of expression");
   // @formatter:off
   
