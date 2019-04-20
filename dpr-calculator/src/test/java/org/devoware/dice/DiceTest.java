@@ -15,7 +15,5 @@ public class DiceTest {
     assertThat(Dice.parse("2d6 + 5").dpr(), equalTo(12.0));
     assertThat(Dice.parse("1d8 + 3 + 1d6").dpr(), equalTo(11.0));
 
-
-
   }
 }
