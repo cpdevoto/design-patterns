@@ -13,7 +13,7 @@ public class AttackRoutineTest {
   public void test_baseline_dpr() {
     // @formatter:off
     // ------------
-    // BASELINE
+    // BASELINE (assumes attack score raised at 4 and 8)
     // ------------
     // Level 1:   5.85
     // Level 2:   7.65

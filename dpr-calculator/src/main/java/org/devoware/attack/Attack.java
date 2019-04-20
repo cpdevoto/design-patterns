@@ -24,6 +24,7 @@ public class Attack {
   }
 
   public static Attack attack(String expression, Consumer<Attack.Builder> consumer) {
+    requireNonNull(consumer, "consumer cannot be null");
     Builder builder = new Builder(expression);
     consumer.accept(builder);
     return builder.build();
