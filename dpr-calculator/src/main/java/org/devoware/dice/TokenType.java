@@ -10,17 +10,9 @@ enum TokenType {
   MINUS("'-'"),
   DIE("'d'"),
   NUMBER("a number"),
-  WEAPON("''w"),
+  REROLL_ONCE("'ro<"),
   EOE("end of expression");
   // @formatter:off
-  
-  static final Set<Character> SPECIAL_CHARS = ImmutableSet.<Character>builder()
-      .add('+')
-      .add('-')
-      .add('d')
-      .add('w')
-      .add((char) -1)
-      .build();
   
   private final String value;
   

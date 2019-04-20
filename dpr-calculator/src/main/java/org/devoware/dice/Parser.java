@@ -53,12 +53,12 @@ class Parser {
       int numDice = expectPositiveInt(value, startPos);
       nextToken();
       Die die = expectDie(numberExpression());
-      boolean isWeapon = false;
-      if (token.getType() == TokenType.WEAPON) {
-        isWeapon = true;
+      Integer rerollOnceThreshold = null;
+      if (token.getType() == TokenType.REROLL_ONCE) {
         nextToken();
+        rerollOnceThreshold = expectPositiveInt(numberExpression(), startPos);
       }
-      return new Dice(numDice, die, isWeapon);
+      return new Dice(numDice, die, rerollOnceThreshold);
     }
     return new Modifier(value);
   }

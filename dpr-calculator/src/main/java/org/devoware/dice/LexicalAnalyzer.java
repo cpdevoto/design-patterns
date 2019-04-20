@@ -6,7 +6,7 @@ import static org.devoware.dice.TokenType.EOE;
 import static org.devoware.dice.TokenType.MINUS;
 import static org.devoware.dice.TokenType.NUMBER;
 import static org.devoware.dice.TokenType.PLUS;
-import static org.devoware.dice.TokenType.WEAPON;
+import static org.devoware.dice.TokenType.REROLL_ONCE;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -47,11 +47,23 @@ class LexicalAnalyzer {
       case 'd':
       case 'D':
         return getToken(DIE);
-      case 'w':
-      case 'W':
-        return getToken(WEAPON);
       case -1:
         return getToken(EOE, false);
+    }
+
+    if (Character.isLetter(peek)) {
+      StringBuilder buf = new StringBuilder();
+      do {
+        buf.append((char) peek);
+        readChar();
+      } while (Character.isLetter(peek) || peek == '<');
+      String lexeme = buf.toString();
+      if (lexeme.equalsIgnoreCase("ro<")) {
+        return getToken(REROLL_ONCE, false);
+      } else {
+        throw new LexicalAnalysisException(
+            "Unexpected string '" + lexeme + "' at position " + startPosition);
+      }
     }
 
     if (Character.isDigit(peek)) {
