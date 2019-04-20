@@ -10,12 +10,63 @@ import org.junit.Test;
 public class AttackRoutineTest {
 
   @Test
-  public void test() {
-    AttackRoutine routine = attackRoutine(
-        attack("1d10 + 5"),
-        attack("1d10 + 5"));
+  public void test_dpr() {
+    // @formatter:off
+    // ------------
+    // BASELINE
+    // ------------
+    // Level 1:   5.85
+    // Level 2:   7.65
+    // Level 4:   8.25
+    // Level 5:  16.50
+    // Level 8:  17.70
+    // Level 11: 26.55
+    // Level 17: 35.40
+    //
+    // ALMOST OR EQUAL TO BASELINE: OK
+    // LESS THAN BASELINE:          POOR
+    // MORE THAN BASELINE:          GOOD
+    // 1/2 BASELINE OR LESS:        TERRIBLE
+    // 1 1/2 x BASELINE:            VERY GOOD
+    // 2 x BASELINE:                TERRIFIC
+    
+    // @formatter:on
 
-    assertThat(routine.dpr(), closeTo(13.150, 0.001));
+    AttackRoutine routine = attackRoutine(
+        attack("1d10 + 1d6"));
+    assertThat(routine.dpr(), closeTo(5.85, 0.001));
+
+    routine = attackRoutine(
+        attack("1d10 + 3 + 1d6"));
+    assertThat(routine.dpr(), closeTo(7.65, 0.001));
+
+    routine = attackRoutine(
+        attack("1d10 + 4 + 1d6"));
+    assertThat(routine.dpr(), closeTo(8.25, 0.001));
+
+    routine = attackRoutine(
+        attack("1d10 + 4 + 1d6"),
+        attack("1d10 + 4 + 1d6"));
+    assertThat(routine.dpr(), closeTo(16.5, 0.001));
+
+    routine = attackRoutine(
+        attack("1d10 + 5 + 1d6"),
+        attack("1d10 + 5 + 1d6"));
+    assertThat(routine.dpr(), closeTo(17.7, 0.001));
+
+    routine = attackRoutine(
+        attack("1d10 + 5 + 1d6"),
+        attack("1d10 + 5 + 1d6"),
+        attack("1d10 + 5 + 1d6"));
+    assertThat(routine.dpr(), closeTo(26.55, 0.001));
+
+    routine = attackRoutine(
+        attack("1d10 + 5 + 1d6"),
+        attack("1d10 + 5 + 1d6"),
+        attack("1d10 + 5 + 1d6"),
+        attack("1d10 + 5 + 1d6"));
+    assertThat(routine.dpr(), closeTo(35.4, 0.001));
+
   }
 
   @Test
@@ -38,7 +89,6 @@ public class AttackRoutineTest {
     // 1/2 BASELINE OR LESS:        TERRIBLE
     // 1 1/2 x BASELINE:            VERY GOOD
     // 2 x BASELINE:                TERRIFIC
-    
     // @formatter:on
 
     AttackRoutine routine = attackRoutine(
