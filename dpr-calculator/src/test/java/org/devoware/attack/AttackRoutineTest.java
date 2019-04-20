@@ -10,7 +10,7 @@ import org.junit.Test;
 public class AttackRoutineTest {
 
   @Test
-  public void test_dpr() {
+  public void test_baseline_dpr() {
     // @formatter:off
     // ------------
     // BASELINE
@@ -70,7 +70,7 @@ public class AttackRoutineTest {
   }
 
   @Test
-  public void test_damage_on_hit() {
+  public void test_baseline_damage_on_hit() {
     // @formatter:off
     // ------------
     // BASELINE
@@ -128,5 +128,19 @@ public class AttackRoutineTest {
 
   }
 
+  @Test
+  public void test_barb_great_weapon_mastery_at_level_4() {
+    // +2 Strength at level 4
+    AttackRoutine routine = attackRoutine(
+        attack("2d6 + 6", a -> a.advantage()));
+    assertThat(routine.dpr(), closeTo(11.603, 0.001));
+
+    routine = attackRoutine(
+        attack("2d6 + 15", a -> a.advantage().hitModifier(-6)));
+    assertThat(routine.dpr(), closeTo(11.902, 0.001));
+
+    System.out.printf("DPR ADVANTAGE: %,.2f%n", (11.902 - 11.603));
+
+  }
 
 }
