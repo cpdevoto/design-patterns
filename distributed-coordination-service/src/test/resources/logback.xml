@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+			</Pattern>
+		</encoder>
+	</appender>
+
+    <!--  
+	<logger name="org.apache.zookeeper" level="DEBUG"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+    -->
+    
+    <!--  
+	<logger name="com.resolute.cloudfill.connectors.verdigris.dao" level="DEBUG"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+    -->
+    
+    <!-- 
+	<logger name="com.resolute.cloudfill.connectors.kmc.dao" level="DEBUG"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+     -->
+
+    <!-- 
+	<logger name="com.resolute.cloudfill.connectors.kmc.dao.KmcAuthenticationHttpDao" level="DEBUG"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+    --> 
+         
+	<logger name="com.resolute.cloudfill.mocks.outputs.LoggingOutputChannel" level="DEBUG"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.resolute.cloudfill.utils.s3.S3FileDownloader" level="INFO"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>

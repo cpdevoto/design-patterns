@@ -1,0 +1,137 @@
+package com.resolute.jackson;
+
+import static java.util.Objects.requireNonNull;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
+@JsonInclude(Include.NON_NULL)
+@JsonDeserialize(builder = User.Builder.class)
+public class User {
+  private final int id;
+  private final Integer age;
+  private final String name;
+  private final LocalDate startDate;
+  private final Set<String> roles;
+  private final List<String> addresses;
+
+  @JsonCreator
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static Builder builder(User user) {
+    return new Builder(user);
+  }
+
+  private User(Builder builder) {
+    this.id = builder.id;
+    this.age = builder.age;
+    this.name = builder.name;
+    this.startDate = builder.startDate;
+    this.roles = builder.roles;
+    this.addresses = builder.addresses;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public Optional<Integer> getAge() {
+    return Optional.ofNullable(age);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Optional<LocalDate> getStartDate() {
+    return Optional.ofNullable(startDate);
+  }
+
+  public Optional<Set<String>> getRoles() {
+    return Optional.ofNullable(roles);
+  }
+
+  public List<String> getAddresses() {
+    return addresses;
+  }
+
+  @JsonPOJOBuilder
+  public static class Builder {
+    private Integer id;
+    private Integer age;
+    private String name;
+    private LocalDate startDate;
+    private Set<String> roles;
+    private List<String> addresses;
+
+    private Builder() {}
+
+    private Builder(User user) {
+      requireNonNull(user, "user cannot be null");
+      this.id = user.id;
+      this.age = user.age;
+      this.name = user.name;
+      this.startDate = user.startDate;
+      this.roles = user.roles;
+      this.addresses = user.addresses;
+    }
+
+    public Builder with(Consumer<Builder> consumer) {
+      requireNonNull(consumer, "consumer cannot be null");
+      consumer.accept(this);
+      return this;
+    }
+
+    public Builder withId(int id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder withAge(Integer age) {
+      this.age = age;
+      return this;
+    }
+
+    public Builder withName(String name) {
+      requireNonNull(name, "name cannot be null");
+      this.name = name;
+      return this;
+    }
+
+    public Builder withStartDate(LocalDate startDate) {
+      this.startDate = startDate;
+      return this;
+    }
+
+    public Builder withRoles(Set<String> roles) {
+      this.roles = (roles == null ? null : ImmutableSet.copyOf(roles));
+      return this;
+    }
+
+    public Builder withAddresses(List<String> addresses) {
+      requireNonNull(addresses, "addresses cannot be null");
+      this.addresses = ImmutableList.copyOf(addresses);
+      return this;
+    }
+
+    public User build() {
+      requireNonNull(id, "id cannot be null");
+      requireNonNull(name, "name cannot be null");
+      requireNonNull(addresses, "addresses cannot be null");
+      return new User(this);
+    }
+  }
+}

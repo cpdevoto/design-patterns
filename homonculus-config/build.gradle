@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}" + '/repo'
+            credentials {
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+            }
+        }
+
+        dependencies {
+            classpath "com.resolutebi:GradleCommonConfigurationPlugin:1.0.+"
+        }
+    }
+}
+
+
+plugins {
+  id 'nebula.dependency-lock' version '4.9.5'
+}
+
+apply plugin: 'resolute-common-config'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+group = 'com.resolute'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+dependencies {
+    compile     'org.slf4j:slf4j-api:1.7.25',
+                'org.slf4j:jul-to-slf4j:1.7.25',
+                'ch.qos.logback:logback-core:1.1.7',
+                'ch.qos.logback:logback-classic:1.1.7',
+                'org.slf4j:jcl-over-slf4j:1.7.25',
+                'com.google.guava:guava:21.0',
+                'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.9',
+                'org.apache.commons:commons-lang3:3.4',
+                'org.apache.commons:commons-text:1.2',
+                'javax.validation:validation-api:1.1.0.Final',
+                'org.hibernate:hibernate-validator:5.2.4.Final',
+                'org.glassfish:javax.el:3.0.0',
+                "com.resolute:jackson-utils-simple:${rbiDepVersion}"
+    testCompile 'junit:junit:4.12', 
+                'org.mockito:mockito-core:1.10.19',
+                'org.hamcrest:hamcrest-all:1.3'    
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+artifactoryPublish {
+    publications('mavenJava')
+}
+
+
