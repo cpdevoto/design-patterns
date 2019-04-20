@@ -46,6 +46,12 @@ public class AttackTest {
 
     attack = attack("1d10 + 5", a -> a.disadvantage().hitModifier(2));
     assertThat(attack.dpr(), closeTo(5.159, 0.001));
+
+    attack = attack("2d6 + 5", a -> a.advantage());
+    assertThat(attack.dpr(), closeTo(10.763, 0.001));
+
+    attack = attack("2d6ro<2 + 5", a -> a.advantage());
+    assertThat(attack.dpr(), closeTo(12.0125, 0.001));
   }
 
   @Test
