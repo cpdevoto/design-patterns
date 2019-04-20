@@ -53,7 +53,12 @@ class Parser {
       int numDice = expectPositiveInt(value, startPos);
       nextToken();
       Die die = expectDie(numberExpression());
-      return new Dice(numDice, die);
+      boolean isWeapon = false;
+      if (token.getType() == TokenType.WEAPON) {
+        isWeapon = true;
+        nextToken();
+      }
+      return new Dice(numDice, die, isWeapon);
     }
     return new Modifier(value);
   }

@@ -11,15 +11,29 @@ import com.google.common.collect.ImmutableList;
 public class Dice implements DieRollExpression {
   private final int number;
   private final Die die;
+  private final boolean isWeapon;
 
   public static DieRollExpression parse(String expression) {
     return Parser.parse(expression);
   }
 
-  Dice(int number, Die die) {
+  Dice(int number, Die die, boolean isWeapon) {
     checkArgument(number > 0, "number must be greater than zero");
     this.die = requireNonNull(die, "die cannot be null");
     this.number = number;
+    this.isWeapon = false;
+  }
+
+  public boolean isWeapon() {
+    return isWeapon;
+  }
+
+  public int getNumber() {
+    return number;
+  }
+
+  public Die getDie() {
+    return die;
   }
 
   @Override

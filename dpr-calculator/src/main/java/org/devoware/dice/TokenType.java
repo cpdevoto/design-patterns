@@ -10,6 +10,7 @@ enum TokenType {
   MINUS("'-'"),
   DIE("'d'"),
   NUMBER("a number"),
+  WEAPON("''w"),
   EOE("end of expression");
   // @formatter:off
   
@@ -17,6 +18,7 @@ enum TokenType {
       .add('+')
       .add('-')
       .add('d')
+      .add('w')
       .add((char) -1)
       .build();
   
