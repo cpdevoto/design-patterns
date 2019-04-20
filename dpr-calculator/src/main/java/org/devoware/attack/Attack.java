@@ -17,7 +17,7 @@ public class Attack {
   private final Type type;
   private final double hitProbability;
   private final double critProbability;
-  private final DieRollExpression additionalCritDamage;
+  private final double additionalCritDamage;
 
   public static Attack attack(String expression) {
     return new Builder(expression).build();
@@ -67,7 +67,7 @@ public class Attack {
   public double dpr() {
     double hitDpr = expression.dpr();
     double critDpr = expression.getDice().stream().mapToDouble(Dice::dpr).sum() +
-        (additionalCritDamage != null ? additionalCritDamage.dpr() : 0);
+        additionalCritDamage;
     double hitDamage = hitProbability * hitDpr;
     double critDamage = critProbability * critDpr;
     return hitDamage + critDamage;
@@ -79,7 +79,7 @@ public class Attack {
     private int critOn = 20;
     private double baseHitProbability = 0.60;
     private boolean elvenAccuracy = false;
-    private DieRollExpression additionalCritDamage;
+    private double additionalCritDamage = 0;
 
     private Builder(String expression) {
       requireNonNull(expression, "expression cannot be null");
@@ -120,7 +120,13 @@ public class Attack {
 
     public Builder additionalCritDamage(String expression) {
       requireNonNull(expression, "expression cannot be null");
-      this.additionalCritDamage = Dice.parse(expression);
+      this.additionalCritDamage = Dice.parse(expression).dpr();
+      return this;
+    }
+
+    public Builder additionalCritDamage(Attack attack) {
+      requireNonNull(attack, "attack cannot be null");
+      this.additionalCritDamage = attack.dpr();
       return this;
     }
 

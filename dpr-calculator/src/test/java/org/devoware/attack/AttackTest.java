@@ -23,6 +23,9 @@ public class AttackTest {
     attack = attack("1d10 + 5", a -> a.additionalCritDamage("1d10"));
     assertThat(attack.dpr(), closeTo(6.85, 0.001));
 
+    attack = attack("1d10 + 5", a -> a.additionalCritDamage(attack("1d10 + 5")));
+    assertThat(attack.dpr(), closeTo(6.904, 0.001));
+
     attack = attack("1d10 + 5", a -> a.advantage());
     assertThat(attack.dpr(), closeTo(9.356, 0.001));
 
