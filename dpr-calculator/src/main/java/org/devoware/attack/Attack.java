@@ -35,7 +35,8 @@ public class Attack {
     double missProbability = 1 - hitProbability;
     switch (this.type) {
       case ADVANTAGE:
-        this.hitProbability = 1 - (missProbability * missProbability);
+        this.hitProbability = 1 - (missProbability * missProbability *
+            (builder.elvenAccuracy ? missProbability : 1));
         break;
       case DISADVANTAGE:
         this.hitProbability = hitProbability * hitProbability;
@@ -74,6 +75,7 @@ public class Attack {
     private Type type = Type.NORMAL;
     private int critOn = 20;
     private double baseHitProbability = 0.60;
+    private boolean elvenAccuracy = false;
 
     private Builder(String expression) {
       requireNonNull(expression, "expression cannot be null");
@@ -92,6 +94,11 @@ public class Attack {
 
     public Builder normal() {
       this.type = Type.NORMAL;
+      return this;
+    }
+
+    public Builder elvenAccuracy() {
+      this.elvenAccuracy = true;
       return this;
     }
 
