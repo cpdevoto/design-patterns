@@ -66,7 +66,13 @@ public class Dice implements DieRollExpression {
   @Override
   public int roll() {
     return IntStream.range(0, number)
-        .map(i -> die.roll())
+        .map(i -> {
+          int r = die.roll();
+          if (rerollOnceThreshold != null && r <= rerollOnceThreshold) {
+            r = die.roll();
+          }
+          return r;
+        })
         .sum();
   }
 
