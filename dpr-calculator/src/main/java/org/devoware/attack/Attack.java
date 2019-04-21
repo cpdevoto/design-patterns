@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 import org.devoware.dice.Dice;
 import org.devoware.dice.DieRollExpression;
@@ -19,6 +20,11 @@ public class Attack {
   private final double critProbability;
   private final double additionalCritDamage;
 
+  private final int critOn;
+  private final double baseHitProbability;
+  private final boolean elvenAccuracy;
+
+
   public static Attack attack(String expression) {
     return new Builder(expression).build();
   }
@@ -26,6 +32,13 @@ public class Attack {
   public static Attack attack(String expression, Consumer<Attack.Builder> consumer) {
     requireNonNull(consumer, "consumer cannot be null");
     Builder builder = new Builder(expression);
+    consumer.accept(builder);
+    return builder.build();
+  }
+
+  public static Attack attack(Attack attack, Consumer<Attack.Builder> consumer) {
+    requireNonNull(consumer, "consumer cannot be null");
+    Builder builder = new Builder(attack);
     consumer.accept(builder);
     return builder.build();
   }
@@ -59,6 +72,10 @@ public class Attack {
         this.critProbability = critProbability;
     }
     this.additionalCritDamage = builder.additionalCritDamage;
+
+    this.critOn = builder.critOn;
+    this.baseHitProbability = builder.baseHitProbability;
+    this.elvenAccuracy = builder.elvenAccuracy;
   }
 
   public double getHitProbability() {
@@ -83,7 +100,7 @@ public class Attack {
   }
 
   public static class Builder {
-    private final DieRollExpression expression;
+    private DieRollExpression expression;
     private Type type = Type.NORMAL;
     private int critOn = 20;
     private double baseHitProbability = 0.60;
@@ -93,6 +110,39 @@ public class Attack {
     private Builder(String expression) {
       requireNonNull(expression, "expression cannot be null");
       this.expression = Dice.parse(expression);
+    }
+
+    private Builder(Attack attack) {
+      this.expression = attack.expression;
+      this.type = attack.type;
+      this.critOn = attack.critOn;
+      this.baseHitProbability = attack.baseHitProbability;
+      this.elvenAccuracy = attack.elvenAccuracy;
+      this.additionalCritDamage = attack.additionalCritDamage;
+    }
+
+    public Builder replaceDamage(String damage) {
+      requireNonNull(damage, "damage");
+      this.expression = Dice.parse(damage);
+      return this;
+    }
+
+    public Builder mutateDamage(UnaryOperator<String> mutator) {
+      requireNonNull(mutator);
+      this.expression = Dice.parse(mutator.apply(expression.toString()));
+      return this;
+    }
+
+    public Builder addDamage(String damage) {
+      requireNonNull(damage, "damage");
+      this.expression = DieRollExpression.plus(this.expression, Dice.parse(damage));
+      return this;
+    }
+
+    public Builder subtractDamage(String damage) {
+      requireNonNull(damage, "damage");
+      this.expression = DieRollExpression.minus(this.expression, Dice.parse(damage));
+      return this;
     }
 
     public Builder advantage() {
@@ -127,6 +177,11 @@ public class Attack {
       return this;
     }
 
+    public Builder removeAdditionalCritDamage() {
+      this.additionalCritDamage = 0;
+      return this;
+    }
+
     public Builder additionalCritDamage(String expression) {
       requireNonNull(expression, "expression cannot be null");
       this.additionalCritDamage = Dice.parse(expression).dpr();
@@ -136,6 +191,30 @@ public class Attack {
     public Builder additionalCritDamage(Attack attack) {
       requireNonNull(attack, "attack cannot be null");
       this.additionalCritDamage = attack.dpr();
+      return this;
+    }
+
+    public Builder addAdditionalCritDamage(String expression) {
+      requireNonNull(expression, "expression cannot be null");
+      this.additionalCritDamage += Dice.parse(expression).dpr();
+      return this;
+    }
+
+    public Builder addAdditionalCritDamage(Attack attack) {
+      requireNonNull(attack, "attack cannot be null");
+      this.additionalCritDamage += attack.dpr();
+      return this;
+    }
+
+    public Builder subtractAdditionalCritDamage(String expression) {
+      requireNonNull(expression, "expression cannot be null");
+      this.additionalCritDamage += Dice.parse(expression).dpr();
+      return this;
+    }
+
+    public Builder subtractAdditionalCritDamage(Attack attack) {
+      requireNonNull(attack, "attack cannot be null");
+      this.additionalCritDamage += attack.dpr();
       return this;
     }
 

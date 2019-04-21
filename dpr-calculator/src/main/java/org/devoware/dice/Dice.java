@@ -78,6 +78,7 @@ public class Dice implements DieRollExpression {
 
   @Override
   public String toString() {
-    return number + "d" + die.type();
+    return number + "d" + die.type()
+        + (rerollOnceThreshold != null ? "ro<" + rerollOnceThreshold : "");
   }
 }

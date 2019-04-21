@@ -140,14 +140,14 @@ public class AttackRoutineTest {
         attack("2d6 + 6", a -> a.advantage()));
     assertThat(routine.dpr(), closeTo(11.603, 0.001));
 
-    System.out.printf("AGAINST BASELINE: %,.2f%n", (11.603 - 8.25) / 8.25 * 100);
+    System.out.printf("AGAINST BASELINE: %,.2f%%%n", (11.603 - 8.25) / 8.25 * 100);
 
     // GWM at level 4
     routine = attackRoutine(
         attack("2d6 + 15", a -> a.advantage().hitModifier(-6)));
     assertThat(routine.dpr(), closeTo(11.902, 0.001));
 
-    System.out.printf("AGAINST BASELINE: %,.2f%n", (11.902 - 8.25) / 8.25 * 100);
+    System.out.printf("AGAINST BASELINE: %,.2f%%%n", (11.902 - 8.25) / 8.25 * 100);
 
   }
 
