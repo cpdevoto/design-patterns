@@ -2,6 +2,7 @@ package org.devoware.attack;
 
 import static org.devoware.attack.Attack.attack;
 import static org.devoware.attack.AttackRoutine.attackRoutine;
+import static org.devoware.attack.AttackRoutine.damageOnAnyHit;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertThat;
 
@@ -67,6 +68,10 @@ public class AttackRoutineTest {
         attack("1d10 + 5 + 1d6"));
     assertThat(routine.dpr(), closeTo(35.4, 0.001));
 
+    routine = attackRoutine(damageOnAnyHit("1d6"),
+        attack("1d6 + 5"),
+        attack("1d6 + 5"));
+    assertThat(routine.dpr(), closeTo(13.831, 0.001));
   }
 
   @Test

@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 
 import org.devoware.attack.Attack;
 import org.devoware.attack.AttackRoutine;
+import org.devoware.dice.DieRollExpression;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeMap;
@@ -78,6 +79,13 @@ public class CharacterBuild {
     public Builder attackRoutineForLevel(int level, Attack... attacks) {
       checkArgument(level >= 1 && level <= 20, "invalid level");
       attackRoutines.put(level, attackRoutine(attacks));
+      return this;
+    }
+
+    public Builder attackRoutineForLevel(int level, DieRollExpression damageOnAnyHit,
+        Attack... attacks) {
+      checkArgument(level >= 1 && level <= 20, "invalid level");
+      attackRoutines.put(level, attackRoutine(damageOnAnyHit, attacks));
       return this;
     }
 

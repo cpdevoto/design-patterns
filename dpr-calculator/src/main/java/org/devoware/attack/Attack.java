@@ -61,6 +61,14 @@ public class Attack {
     this.additionalCritDamage = builder.additionalCritDamage;
   }
 
+  public double getHitProbability() {
+    return hitProbability;
+  }
+
+  public double getCritProbability() {
+    return critProbability;
+  }
+
   public double damageOnHit() {
     return expression.dpr();
   }
