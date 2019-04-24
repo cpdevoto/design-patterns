@@ -338,6 +338,8 @@ public class CharacterBuildTest {
         });
 
     System.out.println(printDpr(rogue, rogue3));
+    System.out.println(printDpr(true, rogue, rogue3));
+
   }
 
 }
