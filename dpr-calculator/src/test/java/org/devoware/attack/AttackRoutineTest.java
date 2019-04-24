@@ -6,6 +6,9 @@ import static org.devoware.attack.AttackRoutine.damageOnAnyHit;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertThat;
 
+import java.util.Iterator;
+
+import org.devoware.dice.Dice;
 import org.junit.Test;
 
 public class AttackRoutineTest {
@@ -68,9 +71,10 @@ public class AttackRoutineTest {
         attack("1d10 + 5 + 1d6"));
     assertThat(routine.dpr(), closeTo(35.4, 0.001));
 
-    routine = attackRoutine(damageOnAnyHit("1d6"),
-        attack("1d6 + 5"),
-        attack("1d6 + 5"));
+    routine = attackRoutine(damageOnAnyHit("3d6"),
+        attack("1d6 + 4"),
+        attack("1d6"));
+    System.out.println(routine.dpr());
     assertThat(routine.dpr(), closeTo(13.831, 0.001));
   }
 
@@ -149,6 +153,27 @@ public class AttackRoutineTest {
 
     System.out.printf("AGAINST BASELINE: %,.2f%%%n", (11.902 - 8.25) / 8.25 * 100);
 
+  }
+
+  @Test
+  public void test() {
+    AttackRoutine routine = attackRoutine(damageOnAnyHit("3d6"),
+        attack("1d6 + 4"),
+        attack("1d6"));
+
+    double damageOnAnyCrit = Dice.parse("3d6").getDice().stream().mapToDouble(Dice::dpr).sum();
+    Iterator<Attack> it = routine.getAttacks().iterator();
+    Attack attack = it.next(); // There has to be at least one attack
+    double anyCritProb = computeAnyCritProb(attack, it);
+    System.out.printf("%,.4f", damageOnAnyCrit * anyCritProb);
+  }
+
+  private double computeAnyCritProb(Attack attack, Iterator<Attack> it) {
+    double critProb = attack.getCritProbability();
+    if (it.hasNext()) {
+      critProb += (1 - attack.getHitProbability()) * computeAnyCritProb(it.next(), it);
+    }
+    return critProb;
   }
 
 }

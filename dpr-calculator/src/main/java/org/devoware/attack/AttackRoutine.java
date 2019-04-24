@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toList;
 import static org.devoware.attack.Attack.attack;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -62,7 +63,8 @@ public class AttackRoutine {
 
   public double dpr() {
     return attacks.stream()
-        .mapToDouble(Attack::dpr)
+        // .mapToDouble(Attack::dpr)
+        .mapToDouble(a -> a.dpr())
         .sum() + computeDamageOnAnyHit();
   }
 
@@ -74,15 +76,29 @@ public class AttackRoutine {
         .mapToDouble(a -> a.getHitProbability())
         .map(prob -> 1 - prob)
         .reduce(1, (a, b) -> a * b);
-    double critProbability = 1 - attacks.stream()
-        .mapToDouble(a -> a.getCritProbability())
-        .map(prob -> 1 - prob)
-        .reduce(1, (a, b) -> a * b);
+
+    double critProbability = computeProbabilityOfAnyCrit();
     double hitDpr = damageOnAnyHit.dpr();
     double critDpr = damageOnAnyHit.getDice().stream().mapToDouble(Dice::dpr).sum();
     double hitDamage = hitProbability * hitDpr;
     double critDamage = critProbability * critDpr;
     return hitDamage + critDamage;
+  }
+
+  // Assumes that you will apply your extra damage the first time you hit, which reduces the
+  // probability of a crit on any hit
+  private double computeProbabilityOfAnyCrit() { //
+    Iterator<Attack> it = attacks.iterator();
+    Attack attack = it.next(); // There has to be at least one attack
+    return computProbabilityOfAnyCrit(attack, it);
+  }
+
+  private double computProbabilityOfAnyCrit(Attack attack, Iterator<Attack> it) {
+    double critProb = attack.getCritProbability();
+    if (it.hasNext()) {
+      critProb += (1 - attack.getHitProbability()) * computProbabilityOfAnyCrit(it.next(), it);
+    }
+    return critProb;
   }
 
   public static class Builder {
