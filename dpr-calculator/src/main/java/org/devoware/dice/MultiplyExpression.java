@@ -6,23 +6,23 @@ import static java.util.stream.Collectors.toList;
 import java.util.List;
 import java.util.stream.Stream;
 
-class PlusExpression implements DieRollExpression {
+class MultiplyExpression implements DieRollExpression {
   DieRollExpression left;
   DieRollExpression right;
 
-  PlusExpression(DieRollExpression left, DieRollExpression right) {
+  MultiplyExpression(DieRollExpression left, DieRollExpression right) {
     this.left = requireNonNull(left, "left cannot be null");
     this.right = requireNonNull(right, "right cannot be null");
   }
 
   @Override
   public double dpr() {
-    return left.dpr() + right.dpr();
+    return left.dpr() * right.dpr();
   }
 
   @Override
   public double roll() {
-    return left.roll() + right.roll();
+    return left.roll() * right.roll();
   }
 
   @Override
@@ -34,7 +34,7 @@ class PlusExpression implements DieRollExpression {
 
   @Override
   public String toString() {
-    return left + " + " + right;
+    return left + " * " + right;
   }
 
 }

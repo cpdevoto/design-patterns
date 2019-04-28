@@ -93,6 +93,9 @@ public class BuildPrinter {
                 String separator = csv ? "," : "     ";
                 int columnWidth = columnWidths.get(j);
                 String s = padRight(outputLines.get(j).get(i), columnWidth);
+                if (csv) {
+                  s = s.trim();
+                }
                 s = (j == 0 ? s : separator + s);
                 return s;
               })
@@ -138,7 +141,7 @@ public class BuildPrinter {
             String level = padLeft(valueOf(entry.getKey()), column1Width);
             print("Level ").print(level).print(":    ").println(value);
           } else {
-            println(value);
+            println(value.trim());
           }
         });
 

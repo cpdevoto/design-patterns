@@ -340,6 +340,202 @@ public class CharacterBuildTest {
     System.out.println(printDpr(rogue, rogue3));
     System.out.println(printDpr(true, rogue, rogue3));
 
+    double percentExtra = 0.525;
+    CharacterBuild rogue4 =
+        createBuild(percentExtra);
+
+    System.out.println(printDpr(true, rogue3));
+
+    System.out.println(printDpr(true, rogue4));
+
+    CharacterBuild rogue5 =
+        characterBuild("Rogue 20 TWF - Advantage", build -> {
+          build.attackRoutineForLevel(1, damageOnAnyHit("1d6"),
+              attack("1d6 + 3", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(3, damageOnAnyHit("2d6"),
+              attack("1d6 + 3", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(4, damageOnAnyHit("2d6"),
+              attack("1d6 + 4", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(5, damageOnAnyHit("3d6"),
+              attack("1d6 + 4", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(7, damageOnAnyHit("4d6"),
+              attack("1d6 + 4", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(8, damageOnAnyHit("4d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(9, damageOnAnyHit("5d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(11, damageOnAnyHit("6d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(13, damageOnAnyHit("7d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(15, damageOnAnyHit("8d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(17, damageOnAnyHit("9d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+          build.attackRoutineForLevel(19, damageOnAnyHit("10d6"),
+              attack("1d6 + 5", a -> a.advantage()),
+              attack("1d6", a -> a.advantage()));
+        });
+
+    CharacterBuild rogue6 =
+        characterBuild("Rogue 20 Booming Blade - Advantage", build -> {
+          build.attackRoutineForLevel(1, damageOnAnyHit("1d6"),
+              attack("1d8 + 3", a -> a.advantage()));
+          build.attackRoutineForLevel(3, damageOnAnyHit("2d6"),
+              attack("1d8 + 3", a -> a.advantage()));
+          build.attackRoutineForLevel(4, damageOnAnyHit("2d6"),
+              attack("1d8 + 4", a -> a.advantage()));
+          build.attackRoutineForLevel(5, damageOnAnyHit("3d6"),
+              attack("1d8 + 1d8 + 4", a -> a.advantage()));
+          build.attackRoutineForLevel(7, damageOnAnyHit("4d6"),
+              attack("1d8 + 1d8 + 4", a -> a.advantage()));
+          build.attackRoutineForLevel(8, damageOnAnyHit("4d6"),
+              attack("1d8 + 1d8 + 5", a -> a.advantage()));
+          build.attackRoutineForLevel(9, damageOnAnyHit("5d6"),
+              attack("1d8 + 1d8 + 5", a -> a.advantage()));
+          build.attackRoutineForLevel(11, damageOnAnyHit("6d6"),
+              attack("1d8 + 2d8 + 5", a -> a.advantage()));
+          build.attackRoutineForLevel(13, damageOnAnyHit("7d6"),
+              attack("1d8 + 2d8 + 5", a -> a.advantage()));
+          build.attackRoutineForLevel(15, damageOnAnyHit("8d6"),
+              attack("1d8 + 2d8 + 5", a -> a.advantage()));
+          build.attackRoutineForLevel(17, damageOnAnyHit("9d6"),
+              attack("1d8 + 3d8 + 5", a -> a.advantage()));
+          build.attackRoutineForLevel(19, damageOnAnyHit("10d6"),
+              attack("1d8 + 3d8 + 5", a -> a.advantage()));
+        });
+
+    System.out.println(printDpr(rogue5));
+    System.out.println(printDpr(rogue6));
+
+    System.out.println(printDpr(true, rogue5));
+    System.out.println(printDpr(true, rogue6));
+
+  }
+
+  @Test
+  public void test_build() {
+    CharacterBuild rogue1 =
+        characterBuild("Rogue 20 TWF", build -> {
+          build.attackRoutineForLevel(1, damageOnAnyHit("1d6"),
+              attack("1d6 + 3"),
+              attack("1d6"));
+          build.attackRoutineForLevel(3, damageOnAnyHit("2d6"),
+              attack("1d6 + 3"),
+              attack("1d6"));
+          build.attackRoutineForLevel(4, damageOnAnyHit("2d6"),
+              attack("1d6 + 4"),
+              attack("1d6"));
+          build.attackRoutineForLevel(5, damageOnAnyHit("3d6"),
+              attack("1d6 + 4"),
+              attack("1d6"));
+          build.attackRoutineForLevel(7, damageOnAnyHit("4d6"),
+              attack("1d6 + 4"),
+              attack("1d6"));
+          build.attackRoutineForLevel(8, damageOnAnyHit("4d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+          build.attackRoutineForLevel(9, damageOnAnyHit("5d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+          build.attackRoutineForLevel(11, damageOnAnyHit("6d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+          build.attackRoutineForLevel(13, damageOnAnyHit("7d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+          build.attackRoutineForLevel(15, damageOnAnyHit("8d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+          build.attackRoutineForLevel(17, damageOnAnyHit("9d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+          build.attackRoutineForLevel(19, damageOnAnyHit("10d6"),
+              attack("1d6 + 5"),
+              attack("1d6"));
+        });
+
+
+    for (int i = 1; i <= 20; i++) {
+      double rogue1Dpr = rogue1.dprByLevel().get(i);
+      double prob = 0.0;
+      double d = 10;
+      CharacterBuild rogue2;
+      double rogue2Dpr = 0.0;
+      boolean firstLoop = true;
+      while (d <= 1000000) {
+        do {
+          double lastDpr = rogue2Dpr;
+          rogue2 = createBuild(prob);
+          rogue2Dpr = rogue2.dprByLevel().get(i);
+          if (firstLoop) {
+            if (rogue2Dpr <= 0) {
+              break;
+            }
+            firstLoop = false;
+          }
+          double dprDiff = rogue1Dpr - rogue2Dpr;
+          // System.out.printf("%,.2f %,.2f %,.4f (%,.4f)%n", rogue1Dpr, rogue2Dpr, dprDiff, prob);
+          if (dprDiff <= 0) {
+            prob -= 1 / d;
+            rogue2Dpr = lastDpr;
+            break;
+          }
+          prob += 1 / d;
+        } while (prob < 1);
+        // System.out.printf("%n%,.2f %,.2f %,.6f (%,.6f)%n", rogue1Dpr, rogue2Dpr,
+        // rogue1Dpr - rogue2Dpr,
+        // prob);
+        if (prob >= 1) {
+          prob = 1;
+        }
+        d *= 10;
+      }
+      System.out.printf("%nLevel %d: %,.4f%%%n", i, prob * 100);
+
+    }
+
+  }
+
+  private CharacterBuild createBuild(double prob) {
+    String probRiderDamage = String.format("%,.4f", prob);
+    return characterBuild("Rogue 20 Booming Blade Situational", build -> {
+      build.attackRoutineForLevel(1, damageOnAnyHit("1d6"),
+          attack("1d8 + 3 + (" + probRiderDamage + " * 1d8nc)"));
+      build.attackRoutineForLevel(3, damageOnAnyHit("2d6"),
+          attack("1d8 + 3 + (" + probRiderDamage + " * 1d8nc)"));
+      build.attackRoutineForLevel(4, damageOnAnyHit("2d6"),
+          attack("1d8 + 4 + (" + probRiderDamage + " * 1d8nc)"));
+      build.attackRoutineForLevel(5, damageOnAnyHit("3d6"),
+          attack("1d8 + 1d8 + 4 + (" + probRiderDamage + " * 2d8nc)"));
+      build.attackRoutineForLevel(7, damageOnAnyHit("4d6"),
+          attack("1d8 + 1d8 + 4 + (" + probRiderDamage + " * 2d8nc)"));
+      build.attackRoutineForLevel(8, damageOnAnyHit("4d6"),
+          attack("1d8 + 1d8 + 5 + (" + probRiderDamage + " * 2d8nc)"));
+      build.attackRoutineForLevel(9, damageOnAnyHit("5d6"),
+          attack("1d8 + 1d8 + 5 + (" + probRiderDamage + " * 2d8nc)"));
+      build.attackRoutineForLevel(11, damageOnAnyHit("6d6"),
+          attack("1d8 + 2d8 + 5 + (" + probRiderDamage + " * 3d8nc)"));
+      build.attackRoutineForLevel(13, damageOnAnyHit("7d6"),
+          attack("1d8 + 2d8 + 5 + (" + probRiderDamage + " * 3d8nc)"));
+      build.attackRoutineForLevel(15, damageOnAnyHit("8d6"),
+          attack("1d8 + 2d8 + 5 + (" + probRiderDamage + " * 3d8nc)"));
+      build.attackRoutineForLevel(17, damageOnAnyHit("9d6"),
+          attack("1d8 + 3d8 + 5 + (" + probRiderDamage + " * 4d8nc)"));
+      build.attackRoutineForLevel(19, damageOnAnyHit("10d6"),
+          attack("1d8 + 3d8 + 5 + (" + probRiderDamage + " * 4d8nc)"));
+    });
   }
 
 }

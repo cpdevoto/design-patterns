@@ -36,12 +36,31 @@ public class Attack {
     return builder.build();
   }
 
+  public static Attack attack(String expression, double baseHitProbability,
+      Consumer<Attack.Builder> consumer) {
+    requireNonNull(consumer, "consumer cannot be null");
+    Builder builder = new Builder(expression, baseHitProbability);
+    consumer.accept(builder);
+    return builder.build();
+  }
+
   public static Attack attack(Attack attack, Consumer<Attack.Builder> consumer) {
+    requireNonNull(attack, "attack cannot be null");
     requireNonNull(consumer, "consumer cannot be null");
     Builder builder = new Builder(attack);
     consumer.accept(builder);
     return builder.build();
   }
+
+  public static Attack attack(Attack attack, double baseHitProbability,
+      Consumer<Attack.Builder> consumer) {
+    requireNonNull(attack, "attack cannot be null");
+    requireNonNull(consumer, "consumer cannot be null");
+    Builder builder = new Builder(attack, baseHitProbability);
+    consumer.accept(builder);
+    return builder.build();
+  }
+
 
   private Attack(Builder builder) {
     this.expression = builder.expression;
@@ -112,13 +131,32 @@ public class Attack {
       this.expression = Dice.parse(expression);
     }
 
+    private Builder(String expression, double baseHitProbability) {
+      requireNonNull(expression, "expression cannot be null");
+      checkArgument(baseHitProbability > 0 && baseHitProbability <= 1,
+          "baseHitPobability must be greater than zero and less than or equal to 1");
+      this.expression = Dice.parse(expression);
+      this.baseHitProbability = baseHitProbability;
+    }
+
     private Builder(Attack attack) {
       this.expression = attack.expression;
       this.type = attack.type;
       this.critOn = attack.critOn;
-      this.baseHitProbability = attack.baseHitProbability;
       this.elvenAccuracy = attack.elvenAccuracy;
       this.additionalCritDamage = attack.additionalCritDamage;
+      this.baseHitProbability = attack.baseHitProbability;
+    }
+
+    private Builder(Attack attack, double baseHitProbability) {
+      checkArgument(baseHitProbability > 0 && baseHitProbability <= 1,
+          "baseHitPobability must be greater than zero and less than or equal to 1");
+      this.expression = attack.expression;
+      this.type = attack.type;
+      this.critOn = attack.critOn;
+      this.elvenAccuracy = attack.elvenAccuracy;
+      this.additionalCritDamage = attack.additionalCritDamage;
+      this.baseHitProbability = baseHitProbability;
     }
 
     public Builder replaceDamage(String damage) {

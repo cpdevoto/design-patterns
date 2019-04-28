@@ -4,9 +4,14 @@ enum TokenType {
   // @formatter:off
   PLUS("'+'"),
   MINUS("'-'"),
+  MUTIPLY("'*'"),
+  LEFT_PAREN("'('"),
+  RIGHT_PAREN("')'"),
   DIE("'d'"),
-  NUMBER("a number"),
+  NUMBER("an integer"),
+  FLOAT("a floating point number"),
   REROLL_ONCE("'ro<'"),
+  NO_CRIT("'nc'"),
   EOE("end of expression");
   // @formatter:off
   

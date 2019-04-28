@@ -64,7 +64,7 @@ public class Dice implements DieRollExpression {
   }
 
   @Override
-  public int roll() {
+  public double roll() {
     return IntStream.range(0, number)
         .map(i -> {
           int r = die.roll();

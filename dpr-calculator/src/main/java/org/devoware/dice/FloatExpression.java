@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-class Modifier implements DieRollExpression {
-  private final int value;
+class FloatExpression implements DieRollExpression {
+  private final double value;
 
-  Modifier(int value) {
+  FloatExpression(double value) {
     this.value = value;
   }
 
@@ -17,7 +17,7 @@ class Modifier implements DieRollExpression {
   }
 
   @Override
-  public int roll() {
+  public double roll() {
     return value;
   }
 
@@ -28,7 +28,7 @@ class Modifier implements DieRollExpression {
 
   @Override
   public String toString() {
-    return String.valueOf(value);
+    return String.format("%,.2f", value);
   }
 
 }

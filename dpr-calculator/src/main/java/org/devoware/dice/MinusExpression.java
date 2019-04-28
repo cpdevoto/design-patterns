@@ -21,7 +21,7 @@ class MinusExpression implements DieRollExpression {
   }
 
   @Override
-  public int roll() {
+  public double roll() {
     return left.roll() - right.roll();
   }
 

@@ -20,7 +20,7 @@ public interface DieRollExpression {
 
   public double dpr();
 
-  public int roll();
+  public double roll();
 
   public List<Dice> getDice();
 
