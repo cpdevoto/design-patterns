@@ -76,6 +76,13 @@ public class CharacterBuild {
       this.name = name;
     }
 
+    public Builder attackRoutineForLevel(int level, AttackRoutine.Builder builder) {
+      checkArgument(level >= 1 && level <= 20, "invalid level");
+      requireNonNull(builder, "builder cannot be null");
+      attackRoutines.put(level, builder.build());
+      return this;
+    }
+
     public Builder attackRoutineForLevel(int level, Attack... attacks) {
       checkArgument(level >= 1 && level <= 20, "invalid level");
       attackRoutines.put(level, attackRoutine(attacks));

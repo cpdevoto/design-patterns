@@ -21,10 +21,16 @@ import com.google.common.collect.Lists;
 public class AttackRoutine {
   private final List<Attack> attacks;
   private final DieRollExpression damageOnAnyHit;
+  private final Attack attackOnAnyCrit;
 
   public static DieRollExpression damageOnAnyHit(String damageOnAnyHit) {
     requireNonNull(damageOnAnyHit, "damageOnAnyHit cannot be null");
     return Dice.parse(damageOnAnyHit);
+  }
+
+  public static Builder builder(Attack... attacks) {
+    return new Builder()
+        .attacks(attacks);
   }
 
   public static AttackRoutine attackRoutine(Attack... attacks) {
@@ -48,6 +54,7 @@ public class AttackRoutine {
 
   private AttackRoutine(Builder builder) {
     this.damageOnAnyHit = builder.damageOnAnyHit;
+    this.attackOnAnyCrit = builder.attackOnAnyCrit;
     this.attacks = ImmutableList.copyOf(builder.attacks);
   }
 
@@ -65,7 +72,19 @@ public class AttackRoutine {
     return attacks.stream()
         // .mapToDouble(Attack::dpr)
         .mapToDouble(a -> a.dpr())
-        .sum() + computeDamageOnAnyHit();
+        .sum() + computeDamageOnAnyHit()
+        + computeDamageOnAnyCrit();
+  }
+
+  private double computeDamageOnAnyCrit() {
+    if (attackOnAnyCrit == null) {
+      return 0;
+    }
+    double critProbability = 1 - attacks.stream()
+        .mapToDouble(Attack::getCritProbability)
+        .map(x -> 1 - x)
+        .reduce(1.0, (x, y) -> x * y);
+    return critProbability * attackOnAnyCrit.dpr();
   }
 
   private double computeDamageOnAnyHit() {
@@ -104,12 +123,21 @@ public class AttackRoutine {
   public static class Builder {
     private List<Attack> attacks = Lists.newArrayList();
     private DieRollExpression damageOnAnyHit;
+    private Attack attackOnAnyCrit;
+
 
     private Builder() {}
 
     private Builder(AttackRoutine routine) {
       this.attacks = routine.attacks;
       this.damageOnAnyHit = routine.damageOnAnyHit;
+      this.attackOnAnyCrit = routine.attackOnAnyCrit;
+    }
+
+    public Builder onAnyCrit(Attack attack) {
+      requireNonNull(attack, "attack cannot be null");
+      this.attackOnAnyCrit = attack;
+      return this;
     }
 
     public Builder damageOnAnyHit(DieRollExpression damage) {

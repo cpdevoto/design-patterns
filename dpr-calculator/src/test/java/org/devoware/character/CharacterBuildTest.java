@@ -6,6 +6,7 @@ import static org.devoware.character.BuildPrinter.printDamageOnHit;
 import static org.devoware.character.BuildPrinter.printDpr;
 import static org.devoware.character.CharacterBuild.characterBuild;
 
+import org.devoware.attack.AttackRoutine;
 import org.junit.Test;
 
 public class CharacterBuildTest {
@@ -507,6 +508,97 @@ public class CharacterBuildTest {
     }
 
   }
+
+  @Test
+  public void test_leugren() {
+    CharacterBuild warlock = characterBuild("Eldritch Blast Warlock", build -> {
+      build.attackRoutineForLevel(1, attack("1d10 + 1d6"));
+      build.attackRoutineForLevel(2, attack("1d10 + 3 + 1d6"));
+      build.attackRoutineForLevel(4, attack("1d10 + 4 + 1d6"));
+      build.attackRoutineForLevel(5, attack("1d10 + 4 + 1d6"), attack("1d10 + 4 + 1d6"));
+      build.attackRoutineForLevel(8, attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"));
+      build.attackRoutineForLevel(11, attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"),
+          attack("1d10 + 5 + 1d6"));
+      build.attackRoutineForLevel(17, attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"),
+          attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"));
+    });
+
+    CharacterBuild leugren = characterBuild("Leugren Bolgrum (Cavalier)", build -> {
+      build.attackRoutineForLevel(1, attack("1d8 + 5"));
+      build.attackRoutineForLevel(4, attack("1d8 + 6"));
+      build.attackRoutineForLevel(5, attack("1d8 + 6"), attack("1d8 + 6"));
+      build.attackRoutineForLevel(6, attack("1d8 + 7"), attack("1d8 + 7"));
+      build.attackRoutineForLevel(11, attack("1d8 + 7"), attack("1d8 + 7"), attack("1d8 + 7"));
+      build.attackRoutineForLevel(20, attack("1d8 + 7"), attack("1d8 + 7"), attack("1d8 + 7"),
+          attack("1d8 + 7"));
+    });
+
+    System.out.println(printDpr(warlock, leugren));
+  }
+
+  @Test
+  public void test_leugren2() {
+    CharacterBuild warlock = characterBuild("Eldritch Blast Warlock", build -> {
+      build.attackRoutineForLevel(1, attack("1d10 + 1d6"));
+      build.attackRoutineForLevel(2, attack("1d10 + 3 + 1d6"));
+      build.attackRoutineForLevel(4, attack("1d10 + 4 + 1d6"));
+      build.attackRoutineForLevel(5, attack("1d10 + 4 + 1d6"), attack("1d10 + 4 + 1d6"));
+      build.attackRoutineForLevel(8, attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"));
+      build.attackRoutineForLevel(11, attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"),
+          attack("1d10 + 5 + 1d6"));
+      build.attackRoutineForLevel(17, attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"),
+          attack("1d10 + 5 + 1d6"), attack("1d10 + 5 + 1d6"));
+    });
+
+    CharacterBuild leugren = characterBuild("Leugren Bolgrum (Barbarian)", build -> {
+      build.attackRoutineForLevel(1, attack("1d12 + 5"));
+      build.attackRoutineForLevel(2, attack("1d12 + 5", a -> a.advantage()));
+      build.attackRoutineForLevel(4,
+          AttackRoutine.builder(attack("1d12 + 15", a -> a.advantage().hitModifier(-6)))
+              .onAnyCrit(attack("1d12 + 15", a -> a.advantage().hitModifier(-6))));
+      build.attackRoutineForLevel(5, AttackRoutine.builder(
+          attack("1d12 + 15", a -> a.advantage().hitModifier(-6)),
+          attack("1d12 + 15", a -> a.advantage().hitModifier(-6)))
+          .onAnyCrit(attack("1d12 + 15", a -> a.advantage().hitModifier(-6))));
+      build.attackRoutineForLevel(8, AttackRoutine.builder(
+          attack("1d12 + 16", a -> a.advantage().hitModifier(-6)),
+          attack("1d12 + 16", a -> a.advantage().hitModifier(-6)))
+          .onAnyCrit(attack("1d12 + 16", a -> a.advantage().hitModifier(-6))));
+      build.attackRoutineForLevel(9, AttackRoutine.builder(
+          attack("1d12 + 17", a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("1d12")),
+          attack("1d12 + 17", a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("1d12")))
+          .onAnyCrit(attack("1d12 + 17",
+              a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("1d12"))));
+      build.attackRoutineForLevel(12, AttackRoutine.builder(
+          attack("1d12 + 17", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("1d12")),
+          attack("1d12 + 17", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("1d12")))
+          .onAnyCrit(attack("1d12 + 17",
+              a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("1d12"))));
+      build.attackRoutineForLevel(13, AttackRoutine.builder(
+          attack("1d12 + 17", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("2d12")),
+          attack("1d12 + 17", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("2d12")))
+          .onAnyCrit(attack("1d12 + 17",
+              a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("2d12"))));
+      build.attackRoutineForLevel(16, AttackRoutine.builder(
+          attack("1d12 + 18", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("2d12")),
+          attack("1d12 + 18", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("2d12")))
+          .onAnyCrit(attack("1d12 + 18",
+              a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("3d12"))));
+      build.attackRoutineForLevel(17, AttackRoutine.builder(
+          attack("1d12 + 18", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("3d12")),
+          attack("1d12 + 18", a -> a.advantage().hitModifier(-5).addAdditionalCritDamage("3d12")))
+          .onAnyCrit(attack("1d12 + 18",
+              a -> a.advantage().hitModifier(-6).addAdditionalCritDamage("3d12"))));
+      build.attackRoutineForLevel(20, AttackRoutine.builder(
+          attack("1d12 + 20", a -> a.advantage().hitModifier(-3).addAdditionalCritDamage("3d12")),
+          attack("1d12 + 20", a -> a.advantage().hitModifier(-3).addAdditionalCritDamage("3d12")))
+          .onAnyCrit(attack("1d12 + 20",
+              a -> a.advantage().hitModifier(-3).addAdditionalCritDamage("3d12"))));
+    });
+
+    System.out.println(printDpr(warlock, leugren));
+  }
+
 
   private CharacterBuild createBuild(double prob) {
     String probRiderDamage = String.format("%,.4f", prob);
