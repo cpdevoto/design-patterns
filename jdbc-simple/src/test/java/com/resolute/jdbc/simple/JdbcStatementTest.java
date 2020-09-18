@@ -1,12 +1,24 @@
 package com.resolute.jdbc.simple;
 
+import static com.resolute.jdbc.simple.QueryHandler.processList;
+import static com.resolute.jdbc.simple.QueryHandler.processObject;
+import static com.resolute.jdbc.simple.QueryHandler.toList;
+import static com.resolute.jdbc.simple.QueryHandler.toObject;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -17,16 +29,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.resolute.jdbc.simple.fixtures.Foo;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class JdbcStatementTest {
   @Mock
@@ -79,6 +81,136 @@ public class JdbcStatementTest {
     assertThat(foos.get(1).getId(), equalTo(2));
     assertThat(foos.get(0).getName(), equalTo("My First Foo"));
     assertThat(foos.get(1).getName(), equalTo("My Second Foo"));
+  }
+
+  @Test
+  public void test_execute_query_with_query_handler_to_list() throws SQLException {
+
+    when(conn.prepareStatement(anyString())).thenReturn(stmt1);
+    when(resultSet.next()).thenReturn(true, true, false);
+    when(resultSet.getInt("id")).thenReturn(1, 2);
+    when(resultSet.getString("name")).thenReturn("My First Foo", "My Second Foo");
+
+    JdbcStatementFactory factory = JdbcStatementFactory.getInstance(dataSource);
+
+    List<Foo> foos = factory.newStatement()
+        .withSql("SELECT * FROM foo WHERE bar_id = ?")
+        .withErrorMessage("A problem occurred while attempting to retrieve foos.")
+        .prepareStatement(s -> {
+          s.setInt(1, 5);
+        })
+        .executeQuery(toList((rowNum, rs) -> {
+          Foo f = Foo.builder()
+              .withId(rs.getInt("id"))
+              .withName(rs.getString("name"))
+              .build();
+          return f;
+        }));
+
+    verify(stmt1, times(1)).setInt(eq(1), eq(5));
+    assertNotNull(foos);
+    assertThat(foos.size(), equalTo(2));
+    assertThat(foos.get(0).getId(), equalTo(1));
+    assertThat(foos.get(1).getId(), equalTo(2));
+    assertThat(foos.get(0).getName(), equalTo("My First Foo"));
+    assertThat(foos.get(1).getName(), equalTo("My Second Foo"));
+
+  }
+
+  @Test
+  public void test_execute_query_with_query_handler_process_list() throws SQLException {
+
+    when(conn.prepareStatement(anyString())).thenReturn(stmt1);
+    when(resultSet.next()).thenReturn(true, true, false);
+    when(resultSet.getInt("id")).thenReturn(1, 2);
+    when(resultSet.getString("name")).thenReturn("My First Foo", "My Second Foo");
+
+    JdbcStatementFactory factory = JdbcStatementFactory.getInstance(dataSource);
+
+    List<Foo> foos = new ArrayList<>();
+    factory.newStatement()
+        .withSql("SELECT * FROM foo WHERE bar_id = ?")
+        .withErrorMessage("A problem occurred while attempting to retrieve foos.")
+        .prepareStatement(s -> {
+          s.setInt(1, 5);
+        })
+        .executeQueryNoReturn(processList((rowNum, rs) -> {
+          Foo f = Foo.builder()
+              .withId(rs.getInt("id"))
+              .withName(rs.getString("name"))
+              .build();
+          foos.add(f);
+        }));
+
+    assertNotNull(foos);
+    assertThat(foos.size(), equalTo(2));
+    assertThat(foos.get(0).getId(), equalTo(1));
+    assertThat(foos.get(1).getId(), equalTo(2));
+    assertThat(foos.get(0).getName(), equalTo("My First Foo"));
+    assertThat(foos.get(1).getName(), equalTo("My Second Foo"));
+
+  }
+
+  @Test
+  public void test_execute_query_with_query_handler_to_object() throws SQLException {
+
+    when(conn.prepareStatement(anyString())).thenReturn(stmt1);
+    when(resultSet.next()).thenReturn(true, false);
+    when(resultSet.getInt("id")).thenReturn(1);
+    when(resultSet.getString("name")).thenReturn("My First Foo");
+
+    JdbcStatementFactory factory = JdbcStatementFactory.getInstance(dataSource);
+
+    Foo foo = factory.newStatement()
+        .withSql("SELECT * FROM foo WHERE bar_id = ?")
+        .withErrorMessage("A problem occurred while attempting to retrieve foos.")
+        .prepareStatement(s -> {
+          s.setInt(1, 5);
+        })
+        .executeQuery(toObject((rowNum, rs) -> {
+          Foo f = Foo.builder()
+              .withId(rs.getInt("id"))
+              .withName(rs.getString("name"))
+              .build();
+          return f;
+        }));
+
+    assertNotNull(foo);
+    assertThat(foo.getId(), equalTo(1));
+    assertThat(foo.getName(), equalTo("My First Foo"));
+
+  }
+
+  @Test
+  public void test_execute_query_with_query_handler_process_object() throws SQLException {
+
+    when(conn.prepareStatement(anyString())).thenReturn(stmt1);
+    when(resultSet.next()).thenReturn(true, false);
+    when(resultSet.getInt("id")).thenReturn(1);
+    when(resultSet.getString("name")).thenReturn("My First Foo");
+
+    JdbcStatementFactory factory = JdbcStatementFactory.getInstance(dataSource);
+
+    List<Foo> foos = new ArrayList<>();
+    factory.newStatement()
+        .withSql("SELECT * FROM foo WHERE bar_id = ?")
+        .withErrorMessage("A problem occurred while attempting to retrieve foos.")
+        .prepareStatement(s -> {
+          s.setInt(1, 5);
+        })
+        .executeQueryNoReturn(processObject((rowNum, rs) -> {
+          Foo f = Foo.builder()
+              .withId(rs.getInt("id"))
+              .withName(rs.getString("name"))
+              .build();
+          foos.add(f);
+        }));
+
+    assertNotNull(foos);
+    assertThat(foos.size(), equalTo(1));
+    assertThat(foos.get(0).getId(), equalTo(1));
+    assertThat(foos.get(0).getName(), equalTo("My First Foo"));
+
   }
 
   @Test
