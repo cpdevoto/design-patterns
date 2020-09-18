@@ -13,14 +13,14 @@ A lightweight library create to eliminate a lot of the boilerplate code involved
 The first step to using the ``jdbc-simple`` library is to create an instance of ``JdbcStatementFactory`` from an instance of ``javax.sql.DataSource`` as follows:
 
 ```java
-JdbcStatementFactory statementFactory = JdbcStatementFactory.getInstance(dataSource);
+JdbcStatementFactory factory = JdbcStatementFactory.getInstance(dataSource);
 ```
 
 ### Execute a SQL query that returns a single object
 
 ```java
 Foo foo = factory.newStatement()
-    .withSql("SELECT * FROM foo WHERE bar_id = ?")
+    .withSql("SELECT * FROM foo WHERE id = ?")
     .withErrorMessage("A problem occurred while attempting to retrieve a foo.")
     .prepareStatement(stmt -> {
         stmt.setInt(1, 42);
@@ -39,7 +39,7 @@ Foo foo = factory.newStatement()
 
 ```java
 factory.newStatement()
-    .withSql("SELECT * FROM foo WHERE bar_id = ?")
+    .withSql("SELECT * FROM foo WHERE id = ?")
     .withErrorMessage("A problem occurred while attempting to retrieve a foo.")
     .prepareStatement(stmt -> {
         stmt.setInt(1, 42);
@@ -58,35 +58,35 @@ factory.newStatement()
 ### Execute a SQL query that returns a list of objects
 
 ```java
-List<Foo> foos = factory.newStatement()
-    .withSql("SELECT * FROM foo WHERE bar_id = ?")
-    .withErrorMessage("A problem occurred while attempting to retrieve foos.")
+List<Bar> bars = factory.newStatement()
+    .withSql("SELECT * FROM bar WHERE foo_id = ?")
+    .withErrorMessage("A problem occurred while attempting to retrieve bars.")
     .prepareStatement(s -> {
-        s.setInt(1, 5);
+        s.setInt(1, 42);
     })
     .executeQuery(QueryHandler.toList(rs -> {
-        Foo f = Foo.builder()
+        Bar b = Bar.builder()
             .withId(rs.getInt("id"))
             .withName(rs.getString("name"))
             .build();
-        return f;
+        return b;
     }));
 ```
 ### Execute a SQL query that processes a list of rows, but does not return anything
 
 ```java
 factory.newStatement()
-    .withSql("SELECT * FROM foo WHERE bar_id = ?")
-    .withErrorMessage("A problem occurred while attempting to retrieve foos.")
+    .withSql("SELECT * FROM bar WHERE foo_id = ?")
+    .withErrorMessage("A problem occurred while attempting to retrieve bars.")
     .prepareStatement(s -> {
-        s.setInt(1, 5);
+        s.setInt(1, 42);
     })
     .executeQuery(QueryHandler.processList(rs -> {
-        Foo f = Foo.builder()
+        Bar b = Bar.builder()
             .withId(rs.getInt("id"))
             .withName(rs.getString("name"))
             .build();
-        System.out.println(f);
+        System.out.println(b);
     }));
 ```
 
