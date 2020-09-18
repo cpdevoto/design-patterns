@@ -24,10 +24,25 @@ public class Result {
     }
   }
 
+  public void processObject(SimpleNoReturnRowMapper mapper)
+      throws SQLException {
+    if (rs.next()) {
+      mapper.mapRow(rs);
+    }
+  }
+
   public <T> T toObject(RowMapper<T> mapper) throws SQLException {
     T entity = null;
     if (rs.next()) {
       entity = mapper.mapRow(1, rs);
+    }
+    return entity;
+  }
+
+  public <T> T toObject(SimpleRowMapper<T> mapper) throws SQLException {
+    T entity = null;
+    if (rs.next()) {
+      entity = mapper.mapRow(rs);
     }
     return entity;
   }
@@ -40,6 +55,12 @@ public class Result {
     }
   }
 
+  public void processList(SimpleNoReturnRowMapper mapper)
+      throws SQLException {
+    while (rs.next()) {
+      mapper.mapRow(rs);
+    }
+  }
 
   public <T> List<T> toList(RowMapper<T> mapper) throws SQLException {
     List<T> entities = new ArrayList<>();
@@ -51,4 +72,12 @@ public class Result {
     return entities;
   }
 
+  public <T> List<T> toList(SimpleRowMapper<T> mapper) throws SQLException {
+    List<T> entities = new ArrayList<>();
+    while (rs.next()) {
+      T entity = mapper.mapRow(rs);
+      entities.add(entity);
+    }
+    return entities;
+  }
 }

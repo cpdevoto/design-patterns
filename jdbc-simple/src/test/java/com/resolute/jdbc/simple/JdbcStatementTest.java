@@ -99,7 +99,7 @@ public class JdbcStatementTest {
         .prepareStatement(s -> {
           s.setInt(1, 5);
         })
-        .executeQuery(toList((rowNum, rs) -> {
+        .executeQuery(toList(rs -> {
           Foo f = Foo.builder()
               .withId(rs.getInt("id"))
               .withName(rs.getString("name"))
@@ -134,7 +134,7 @@ public class JdbcStatementTest {
         .prepareStatement(s -> {
           s.setInt(1, 5);
         })
-        .executeQueryNoReturn(processList((rowNum, rs) -> {
+        .executeQueryNoReturn(processList(rs -> {
           Foo f = Foo.builder()
               .withId(rs.getInt("id"))
               .withName(rs.getString("name"))
@@ -167,7 +167,7 @@ public class JdbcStatementTest {
         .prepareStatement(s -> {
           s.setInt(1, 5);
         })
-        .executeQuery(toObject((rowNum, rs) -> {
+        .executeQuery(toObject(rs -> {
           Foo f = Foo.builder()
               .withId(rs.getInt("id"))
               .withName(rs.getString("name"))
@@ -198,7 +198,7 @@ public class JdbcStatementTest {
         .prepareStatement(s -> {
           s.setInt(1, 5);
         })
-        .executeQueryNoReturn(processObject((rowNum, rs) -> {
+        .executeQueryNoReturn(processObject(rs -> {
           Foo f = Foo.builder()
               .withId(rs.getInt("id"))
               .withName(rs.getString("name"))
