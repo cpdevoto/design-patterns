@@ -596,7 +596,50 @@ public class CharacterBuildTest {
               a -> a.advantage().hitModifier(-3).addAdditionalCritDamage("3d12"))));
     });
 
-    System.out.println(printDpr(warlock, leugren));
+    CharacterBuild beastBarbarian = characterBuild("Beast Barbarian", build -> {
+      build.attackRoutineForLevel(1, attack("1d12 + 5"));
+      build.attackRoutineForLevel(2, attack("1d12 + 5", a -> a.advantage()));
+      build.attackRoutineForLevel(3, attack("1d6 + 5", a -> a.advantage()),
+          attack("1d6 + 5", a -> a.advantage()));
+      build.attackRoutineForLevel(4, attack("1d6 + 5", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 5", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 2", a -> a.advantage().hitModifier(-1)));
+      build.attackRoutineForLevel(5, attack("1d6 + 5", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 5", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 5", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 2", a -> a.advantage().hitModifier(-1)));
+      build.attackRoutineForLevel(8, attack("1d6 + 6", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 6", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 6", a -> a.advantage().hitModifier(-1)),
+          attack("1d6 + 2", a -> a.advantage().hitModifier(-1)));
+      build.attackRoutineForLevel(9,
+          attack("1d6 + 7", a -> a.advantage().hitModifier(-1).addAdditionalCritDamage("1d6")),
+          attack("1d6 + 7", a -> a.advantage().hitModifier(-1).addAdditionalCritDamage("1d6")),
+          attack("1d6 + 7", a -> a.advantage().hitModifier(-1).addAdditionalCritDamage("1d6")),
+          attack("1d6 + 3", a -> a.advantage().hitModifier(-1).addAdditionalCritDamage("1d6")));
+      build.attackRoutineForLevel(12,
+          attack("1d6 + 8", a -> a.advantage().addAdditionalCritDamage("1d6")),
+          attack("1d6 + 8", a -> a.advantage().addAdditionalCritDamage("1d6")),
+          attack("1d6 + 8", a -> a.advantage().addAdditionalCritDamage("1d6")),
+          attack("1d6 + 3", a -> a.advantage().addAdditionalCritDamage("1d6")));
+      build.attackRoutineForLevel(13,
+          attack("1d6 + 8", a -> a.advantage().addAdditionalCritDamage("2d6")),
+          attack("1d6 + 8", a -> a.advantage().addAdditionalCritDamage("2d6")),
+          attack("1d6 + 8", a -> a.advantage().addAdditionalCritDamage("2d6")),
+          attack("1d6 + 3", a -> a.advantage().addAdditionalCritDamage("2d6")));
+      build.attackRoutineForLevel(16,
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("2d6")),
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("2d6")),
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("2d6")),
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("2d6")));
+      build.attackRoutineForLevel(17,
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("3d6")),
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("3d6")),
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("3d6")),
+          attack("1d6 + 9", a -> a.advantage().addAdditionalCritDamage("3d6")));
+    });
+
+    System.out.println(printDpr(warlock, leugren, beastBarbarian));
   }
 
 
