@@ -1,4 +1,4 @@
-package org.dicegolem.parser;
+package org.dicegolem;
 
 import static org.dicegolem.model.fixtures.Assertions.assertRollRange;
 import static org.dicegolem.model.fixtures.Assertions.assertSyntaxError;
@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import org.dicegolem.Dice;
 import org.dicegolem.model.CompositeDice;
 import org.dicegolem.model.DiceRollExpression;
 import org.dicegolem.model.Die;

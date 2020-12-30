@@ -1,4 +1,4 @@
-package org.dicegolem.parser;
+package org.dicegolem;
 
 import static java.util.Objects.requireNonNull;
 

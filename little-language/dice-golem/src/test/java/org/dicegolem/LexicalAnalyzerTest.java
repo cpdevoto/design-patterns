@@ -1,17 +1,17 @@
-package org.dicegolem.parser;
+package org.dicegolem;
 
-import static org.dicegolem.parser.Token.Type.DIE;
-import static org.dicegolem.parser.Token.Type.DROP_HIGHEST;
-import static org.dicegolem.parser.Token.Type.DROP_LOWEST;
-import static org.dicegolem.parser.Token.Type.EOF;
-import static org.dicegolem.parser.Token.Type.KEEP_HIGHEST;
-import static org.dicegolem.parser.Token.Type.KEEP_LOWEST;
-import static org.dicegolem.parser.Token.Type.LEFT_PAREN;
-import static org.dicegolem.parser.Token.Type.MINUS;
-import static org.dicegolem.parser.Token.Type.NUMBER;
-import static org.dicegolem.parser.Token.Type.PLUS;
-import static org.dicegolem.parser.Token.Type.REROLL_ONCE;
-import static org.dicegolem.parser.Token.Type.RIGHT_PAREN;
+import static org.dicegolem.Token.Type.DIE;
+import static org.dicegolem.Token.Type.DROP_HIGHEST;
+import static org.dicegolem.Token.Type.DROP_LOWEST;
+import static org.dicegolem.Token.Type.EOF;
+import static org.dicegolem.Token.Type.KEEP_HIGHEST;
+import static org.dicegolem.Token.Type.KEEP_LOWEST;
+import static org.dicegolem.Token.Type.LEFT_PAREN;
+import static org.dicegolem.Token.Type.MINUS;
+import static org.dicegolem.Token.Type.NUMBER;
+import static org.dicegolem.Token.Type.PLUS;
+import static org.dicegolem.Token.Type.REROLL_ONCE;
+import static org.dicegolem.Token.Type.RIGHT_PAREN;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -19,6 +19,10 @@ import static org.junit.Assert.assertThat;
 import java.io.StringReader;
 import java.util.function.Consumer;
 
+import org.dicegolem.LexicalAnalysisException;
+import org.dicegolem.LexicalAnalyzer;
+import org.dicegolem.NumberToken;
+import org.dicegolem.Token;
 import org.junit.Assert;
 import org.junit.Test;
 

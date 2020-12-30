@@ -1,21 +1,21 @@
-package org.dicegolem.parser;
+package org.dicegolem;
 
 import static java.util.Objects.requireNonNull;
-import static org.dicegolem.parser.Token.Type.DIE;
-import static org.dicegolem.parser.Token.Type.DROP_HIGHEST;
-import static org.dicegolem.parser.Token.Type.EOF;
-import static org.dicegolem.parser.Token.Type.KEEP_HIGHEST;
-import static org.dicegolem.parser.Token.Type.KEEP_LOWEST;
-import static org.dicegolem.parser.Token.Type.LEFT_PAREN;
-import static org.dicegolem.parser.Token.Type.MINUS;
-import static org.dicegolem.parser.Token.Type.PLUS;
-import static org.dicegolem.parser.Token.Type.REROLL_ONCE;
-import static org.dicegolem.parser.Token.Type.RIGHT_PAREN;
+import static org.dicegolem.Token.Type.DIE;
+import static org.dicegolem.Token.Type.DROP_HIGHEST;
+import static org.dicegolem.Token.Type.EOF;
+import static org.dicegolem.Token.Type.KEEP_HIGHEST;
+import static org.dicegolem.Token.Type.KEEP_LOWEST;
+import static org.dicegolem.Token.Type.LEFT_PAREN;
+import static org.dicegolem.Token.Type.MINUS;
+import static org.dicegolem.Token.Type.PLUS;
+import static org.dicegolem.Token.Type.REROLL_ONCE;
+import static org.dicegolem.Token.Type.RIGHT_PAREN;
 
 import java.io.IOException;
 import java.io.StringReader;
 
-import org.dicegolem.parser.Token.Type;
+import org.dicegolem.Token.Type;
 
 class LexicalAnalyzer {
 

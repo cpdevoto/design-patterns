@@ -1,4 +1,4 @@
-package org.dicegolem.parser;
+package org.dicegolem;
 
 class NumberToken extends Token {
 

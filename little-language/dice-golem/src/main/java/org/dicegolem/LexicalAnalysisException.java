@@ -1,4 +1,4 @@
-package org.dicegolem.parser;
+package org.dicegolem;
 
 public class LexicalAnalysisException extends RuntimeException {
 

@@ -5,9 +5,9 @@ import static org.junit.Assert.assertThat;
 
 import java.util.function.Supplier;
 
+import org.dicegolem.Dice;
+import org.dicegolem.SyntaxException;
 import org.dicegolem.model.Die;
-import org.dicegolem.parser.Dice;
-import org.dicegolem.parser.SyntaxException;
 import org.junit.Assert;
 
 public class Assertions {
