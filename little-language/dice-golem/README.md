@@ -21,17 +21,13 @@ public class Main {
     // 5. ro<X: reroll each die once if the first roll of that die is less than or equal to X
 
     // Roll 4d6 and drop the lowest roll
-    DiceRollExpression expression1 = DiceParser.parse("4d6dl1");
-    System.out.println("RESULT1: " + expression1.roll());
+    System.out.println("RESULT1: " + DiceParser.roll("4d6dl1"));
 
     // Roll 2d6 and reroll each die once if the first roll of that die is less than or equal to 2
-    DiceRollExpression expression2 = DiceParser.parse("2d6ro<2");
-    System.out.println("RESULT2: " + expression2.roll());
+    System.out.println("RESULT2: " + DiceParser.parse("2d6ro<2"));
 
     // Roll 1d20 and add 5 to the result
-    DiceRollExpression expression3 = DiceParser.parse("1d20 + 7");
-    System.out.println("RESULT3: " + expression3.roll());
-
+    System.out.println("RESULT3: " + DiceParser.parse("1d20 + 7"));
 
   }
 
