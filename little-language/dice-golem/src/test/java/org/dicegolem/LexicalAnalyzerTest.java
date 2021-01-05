@@ -1,5 +1,7 @@
 package org.dicegolem;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.dicegolem.Token.Type.DIE;
 import static org.dicegolem.Token.Type.DROP_HIGHEST;
 import static org.dicegolem.Token.Type.DROP_LOWEST;
@@ -12,19 +14,11 @@ import static org.dicegolem.Token.Type.NUMBER;
 import static org.dicegolem.Token.Type.PLUS;
 import static org.dicegolem.Token.Type.REROLL_ONCE;
 import static org.dicegolem.Token.Type.RIGHT_PAREN;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
 import java.io.StringReader;
 import java.util.function.Consumer;
 
-import org.dicegolem.LexicalAnalysisException;
-import org.dicegolem.LexicalAnalyzer;
-import org.dicegolem.NumberToken;
-import org.dicegolem.Token;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class LexicalAnalyzerTest {
 
@@ -39,177 +33,177 @@ public class LexicalAnalyzerTest {
 
       // Token 1: NUMBER(4)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(4));
+      assertThat(numToken.getValue()).isEqualTo(4);
 
       // Token 2: DIE
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(DIE));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(DIE);
 
       // Token 3: NUMBER(6)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(6));
+      assertThat(numToken.getValue()).isEqualTo(6);
 
       // Token 4: KEEP_HIGHEST
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(KEEP_HIGHEST));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(KEEP_HIGHEST);
 
       // Token 5: NUMBER(3)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(3));
+      assertThat(numToken.getValue()).isEqualTo(3);
 
       // Token 6: REROLL_ONCE
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(REROLL_ONCE));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(REROLL_ONCE);
 
       // Token 7: NUMBER(2)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(2));
+      assertThat(numToken.getValue()).isEqualTo(2);
 
       // Token 8: PLUS
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(PLUS));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(PLUS);
 
       // Token 9: LEFT_PAREN
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(LEFT_PAREN));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(LEFT_PAREN);
 
       // Token 10: NUMBER(2)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(2));
+      assertThat(numToken.getValue()).isEqualTo(2);
 
       // Token 11: DIE
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(DIE));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(DIE);
 
       // Token 12: NUMBER(4)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(4));
+      assertThat(numToken.getValue()).isEqualTo(4);
 
       // Token 13: KEEP_LOWEST
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(KEEP_LOWEST));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(KEEP_LOWEST);
 
       // Token 14: NUMBER(1)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(1));
+      assertThat(numToken.getValue()).isEqualTo(1);
 
       // Token 15: MINUS
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(MINUS));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(MINUS);
 
       // Token 16: NUMBER(2)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(2));
+      assertThat(numToken.getValue()).isEqualTo(2);
 
       // Token 17: DIE
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(DIE));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(DIE);
 
       // Token 18: NUMBER(20)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(20));
+      assertThat(numToken.getValue()).isEqualTo(20);
 
       // Token 19: DROP_LOWEST
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(DROP_LOWEST));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(DROP_LOWEST);
 
       // Token 20: NUMBER(1)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(1));
+      assertThat(numToken.getValue()).isEqualTo(1);
 
       // Token 21: PLUS
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(PLUS));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(PLUS);
 
       // Token 22: NUMBER(3)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(3));
+      assertThat(numToken.getValue()).isEqualTo(3);
 
       // Token 23: DIE
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(DIE));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(DIE);
 
       // Token 24: NUMBER(20)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(20));
+      assertThat(numToken.getValue()).isEqualTo(20);
 
       // Token 25: DROP_HIGHEST
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(DROP_HIGHEST));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(DROP_HIGHEST);
 
       // Token 26: NUMBER(2)
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(NUMBER));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(NUMBER);
       numToken = NumberToken.class.cast(token);
-      assertThat(numToken.getValue(), equalTo(2));
+      assertThat(numToken.getValue()).isEqualTo(2);
 
       // Token 27: RIGHT_PAREN
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(RIGHT_PAREN));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(RIGHT_PAREN);
 
       // Token 28: EOF
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(EOF));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(EOF);
 
       // Test that nextToken() just keeps returning EOF
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(EOF));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(EOF);
       token = lexer.nextToken();
-      assertThat(token, notNullValue());
-      assertThat(token.getType(), equalTo(EOF));
+      assertThat(token).isNotNull();
+      assertThat(token.getType()).isEqualTo(EOF);
 
     });
 
@@ -236,19 +230,19 @@ public class LexicalAnalyzerTest {
           token = lexer.nextToken();
         } while (token.getType() != EOF);
       });
-      Assert.fail("Expected a LexicalAnalysisException");
+      fail("Expected a LexicalAnalysisException");
     } catch (LexicalAnalysisException e) {
-      String message = e.getMessage();
-      String illegalCharacterString = "'" + illegalCharacter + "'";
-      assertThat(
-          "Expected an error message containing the substring \"" + illegalCharacterString
-              + "\" but found the following error message instead: " + message,
-          message.indexOf(illegalCharacterString) != -1, equalTo(true));
-      String positionString = "at line " + line + ", character " + pos;
-      assertThat(
-          "Expected an error message containing the substring \"" + positionString
-              + "\" but found the following error message instead: " + message,
-          message.indexOf(positionString) != -1, equalTo(true));
+      String actualMessage = e.getMessage();
+
+      String expectedIllegalCharacterString = "'" + illegalCharacter + "'";
+      assertThat(actualMessage.indexOf(expectedIllegalCharacterString)).isNotEqualTo(-1)
+          .as("Expected an error message containing the substring \"%s\" but found the following error message instead: %s",
+              expectedIllegalCharacterString, actualMessage);
+
+      String expectedPositionString = "at line " + line + ", character " + pos;
+      assertThat(actualMessage.indexOf(expectedPositionString)).isNotEqualTo(-1)
+          .as("Expected an error message containing the substring \"%s\" but found the following error message instead: %s",
+              expectedPositionString, actualMessage);
 
     }
 

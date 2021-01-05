@@ -1,14 +1,13 @@
 package org.dicegolem.model.fixtures;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.function.Supplier;
 
 import org.dicegolem.Dice;
 import org.dicegolem.SyntaxException;
 import org.dicegolem.model.Die;
-import org.junit.Assert;
 
 public class Assertions {
 
@@ -16,59 +15,56 @@ public class Assertions {
       String expectedMessageFragment) {
     try {
       Dice.parse(expression);
-      Assert.fail("Expected a SyntaxException");
+      fail("Expected a SyntaxException");
     } catch (SyntaxException e) {
-      String message = e.getMessage();
-      assertThat(
-          "Expected an error message containing the substring \"" + expectedMessageFragment
-              + "\" but found the following error message instead: " + message,
-          message.indexOf(expectedMessageFragment) != -1, equalTo(true));
+      String actualMessage = e.getMessage();
+      assertThat(actualMessage.indexOf(expectedMessageFragment)).isNotEqualTo(-1)
+          .as("Expected an error message containing the substring \"" + expectedMessageFragment
+              + "\" but found the following error message instead: " + actualMessage);
       String positionString = "at line " + line + ", character " + pos;
-      assertThat(
-          "Expected an error message containing the substring \"" + positionString
-              + "\" but found the following error message instead: " + message,
-          message.indexOf(positionString) != -1, equalTo(true));
+      assertThat(actualMessage.indexOf(positionString)).isNotEqualTo(-1)
+          .as("Expected an error message containing the substring \"%s\" but found the following error message instead: %s",
+              positionString, actualMessage);
     }
 
   }
 
-  public static void assertRollRange(Supplier<Integer> supplier, int minValue, int maxValue) {
-    int minRoll = Integer.MAX_VALUE;
-    int maxRoll = Integer.MIN_VALUE;
+  public static void assertRollRange(Supplier<Integer> supplier, int expectedMin, int expectedMax) {
+    int actualMin = Integer.MAX_VALUE;
+    int actualMax = Integer.MIN_VALUE;
     for (int i = 0; i < 10000000; i++) {
       int roll = supplier.get();
-      if (roll < minRoll) {
-        minRoll = roll;
+      if (roll < actualMin) {
+        actualMin = roll;
       }
-      if (roll > maxRoll) {
-        maxRoll = roll;
+      if (roll > actualMax) {
+        actualMax = roll;
       }
     }
-    assertThat("Expected a minimum value of " + minValue + " but got a minimum value of " + minRoll,
-        minRoll, equalTo(minValue));
-    assertThat("Expected a maximum value of " + maxValue + " but got a maximum value of " + maxRoll,
-        maxRoll, equalTo(maxValue));
+    assertThat(actualMin).isEqualTo(expectedMin)
+        .as("Expected a minimum value of %d but got a minimum value of %d", expectedMin, actualMin);
+    assertThat(actualMax).isEqualTo(expectedMax)
+        .as("Expected a maximum value of %d but got a maximum value of %d", expectedMax, actualMax);
   }
 
   public static void assertDieRange(Die die) {
-    int minRoll = Integer.MAX_VALUE;
-    int maxRoll = Integer.MIN_VALUE;
+    int actualMin = Integer.MAX_VALUE;
+    int actualMax = Integer.MIN_VALUE;
     for (int i = 0; i < 10000000; i++) {
       int roll = die.roll();
-      if (roll < minRoll) {
-        minRoll = roll;
+      if (roll < actualMin) {
+        actualMin = roll;
       }
-      if (roll > maxRoll) {
-        maxRoll = roll;
+      if (roll > actualMax) {
+        actualMax = roll;
       }
     }
-    assertThat("Invalid range for " + die
-        + ": expected a minimum value of 1 but got a minimum value of " + minRoll, minRoll,
-        equalTo(1));
-    assertThat(
-        "Invalid range for " + die + ": expected a maximum value of " + die.getType()
-            + " but got a maximum value of " + maxRoll,
-        maxRoll, equalTo(die.getType()));
+    assertThat(actualMin).isEqualTo(1)
+        .as("Invalid range for %s: expected a minimum value of 1 but got a minimum value of %d",
+            die, actualMin);
+    assertThat(actualMax).isEqualTo(die.getType())
+        .as("Invalid range for %s: expected a maximum value of %d but got a minimum value of %d",
+            die, die.getType(), actualMax);
   }
 
 

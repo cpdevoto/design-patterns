@@ -1,11 +1,9 @@
 package org.dicegolem.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.dicegolem.model.fixtures.Assertions.assertDieRange;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DieTest {
 
@@ -20,29 +18,29 @@ public class DieTest {
   @Test
   public void test_get() {
     Die die = Die.get(4);
-    assertThat(die, notNullValue());
-    assertThat(die.getType(), equalTo(4));
+    assertThat(die).isNotNull();
+    assertThat(die.getType()).isEqualTo(4);
 
     die = Die.get(54);
-    assertThat(die, notNullValue());
-    assertThat(die.getType(), equalTo(54));
+    assertThat(die).isNotNull();
+    assertThat(die.getType()).isEqualTo(54);
   }
 
   @Test
   public void test_values() {
     int numDice = Die.values().size();
     Die.get(100);
-    assertThat("Expected the size of the Die cache to remain the same", Die.values().size(),
-        equalTo(numDice));
+    assertThat(Die.values().size()).isEqualTo(numDice)
+        .as("Expected the size of the Die cache to remain the same");
     Die.get(121);
     int newNumDice = Die.values().size();
-    assertThat("Expected a new Die object to be added to the Die cache", newNumDice > numDice,
-        equalTo(true));
+    assertThat(newNumDice).isGreaterThan(numDice)
+        .as("Expected a new Die object to be added to the Die cache");
     int oldType = -1;
     for (Die d : Die.values()) {
       if (oldType != -1) {
-        assertThat("Expected values() to return the Die objects sorted by type ascending",
-            oldType < d.getType(), equalTo(true));
+        assertThat(oldType).isLessThan(d.getType())
+            .as("Expected values() to return the Die objects sorted by type ascending");
       }
       oldType = d.getType();
     }
@@ -51,7 +49,7 @@ public class DieTest {
   @Test
   public void test_to_string() {
     for (Die die : Die.values()) {
-      assertThat(die.toString(), equalTo("D" + die.getType()));
+      assertThat(die.toString()).isEqualTo("D" + die.getType());
     }
   }
 
