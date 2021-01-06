@@ -1,5 +1,12 @@
 package com.resolute.jdbc.simple;
 
+import static java.util.Objects.requireNonNull;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -8,6 +15,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 public class DaoUtils {
   public static ThreadLocal<Calendar> UTC_CAL = new ThreadLocal<Calendar>() {
@@ -96,6 +106,47 @@ public class DaoUtils {
     return result;
   }
 
+  public static void executeSqlScript(DataSource dataSource, String fileName)
+      throws IOException, SQLException {
+    requireNonNull(dataSource, "dataSource cannot be null");
+    requireNonNull(fileName, "fileName cannot be null");
+    execSqlScript(dataSource, null, fileName);
+  }
+
+  public static void executeSqlScript(DataSource dataSource, Class<?> fileLocatorClass,
+      String fileName) throws IOException, SQLException {
+    requireNonNull(dataSource, "dataSource cannot be null");
+    requireNonNull(fileLocatorClass, "fileLocatorClass cannot be null");
+    requireNonNull(fileName, "fileName cannot be null");
+    execSqlScript(dataSource, fileLocatorClass, fileName);
+  }
+
+  private static void execSqlScript(DataSource dataSource, Class<?> fileLocatorClass,
+      String fileName) throws IOException, SQLException {
+    try (Connection connection = dataSource.getConnection();
+        java.sql.Statement statement = connection.createStatement();) {
+
+      String sqlfileContent = null;
+      if (fileLocatorClass != null) {
+        try (InputStream inputStream = fileLocatorClass.getResourceAsStream(fileName)) {
+          sqlfileContent = new BufferedReader(new InputStreamReader(inputStream)).lines()
+              .collect(Collectors.joining("\n"));
+        }
+      } else {
+        try (InputStream inputStream =
+            DaoUtils.class.getClassLoader().getResourceAsStream(fileName)) {
+          sqlfileContent = new BufferedReader(new InputStreamReader(inputStream)).lines()
+              .collect(Collectors.joining("\n"));
+        }
+      }
+
+      if (sqlfileContent != null) {
+        statement.execute(sqlfileContent);
+      }
+
+    }
+
+  }
 
   private DaoUtils() {}
 

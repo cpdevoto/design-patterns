@@ -4,9 +4,9 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Optional;
 
-public class Foo {
+public class Bar {
   public static enum Column {
-    ID("id"), BAR_ID("bar_id"), NAME("name");
+    ID("id"), NAME("name");
 
     private final String name;
 
@@ -20,29 +20,23 @@ public class Foo {
   }
 
   private final Integer id;
-  private final Integer barId;
   private final String name;
 
   public static Builder builder() {
     return new Builder();
   }
 
-  public static Builder builder(Foo foo) {
+  public static Builder builder(Bar foo) {
     return new Builder(foo);
   }
 
-  private Foo(Builder builder) {
+  private Bar(Builder builder) {
     this.id = builder.id;
-    this.barId = builder.barId;
     this.name = builder.name;
   }
 
   public Optional<Integer> getId() {
     return Optional.ofNullable(id);
-  }
-
-  public Optional<Integer> getBarId() {
-    return Optional.ofNullable(barId);
   }
 
   public String getName() {
@@ -53,7 +47,6 @@ public class Foo {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((barId == null) ? 0 : barId.hashCode());
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
@@ -67,12 +60,7 @@ public class Foo {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    Foo other = (Foo) obj;
-    if (barId == null) {
-      if (other.barId != null)
-        return false;
-    } else if (!barId.equals(other.barId))
-      return false;
+    Bar other = (Bar) obj;
     if (id == null) {
       if (other.id != null)
         return false;
@@ -88,17 +76,16 @@ public class Foo {
 
   @Override
   public String toString() {
-    return "Foo [id=" + id + ", barId=" + barId + ", name=" + name + "]";
+    return "Bar [id=" + id + ", name=" + name + "]";
   }
 
   public static class Builder {
     private Integer id;
-    private Integer barId;
     private String name;
 
     private Builder() {}
 
-    private Builder(Foo foo) {
+    private Builder(Bar foo) {
       this.id = foo.id;
       this.name = foo.name;
     }
@@ -108,19 +95,14 @@ public class Foo {
       return this;
     }
 
-    public Builder withBarId(int barId) {
-      this.barId = barId;
-      return this;
-    }
-
     public Builder withName(String name) {
       this.name = requireNonNull(name, "name cannot be null");
       return this;
     }
 
-    public Foo build() {
+    public Bar build() {
       requireNonNull(name, "name cannot be null");
-      return new Foo(this);
+      return new Bar(this);
     }
 
   }

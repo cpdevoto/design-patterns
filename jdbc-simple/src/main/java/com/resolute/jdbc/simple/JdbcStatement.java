@@ -1,17 +1,18 @@
 package com.resolute.jdbc.simple;
 
+import static java.util.Objects.requireNonNull;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Optional;
 
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.util.Objects.requireNonNull;
 
 public class JdbcStatement {
   private static Logger log = LoggerFactory.getLogger(JdbcStatementFactory.class);
@@ -240,6 +241,43 @@ public class JdbcStatement {
   }
 
   /**
+   * Use to execute a Batch SQL statement and return all generated keys. Before calling this method,
+   * you must invoke the {@link #withSql(String) withSql}, {@link #withErrorMessage(String)
+   * withErrorMessage} methods. You may should also invoke the {@link #prepareStatement(SqlConsumer)
+   * prepareStatement} method to add batch parameters.
+   * 
+   * @return the current result as an update count or -1 if the current result is a ResultSet object
+   *         or there are no more results
+   */
+  public int[] executeBatchAndReturnPkValues() {
+    requireNonNull(sql, "sql cannot be null");
+    requireNonNull(errorMessage, "errorMessage cannot be null");
+
+    try (Connection conn = dataSource.getConnection()) {
+      try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        if (preparedStatementHandler.isPresent()) {
+          preparedStatementHandler.get().accept(stmt);
+        }
+        int[] counts = stmt.executeBatch();
+
+        int[] ids = new int[counts.length];
+        ResultSet rs = stmt.getGeneratedKeys();
+        int idx = 0;
+        while (rs.next()) {
+          ids[idx++] = rs.getInt(1);
+        }
+        return ids;
+      }
+    } catch (Exception e) {
+      if (e instanceof DataAccessException) {
+        throw DataAccessException.class.cast(e);
+      }
+      throw new DataAccessException(errorMessage,
+          e);
+    }
+  }
+
+  /**
    * Use to execute a SQL statement within the context of a larger transaction. Before calling this
    * method you must invoke the {@link #withSql(String) withSql} method. You may optionally also
    * invoke the {@link #prepareStatement(SqlConsumer) prepareStatement} method as needed.
@@ -260,6 +298,57 @@ public class JdbcStatement {
       return stmt.getUpdateCount();
     }
   }
+
+  /**
+   * Use to execute a Batch SQL statement within the context of a larger transaction. Before calling
+   * this method, you must invoke the {@link #withSql(String) withSql} method. You should also
+   * invoke the {@link #prepareStatement(SqlConsumer) prepareStatement} method to add batch
+   * parameters.
+   * 
+   * @return the current result as an update count or -1 if the current result is a ResultSet object
+   *         or there are no more results
+   */
+  public int[] executeBatchWithConnection(Connection conn) throws SQLException {
+    requireNonNull(conn, "conn cannot be null");
+    requireNonNull(sql, "sql cannot be null");
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+      if (preparedStatementHandler.isPresent()) {
+        preparedStatementHandler.get().accept(stmt);
+      }
+      return stmt.executeBatch();
+    }
+  }
+
+  /**
+   * Use to execute a Batch SQL statement and return all generated keys. Before calling this method,
+   * you must invoke the {@link #withSql(String) withSql}, {@link #withErrorMessage(String)
+   * withErrorMessage} methods. You may should also invoke the {@link #prepareStatement(SqlConsumer)
+   * prepareStatement} method to add batch parameters.
+   * 
+   * @return the current result as an update count or -1 if the current result is a ResultSet object
+   *         or there are no more results
+   */
+  public int[] executeBatchWithConnectionAndReturnPkValues(Connection conn) throws SQLException {
+    requireNonNull(conn, "conn cannot be null");
+    requireNonNull(sql, "sql cannot be null");
+
+    try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+      if (preparedStatementHandler.isPresent()) {
+        preparedStatementHandler.get().accept(stmt);
+      }
+      int[] counts = stmt.executeBatch();
+
+      int[] ids = new int[counts.length];
+      ResultSet rs = stmt.getGeneratedKeys();
+      int idx = 0;
+      while (rs.next()) {
+        ids[idx++] = rs.getInt(1);
+      }
+      return ids;
+    }
+  }
+
 
   /**
    * Use to execute a series of SQL statements together as a single transaction. Before calling this

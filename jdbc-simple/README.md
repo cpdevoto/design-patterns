@@ -44,7 +44,7 @@ factory.newStatement()
     .prepareStatement(stmt -> {
         stmt.setInt(1, 42);
     })
-    .executeQuery(QueryHandler.processObject(rs -> {
+    .executeQueryNoReturn(QueryHandler.processObject(rs -> {
         Foo f = Foo.builder()
             .withId(rs.getInt("id"))
             .withName(rs.getString("name"))
@@ -81,7 +81,7 @@ factory.newStatement()
     .prepareStatement(s -> {
         s.setInt(1, 42);
     })
-    .executeQuery(QueryHandler.processList(rs -> {
+    .executeQueryNoReturn(QueryHandler.processList(rs -> {
         Bar b = Bar.builder()
             .withId(rs.getInt("id"))
             .withName(rs.getString("name"))

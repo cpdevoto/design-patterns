@@ -1,0 +1,20 @@
+-----------------
+-- TEST TABLES --
+-----------------
+
+DROP TABLE IF EXISTS bar;
+DROP TABLE IF EXISTS foo;
+
+CREATE TABLE bar (
+  id SERIAL PRIMARY KEY,
+  name CHARACTER VARYING NOT NULL UNIQUE CHECK (name <> '')
+);
+
+
+CREATE TABLE foo (
+  id SERIAL PRIMARY KEY,
+  bar_id INTEGER REFERENCES bar, 
+  name CHARACTER VARYING NOT NULL UNIQUE CHECK (name <> '')
+);
+
+

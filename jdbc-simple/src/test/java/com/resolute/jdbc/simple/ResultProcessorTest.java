@@ -1,24 +1,21 @@
 package com.resolute.jdbc.simple;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertThat;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 public class ResultProcessorTest {
   private RowMapper<DataObject> mapper;
 
-  @Before
+  @BeforeEach
   public void setup() {
     mapper = new RowMapper<DataObject>() {
 
@@ -39,7 +36,7 @@ public class ResultProcessorTest {
     Result processor = new Result(rs);
 
     DataObject obj = processor.toObject(mapper);
-    assertThat(obj, equalTo(new DataObject(1, "value1")));
+    assertDataObject(obj, createDataObject(1, "value1"));
 
     rs = mock(ResultSet.class);
     when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(false);
@@ -48,7 +45,7 @@ public class ResultProcessorTest {
     processor = new Result(rs);
 
     obj = processor.toObject(mapper);
-    assertThat(obj, equalTo(new DataObject(1, "value1")));
+    assertDataObject(obj, createDataObject(1, "value1"));
   }
 
   @Test
@@ -60,10 +57,31 @@ public class ResultProcessorTest {
     Result processor = new Result(rs);
 
     List<DataObject> obj = processor.toList(mapper);
-    assertThat(obj.size(), equalTo(2));
-    assertThat(obj.get(0), equalTo(new DataObject(1, "value1")));
-    assertThat(obj.get(1), equalTo(new DataObject(2, "value2")));
+    assertDataObjects(obj,
+        createDataObject(1, "value1"),
+        createDataObject(2, "value2"));
   }
+
+  // ------------------
+  // Helper Functions
+  // ------------------
+
+  private static void assertDataObjects(List<DataObject> actual, DataObject... expected) {
+    assertThat(actual).isNotNull()
+        .containsExactly(expected);
+  }
+
+  private static void assertDataObject(DataObject actual, DataObject expected) {
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  private static DataObject createDataObject(int rowNumber, String value) {
+    return new DataObject(rowNumber, value);
+  }
+
+  // ------------------
+  // Helper Classes
+  // ------------------
 
   private static class DataObject {
     private int rowNumber;
