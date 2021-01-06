@@ -507,7 +507,7 @@ public class JdbcStatementTest {
                 s.addBatch();
               })
               .executeBatch();
-          assertThat(result).isNotNull().hasSize(2);
+          assertThat(result).isNotNull().containsExactly(1, 1);
 
 
           List<Foo> foos = retrieveFoos(dataSource);
@@ -577,7 +577,7 @@ public class JdbcStatementTest {
                   s.addBatch();
                 })
                 .executeBatchWithConnection(conn);
-            assertThat(result).isNotNull().hasSize(2);
+            assertThat(result).isNotNull().containsExactly(1, 1);
 
 
             List<Foo> foos = retrieveFoos(dataSource);
