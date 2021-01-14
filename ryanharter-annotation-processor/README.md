@@ -44,5 +44,10 @@ After you set up the client project in Eclipse, you will need to perform the fol
   * After running the Gradle tasks, right-click on the project node within the Package Explorer and select ``Refresh`` within the result context menu.
   * Use this newly created Run Configuration any time you want to invoke the annotation processor from within your IDE.
   
+If you wish to make modifications to the generated file:
+
+  * Move the generated file from the ``src/main/generated`` directory to the ``src/main/java`` directory.
+  * Find the class containing the ``@Builder`` annotation, and just comment out the annotation. 
+  * Later on, if you want to regenerate the class, delete the generated file from the ``src/main/java`` directory, uncomment the ``@Builder`` annotation, and relaunch your Gradle Run Configuration.  
   
         
