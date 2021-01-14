@@ -41,6 +41,7 @@ After you set up the client project in Eclipse, you will need to perform the fol
   *  Within the right pane of the Run Configurations dialog, select the ``Project Settings`` tab, and set the following properties:
     * **Gradle distribution:** Make sure the ``Gradle Wrapper`` radio button is selected.
   * Within the right pane of the Run Configurations dialog, click on the ``Run`` button that appears on the bottom-right corner.
+  * After running the Gradle tasks, right-click on the project node within the Package Explorer and select ``Refresh`` within the result context menu.
   * Use this newly created Run Configuration any time you want to invoke the annotation processor from within your IDE.
   
   

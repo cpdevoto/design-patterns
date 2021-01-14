@@ -70,7 +70,7 @@ public class BuilderProcessor extends AbstractProcessor {
       process(el);
     }
 
-    return false;
+    return true;
   }
 
   // ------------------
