@@ -76,13 +76,13 @@ After you set up the client project in Eclipse, you will need to perform the fol
   * Within left tree pane of the Run Configurations dialog, right-click on the ``Gradle Project`` node and select ``New configuration`` from the resulting context menu.
   * Within the right pane of the Run Configurations dialog, select the ``Gradle Tasks`` tab, and set the following properties:
     * **Name:** Give your run configuration any name you want; I always use the name of the project.
-    * **Gradle Tasks:** ``clean compileJava``
+    * **Gradle Tasks:** ``compileJava``
     * **Working Directory:** Click on the ``Workspace...`` button, and select your client project from the resulting dialog.
     * Make sure that ``Show Execution View`` and ``Show Console`` are both checked.
   *  Within the right pane of the Run Configurations dialog, select the ``Project Settings`` tab, and set the following properties:
     * **Gradle distribution:** Make sure the ``Gradle Wrapper`` radio button is selected.
   *  Within the right pane of the Run Configurations dialog, select the ``Arguments`` tab, and set the following properties:
-    * **Program Arguments:** ``--refresh-dependencies``
+    * **Program Arguments:** ``--refresh-dependencies`` (WARNING: This can severely slow your build down, so only do it if you need to pull down a more recent copy of a dependency)
     
   * Within the right pane of the Run Configurations dialog, click on the ``Run`` button that appears on the bottom-right corner.
   * After running the Gradle tasks, right-click on the project node within the Package Explorer and select ``Refresh`` within the result context menu.
