@@ -47,6 +47,8 @@ public class Employee {
     return username;
   }
 
+  // Inserting some custom code here!
+
   @Override
   public int hashCode() {
     final int prime = 31;
