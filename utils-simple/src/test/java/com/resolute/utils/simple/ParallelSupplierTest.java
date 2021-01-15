@@ -2,11 +2,8 @@ package com.resolute.utils.simple;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.Map;
@@ -14,10 +11,9 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
-
 
 public class ParallelSupplierTest {
 
@@ -32,8 +28,7 @@ public class ParallelSupplierTest {
         .withMapper(input -> input)
         .get();
 
-    assertThat(outputs.size(), equalTo(3));
-    assertThat(outputs, hasItems("one", "two", "three"));
+    assertThat(outputs).containsOnly("one", "two", "three");
 
   }
 
@@ -42,7 +37,8 @@ public class ParallelSupplierTest {
     List<String> inputs = ImmutableList.of("one", "two", "three");
 
     ExecutorService workers = Executors.newFixedThreadPool(3);
-    try {
+
+    assertThatThrownBy(() -> {
       ParallelSupplier.<String, String>newParallelSupplier()
           .withWorkers(workers)
           .withInputs(inputs)
@@ -53,10 +49,9 @@ public class ParallelSupplierTest {
             return input;
           })
           .get();
-      fail("Expected a CompletionException");
-    } catch (CompletionException e) {
-      assertThat(e.getCause(), instanceOf(IllegalArgumentException.class));
-    }
+    }).isInstanceOf(CompletionException.class)
+        .hasCauseInstanceOf(IllegalArgumentException.class);
+
   }
 
   @Test
@@ -70,15 +65,14 @@ public class ParallelSupplierTest {
         .withFlatMapper(input -> ImmutableList.of(input, input))
         .get();
 
-    assertThat(outputs.size(), equalTo(6));
-    assertThat(outputs, hasItems("one", "two", "three"));
+    assertThat(outputs).hasSize(6).contains("one", "two", "three");
 
     Map<String, Long> counts =
         outputs.stream().collect(groupingBy(e -> e, counting()));
 
-    assertThat(counts.get("one"), equalTo(2L));
-    assertThat(counts.get("two"), equalTo(2L));
-    assertThat(counts.get("three"), equalTo(2L));
+    assertThat(counts.get("one")).isEqualTo(2L);
+    assertThat(counts.get("two")).isEqualTo(2L);
+    assertThat(counts.get("three")).isEqualTo(2L);
 
   }
 
@@ -87,7 +81,8 @@ public class ParallelSupplierTest {
     List<String> inputs = ImmutableList.of("one", "two", "three");
 
     ExecutorService workers = Executors.newFixedThreadPool(3);
-    try {
+
+    assertThatThrownBy(() -> {
       ParallelSupplier.<String, String>newParallelSupplier()
           .withWorkers(workers)
           .withInputs(inputs)
@@ -98,10 +93,9 @@ public class ParallelSupplierTest {
             return ImmutableList.of(input, input);
           })
           .get();
-      fail("Expected a CompletionException");
-    } catch (CompletionException e) {
-      assertThat(e.getCause(), instanceOf(IllegalArgumentException.class));
-    }
+    }).isInstanceOf(CompletionException.class)
+        .hasCauseInstanceOf(IllegalArgumentException.class);
+
   }
 
 }

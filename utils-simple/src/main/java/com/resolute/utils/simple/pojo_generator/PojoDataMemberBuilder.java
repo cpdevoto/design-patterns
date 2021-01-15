@@ -17,6 +17,11 @@ public class PojoDataMemberBuilder {
     return this;
   }
 
+  public PojoDataMemberBuilder dataType(DataType dataType) {
+    dataMemberBuilder.withDataType(dataType);
+    return this;
+  }
+
   public PojoDataMemberBuilder required() {
     dataMemberBuilder.withRequired(true);
     return this;

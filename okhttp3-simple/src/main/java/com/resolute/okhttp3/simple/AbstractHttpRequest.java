@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -88,7 +89,16 @@ public abstract class AbstractHttpRequest<R extends AbstractHttpRequest<R>>
   public final <T> R delete(T value) throws JsonProcessingException {
     requireNonNull(value, "value cannot be null");
     this.buildRequestHandlers.add(builder -> {
-      builder.post(value);
+      builder.delete(value);
+    });
+    return getThis();
+  }
+
+  public final R delete(MediaType mediaType, String content) throws JsonProcessingException {
+    requireNonNull(mediaType, "mediaType cannot be null");
+    requireNonNull(content, "content cannot be null");
+    this.buildRequestHandlers.add(builder -> {
+      builder.delete(mediaType, content);
     });
     return getThis();
   }
@@ -132,6 +142,15 @@ public abstract class AbstractHttpRequest<R extends AbstractHttpRequest<R>>
     return getThis();
   }
 
+  public final R patch(MediaType mediaType, String content) throws JsonProcessingException {
+    requireNonNull(mediaType, "mediaType cannot be null");
+    requireNonNull(content, "content cannot be null");
+    this.buildRequestHandlers.add(builder -> {
+      builder.patch(mediaType, content);
+    });
+    return getThis();
+  }
+
   public final <T> R post(T value) throws JsonProcessingException {
     requireNonNull(value, "value cannot be null");
     this.buildRequestHandlers.add(builder -> {
@@ -140,10 +159,28 @@ public abstract class AbstractHttpRequest<R extends AbstractHttpRequest<R>>
     return getThis();
   }
 
+  public final R post(MediaType mediaType, String content) throws JsonProcessingException {
+    requireNonNull(mediaType, "mediaType cannot be null");
+    requireNonNull(content, "content cannot be null");
+    this.buildRequestHandlers.add(builder -> {
+      builder.post(mediaType, content);
+    });
+    return getThis();
+  }
+
   public final <T> R put(T value) throws JsonProcessingException {
     requireNonNull(value, "value cannot be null");
     this.buildRequestHandlers.add(builder -> {
       builder.put(value);
+    });
+    return getThis();
+  }
+
+  public final R put(MediaType mediaType, String content) throws JsonProcessingException {
+    requireNonNull(mediaType, "mediaType cannot be null");
+    requireNonNull(content, "content cannot be null");
+    this.buildRequestHandlers.add(builder -> {
+      builder.put(mediaType, content);
     });
     return getThis();
   }

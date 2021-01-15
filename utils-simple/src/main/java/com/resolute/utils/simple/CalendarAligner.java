@@ -38,6 +38,14 @@ public class CalendarAligner implements TemporalAdjuster {
     this.strategy = strategy;
   }
 
+  public long getInterval() {
+    return interval;
+  }
+
+  public TemporalField getTemporalField() {
+    return field;
+  }
+
   @Override
   public Temporal adjustInto(Temporal temporal) {
     validateAdjustIntoParams(temporal, field);
@@ -65,7 +73,7 @@ public class CalendarAligner implements TemporalAdjuster {
     Duration durationMin =
         Duration.between(temporal.minus(interval, field.getBaseUnit()), temporal);
     Duration durationFromFloor = Duration.between(floor, temporal);
-    while (durationFromFloor.compareTo(durationMin) > 0) {
+    while (durationFromFloor.compareTo(durationMin) >= 0) {
       floor = floor.plus(interval, field.getBaseUnit());
       durationFromFloor = Duration.between(floor, temporal);
     }

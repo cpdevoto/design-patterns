@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 public class PojoDataMember {
   private final String name;
-  private final String dataType;
+  private final DataType dataType;
   private final boolean required;
 
   public static Builder builder() {
@@ -27,7 +27,7 @@ public class PojoDataMember {
     return name;
   }
 
-  public String getDataType() {
+  public DataType getDataType() {
     return dataType;
   }
 
@@ -43,7 +43,7 @@ public class PojoDataMember {
 
   public static class Builder {
     private String name;
-    private String dataType;
+    private DataType dataType;
     private Boolean required;
 
     private Builder() {}
@@ -68,6 +68,12 @@ public class PojoDataMember {
     }
 
     public Builder withDataType(String dataType) {
+      requireNonNull(dataType, "dataType cannot be null");
+      this.dataType = new SimpleDataType(dataType);
+      return this;
+    }
+
+    public Builder withDataType(DataType dataType) {
       requireNonNull(dataType, "dataType cannot be null");
       this.dataType = dataType;
       return this;

@@ -1,13 +1,12 @@
 package com.resolute.utils.simple.pojo_generator;
 
 import static com.resolute.utils.simple.pojo_generator.PojoGenerator.dataMember;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.resolute.utils.simple.IOUtils;
 
@@ -48,6 +47,6 @@ public class PojoGeneratorTest {
     // @formatter:on
 
     System.out.println(source);
-    assertThat(source.trim(), equalTo(expected.trim()));
+    assertThat(source.trim()).isEqualTo(expected.trim());
   }
 }

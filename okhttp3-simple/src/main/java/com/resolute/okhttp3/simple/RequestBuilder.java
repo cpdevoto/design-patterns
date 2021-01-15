@@ -7,6 +7,7 @@ import static java.util.Objects.requireNonNull;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -29,6 +30,12 @@ public class RequestBuilder {
     return body;
   }
 
+  private static <T> RequestBody toRequestBody(MediaType mediaType, String content)
+      throws JsonProcessingException {
+    RequestBody body = RequestBody.create(mediaType, content);
+    return body;
+  }
+
   public RequestBuilder addHeader(String name, String value) {
     builder.addHeader(name, value);
     return this;
@@ -42,6 +49,13 @@ public class RequestBuilder {
   public <T> RequestBuilder delete(T object) throws JsonProcessingException {
     RequestBody body = toRequestBody(object);
     builder.post(body);
+    return this;
+  }
+
+  public <T> RequestBuilder delete(MediaType mediaType, String content)
+      throws JsonProcessingException {
+    RequestBody body = toRequestBody(mediaType, content);
+    builder.delete(body);
     return this;
   }
 
@@ -71,14 +85,36 @@ public class RequestBuilder {
     return this;
   }
 
+  public <T> RequestBuilder patch(MediaType mediaType, String content)
+      throws JsonProcessingException {
+    RequestBody body = toRequestBody(mediaType, content);
+    builder.patch(body);
+    return this;
+  }
+
   public <T> RequestBuilder post(T object) throws JsonProcessingException {
     RequestBody body = toRequestBody(object);
     builder.post(body);
     return this;
   }
 
+  public <T> RequestBuilder post(MediaType mediaType, String content)
+      throws JsonProcessingException {
+    RequestBody body = toRequestBody(mediaType, content);
+    builder.post(body);
+    return this;
+  }
+
+
   public <T> RequestBuilder put(T object) throws JsonProcessingException {
     RequestBody body = toRequestBody(object);
+    builder.put(body);
+    return this;
+  }
+
+  public <T> RequestBuilder put(MediaType mediaType, String content)
+      throws JsonProcessingException {
+    RequestBody body = toRequestBody(mediaType, content);
     builder.put(body);
     return this;
   }

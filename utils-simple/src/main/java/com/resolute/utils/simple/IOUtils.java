@@ -1,7 +1,6 @@
 package com.resolute.utils.simple;
 
 import static java.util.Objects.requireNonNull;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,6 +9,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -107,6 +110,28 @@ public class IOUtils {
     }
   }
 
+  public static void fastCopy(final InputStream input, final OutputStream output) throws IOException {
+    
+    final ReadableByteChannel inputChannel = Channels.newChannel(input);
+    final WritableByteChannel outputChannel = Channels.newChannel(output);
+    fastCopy(inputChannel, outputChannel);
+  }
+  
+  public static void fastCopy(final ReadableByteChannel input, final WritableByteChannel output) throws IOException {
+    
+    final ByteBuffer buffer = ByteBuffer.allocateDirect(16 * 1024);
+    while (input.read(buffer) != -1) {
+      buffer.flip();
+      output.write(buffer);
+      buffer.compact();
+    }
+    
+    buffer.flip();
+    
+    while(buffer.hasRemaining()) {
+      output.write(buffer);
+    }
+  }
 
   private IOUtils() {}
 }

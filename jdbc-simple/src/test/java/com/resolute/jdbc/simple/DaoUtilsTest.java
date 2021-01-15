@@ -25,8 +25,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import com.resolute.jdbc.simple.fixtures.DataSourceBuilder;
 import com.resolute.jdbc.simple.fixtures.Foo;
+import com.resolute.testutils.postgres.DataSourceBuilder;
 
 
 @Testcontainers

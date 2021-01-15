@@ -4,109 +4,136 @@ import static com.resolute.utils.simple.StringUtils.hr;
 import static com.resolute.utils.simple.StringUtils.padLeft;
 import static com.resolute.utils.simple.StringUtils.padLeftWithZeroes;
 import static com.resolute.utils.simple.StringUtils.padRight;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 public class StringUtilsTest {
 
-  @Test
-  public void testPadLeft() {
-    String s = padLeft("", 5);
-    assertThat(s, equalTo("     "));
-
-    s = padLeft("abc", 5);
-    assertThat(s, equalTo("  abc"));
-
-    s = padLeft("abc", 5, '*');
-    assertThat(s, equalTo("**abc"));
-
-    s = padLeft("abc", 2);
-    assertThat(s, equalTo("abc"));
-
-    try {
-      padLeft(null, 5);
-      fail("Expected a NullPointerException");
-    } catch (NullPointerException ex) {
+  @Nested
+  @DisplayName("padLeft")
+  class PadLeft {
+    @ParameterizedTest
+    @CsvSource({
+        "'',    5, '     '",
+        "'abc', 5, '  abc'",
+        "'abc', 2, 'abc'"})
+    public void test_pad_left(String input, int padLength, String expected) {
+      String s = padLeft(input, padLength);
+      assertThat(s).isEqualTo(expected);
     }
 
-    try {
-      padLeft("abc", 0);
-      fail("Expected an IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    @Test
+    public void test_string_is_null() {
+      assertThatThrownBy(() -> {
+        padLeft(null, 5);
+      }).isInstanceOf(NullPointerException.class);
     }
 
-    try {
-      padLeft("abc", -1);
-      fail("Expected an IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1})
+    public void test_invalid_pad_lengths(int padLength) {
+      assertThatThrownBy(() -> {
+        padLeft("abc", padLength);
+      }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void test_override_default_pad_char() {
+      String s = padLeft("abc", 5, '*');
+      assertThat(s).isEqualTo("**abc");
+    }
+
+
+  }
+
+  @Nested
+  @DisplayName("padRight")
+  class PadRight {
+
+    @ParameterizedTest
+    @CsvSource({
+        "'',    5, '     '",
+        "'abc', 5, 'abc  '",
+        "'abc', 2, 'abc'"})
+    public void test_pad_right(String input, int padLength, String expected) {
+      String s = padRight(input, padLength);
+      assertThat(s).isEqualTo(expected);
+    }
+
+    @Test
+    public void test_override_default_pad_char() {
+      String s = padRight("abc", 5, '*');
+      assertThat(s).isEqualTo("abc**");
+    }
+
+    @Test
+    public void test_string_is_null() {
+      assertThatThrownBy(() -> {
+        padRight(null, 5);
+      }).isInstanceOf(NullPointerException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -1})
+    public void test_invalid_pad_lengths(int padLength) {
+      assertThatThrownBy(() -> {
+        padRight("abc", padLength);
+      }).isInstanceOf(IllegalArgumentException.class);
     }
   }
 
-  @Test
-  public void testPadRight() {
-    String s = padRight("", 5);
-    assertThat(s, equalTo("     "));
+  @Nested
+  @DisplayName("padWithZeroes")
+  class PadWithZeroes {
 
-    s = padRight("abc", 5);
-    assertThat(s, equalTo("abc  "));
+    @ParameterizedTest
+    @CsvSource({
+        "1,    5, '00001'",
+        "41,   5, '00041'",
+        "-1,   5, '-0001'",
+        "555,  2, '555'",
+        "1,    0, '1'",
+        "1,   -1, '1'"
 
-    s = padRight("abc", 5, '*');
-    assertThat(s, equalTo("abc**"));
-
-    s = padRight("abc", 2);
-    assertThat(s, equalTo("abc"));
-
-    try {
-      padRight(null, 5);
-      fail("Expected a NullPointerException");
-    } catch (NullPointerException ex) {
+    })
+    public void test_pad_with_zeroes(int input, int padLength, String expected) {
+      String s = padLeftWithZeroes(input, padLength);
+      assertThat(s).isEqualTo(expected);
     }
 
-    try {
-      padRight("abc", 0);
-      fail("Expected an IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+  }
+
+
+  @Nested
+  @DisplayName("hr")
+  class HorizontalRule {
+
+    @Test
+    public void test_positive_length() {
+      String s = hr(5);
+      assertThat(s).isEqualTo("=====");
     }
 
-    try {
-      padRight("abc", -1);
-      fail("Expected an IllegalArgumentException");
-    } catch (IllegalArgumentException ex) {
+    @Test
+    public void test_nonpositive_length() {
+      assertThatThrownBy(() -> {
+        hr(0);
+      }).isInstanceOf(IllegalArgumentException.class);
+
     }
-  }
 
-  @Test
-  public void testPadWithZeroes() {
-    String s = padLeftWithZeroes(1, 5);
-    assertThat(s, equalTo("00001"));
+    @Test
+    public void test_override_default_char() {
+      String s = hr('*', 5);
+      assertThat(s).isEqualTo("*****");
+    }
 
-    s = padLeftWithZeroes(41, 5);
-    assertThat(s, equalTo("00041"));
-
-    s = padLeftWithZeroes(-1, 5);
-    assertThat(s, equalTo("-0001"));
-
-    s = padLeftWithZeroes(555, 2);
-    assertThat(s, equalTo("555"));
-
-    s = padLeftWithZeroes(1, 0);
-    assertThat(s, equalTo("1"));
-
-    s = padLeftWithZeroes(1, -1);
-    assertThat(s, equalTo("1"));
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void test_hr_with_nonpositive_length() {
-    hr(0);
-  }
-
-  @Test
-  public void test_hr() {
-    assertThat(hr(5), equalTo("====="));
-    assertThat(hr('*', 5), equalTo("*****"));
   }
 }

@@ -1,11 +1,11 @@
 package com.resolute.jackson;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +35,7 @@ public class ObjectMappersTest {
         .build();
 
     String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(user);
-    assertThat(json, equalTo(JSON));
+    assertThat(json).isEqualTo(JSON);
 
   }
 

@@ -9,19 +9,21 @@ buildscript {
         }
 
         dependencies {
-            classpath "com.resolutebi:GradleCommonConfigurationPlugin:1.0.+"
+            classpath "com.resolutebi:GradleCommonConfigurationPlugin:1.0.+",
+                      "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
         }
     }
 }
 
 plugins {
-  id 'nebula.dependency-lock' version '4.9.5'
+  id 'nebula.dependency-lock' version '11.1.1'
 }
 
 apply plugin: 'resolute-common-config'
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: "com.jfrog.artifactory"
 
 group = 'com.resolute'
 
@@ -29,17 +31,22 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 dependencies {
-    compile     'com.fasterxml.jackson.core:jackson-databind:2.8.9',
-                'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.9',
-                'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9',
-                'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.8.9',
-                'org.slf4j:slf4j-api:1.7.25',
-                'com.google.guava:guava:21.0'
-                
-    testCompile 'junit:junit:4.12', 
-                'org.mockito:mockito-core:1.10.19',
-                'org.hamcrest:hamcrest-all:1.3',
-                'org.slf4j:slf4j-simple:1.7.25'     
+    api             'com.fasterxml.jackson.core:jackson-databind:2.8.9',
+                    'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.9',
+                    'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9',
+                    'com.fasterxml.jackson.datatype:jackson-datatype-guava:2.8.9'
+                    
+    implementation  'org.slf4j:slf4j-api:1.7.30',
+                    'com.google.guava:guava:30.1-jre'
+
+	testImplementation(platform('org.junit:junit-bom:5.7.0'))
+	testImplementation 'org.junit.jupiter:junit-jupiter',
+                       'org.assertj:assertj-core:3.18.1',
+                       'org.testcontainers:testcontainers:1.15.1',
+                       'org.testcontainers:junit-jupiter:1.15.1',
+                       'org.mockito:mockito-core:3.6.28',
+                       'org.slf4j:slf4j-simple:1.7.30'     
+
 }
 
 publishing {
@@ -52,4 +59,11 @@ publishing {
 
 artifactoryPublish {
     publications('mavenJava')
+}
+
+test {
+    useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }

@@ -2,18 +2,18 @@ package com.resolutebi.orders;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.function.Consumer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import java.util.List;
 import com.google.common.collect.ImmutableList;
-import java.util.Set;
 import com.google.common.collect.ImmutableSet;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
 
 @JsonInclude(Include.NON_NULL)
 @JsonDeserialize(builder = User.Builder.class)

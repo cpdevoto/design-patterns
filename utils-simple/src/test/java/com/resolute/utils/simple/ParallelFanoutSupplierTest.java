@@ -1,21 +1,16 @@
 package com.resolute.utils.simple;
 
-import static java.util.stream.Collectors.toSet;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.hamcrest.Matchers;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import com.resolute.utils.simple.fixtures.Device;
 import com.resolute.utils.simple.fixtures.KmcDao;
@@ -39,32 +34,18 @@ public class ParallelFanoutSupplierTest {
         ParallelFanoutSupplier.newParallelFanoutSupplier(licenseSupplier, workers)
             .get();
 
-    assertThat(licenses, notNullValue());
-    assertThat(licenses.size(), equalTo(2));
-
-    Set<String> licenseIds = licenses.stream()
-        .map(License::toString)
-        .collect(toSet());
-
-    assertThat(licenseIds.contains("license1"), equalTo(true));
-    assertThat(licenseIds.contains("license2"), equalTo(true));
+    assertThat(licenses).isNotNull()
+        .extracting(License::toString)
+        .containsOnly("license1", "license2");
 
     List<Device> devices =
         ParallelFanoutSupplier.newParallelFanoutSupplier(licenseSupplier, workers)
             .thenCompose(deviceFunction)
             .get();
 
-    assertThat(devices, notNullValue());
-    assertThat(devices.size(), equalTo(4));
-
-    Set<String> deviceIds = devices.stream()
-        .map(Device::toString)
-        .collect(toSet());
-
-    assertThat(deviceIds.contains("device1"), equalTo(true));
-    assertThat(deviceIds.contains("device2"), equalTo(true));
-    assertThat(deviceIds.contains("device3"), equalTo(true));
-    assertThat(deviceIds.contains("device4"), equalTo(true));
+    assertThat(devices).isNotNull()
+        .extracting(Device::toString)
+        .containsOnly("device1", "device2", "device3", "device4");
 
     List<Point> points =
         ParallelFanoutSupplier.newParallelFanoutSupplier(licenseSupplier, workers)
@@ -72,26 +53,15 @@ public class ParallelFanoutSupplierTest {
             .thenCompose(pointFunction)
             .get();
 
-    assertThat(points, notNullValue());
-    assertThat(points.size(), equalTo(8));
-
-    Set<String> pointIds = points.stream()
-        .map(Point::toString)
-        .collect(toSet());
-
-    assertThat(pointIds.contains("point1"), equalTo(true));
-    assertThat(pointIds.contains("point2"), equalTo(true));
-    assertThat(pointIds.contains("point3"), equalTo(true));
-    assertThat(pointIds.contains("point4"), equalTo(true));
-    assertThat(pointIds.contains("point5"), equalTo(true));
-    assertThat(pointIds.contains("point6"), equalTo(true));
-    assertThat(pointIds.contains("point7"), equalTo(true));
-    assertThat(pointIds.contains("point8"), equalTo(true));
+    assertThat(points).isNotNull()
+        .extracting(Point::toString)
+        .containsOnly("point1", "point2", "point3", "point4", "point5", "point6", "point7",
+            "point8");
 
   }
 
   @Test
-  @Ignore // This test seems to be non-deterministic on Jenkins, so we will ignore it
+  @Disabled // This test seems to be non-deterministic on Jenkins, so we will ignore it
   public void test_sequential_versus_parallel_timings() {
     KmcDao dao = new KmcDao();
 
@@ -105,8 +75,7 @@ public class ParallelFanoutSupplierTest {
         .collect(Collectors.toList());
     long sequentialDuration = (System.nanoTime() - sequentialStart) / 1_000_000;
 
-    assertThat(points, notNullValue());
-    assertThat(points.size(), equalTo(8));
+    assertThat(points).isNotNull().hasSize(8);
 
     System.out.println("Sequential execution done in " + sequentialDuration + " msecs");
 
@@ -134,12 +103,11 @@ public class ParallelFanoutSupplierTest {
             .get();
     long parallelDuration = (System.nanoTime() - parallelStart) / 1_000_000;
 
-    assertThat(points, notNullValue());
-    assertThat(points.size(), equalTo(8));
+    assertThat(points).isNotNull().hasSize(8);
 
     System.out.println("Parallel execution done in " + parallelDuration + " msecs");
 
-    assertThat(parallelDuration, Matchers.lessThan(sequentialDuration));
+    assertThat(parallelDuration).isLessThan(sequentialDuration);
 
   }
 

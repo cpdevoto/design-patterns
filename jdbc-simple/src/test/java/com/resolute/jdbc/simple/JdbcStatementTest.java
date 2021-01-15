@@ -30,8 +30,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import com.resolute.jdbc.simple.fixtures.Bar;
-import com.resolute.jdbc.simple.fixtures.DataSourceBuilder;
 import com.resolute.jdbc.simple.fixtures.Foo;
+import com.resolute.testutils.postgres.DataSourceBuilder;
 
 @Testcontainers
 public class JdbcStatementTest {

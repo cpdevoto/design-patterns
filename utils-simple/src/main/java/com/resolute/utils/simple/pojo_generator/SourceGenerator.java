@@ -5,11 +5,13 @@ import static java.util.Objects.requireNonNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 class SourceGenerator {
   private static final List<String> primitives = ImmutableList.copyOf(Arrays.asList(
@@ -73,35 +75,43 @@ class SourceGenerator {
   }
 
   private void generateImports() {
-    buf.println("import java.util.function.Consumer;");
+    Set<String> imports = Sets.newTreeSet();
+    imports.add("java.util.function.Consumer");
     if (pojo.getJacksonAnnotations()) {
-      buf.println("import com.fasterxml.jackson.annotation.JsonCreator;");
-      buf.println("import com.fasterxml.jackson.annotation.JsonInclude;");
-      buf.println("import com.fasterxml.jackson.annotation.JsonInclude.Include;");
-      buf.println("import com.fasterxml.jackson.databind.annotation.JsonDeserialize;");
-      buf.println("import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;");
+      imports.add("com.fasterxml.jackson.annotation.JsonCreator");
+      imports.add("com.fasterxml.jackson.annotation.JsonInclude");
+      imports.add("com.fasterxml.jackson.annotation.JsonInclude.Include");
+      imports.add("com.fasterxml.jackson.databind.annotation.JsonDeserialize");
+      imports.add("com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder");
     }
     if (flags.get(PojoFlag.HAS_LIST)) {
-      buf.println("import java.util.List;");
-      buf.println("import com.google.common.collect.ImmutableList;");
+      imports.add("java.util.List");
+      imports.add("com.google.common.collect.ImmutableList");
     }
     if (flags.get(PojoFlag.HAS_MAP)) {
-      buf.println("import java.util.Map;");
-      buf.println("import com.google.common.collect.ImmutableMap;");
+      imports.add("java.util.Map");
+      imports.add("com.google.common.collect.ImmutableMap");
     }
     if (flags.get(PojoFlag.HAS_SET)) {
-      buf.println("import java.util.Set;");
-      buf.println("import com.google.common.collect.ImmutableSet;");
+      imports.add("java.util.Set");
+      imports.add("com.google.common.collect.ImmutableSet");
     }
     if (flags.get(PojoFlag.HAS_LOCAL_DATE)) {
-      buf.println("import java.time.LocalDate;");
+      imports.add("java.time.LocalDate");
     }
     if (flags.get(PojoFlag.HAS_LOCAL_DATE_TIME)) {
-      buf.println("import java.time.LocalDateTime;");
+      imports.add("java.time.LocalDateTime");
     }
     if (flags.get(PojoFlag.HAS_OPTIONAL)) {
-      buf.println("import java.util.Optional;");
+      imports.add("java.util.Optional");
     }
+    pojo.getDataMembers().stream()
+        .flatMap(member -> member.getDataType().getImports().stream())
+        .forEach(type -> imports.add(type));
+
+    imports.stream()
+        .map(pkg -> String.format("import %s;", pkg))
+        .forEach(s -> buf.println(s));
     buf.println();
   }
 
@@ -219,10 +229,11 @@ class SourceGenerator {
     pojo.getDataMembers().stream()
         .forEach(dm -> {
           buf.indentAndPrint("public Builder with").print(toHungarian(dm.getName())).print("(")
-              .print(!dm.getRequired() ? getDataType(dm) : dm.getDataType()).print(" ")
+              .print(!dm.getRequired() ? getDataType(dm) : dm.getDataType().getSimpleName())
+              .print(" ")
               .print(dm.getName()).println(") {");
           buf.increaseIndent();
-          if (dm.getRequired() && !primitives.contains(dm.getDataType())) {
+          if (dm.getRequired() && !primitives.contains(dm.getDataType().getSimpleName())) {
             buf.indentAndPrint("requireNonNull(").print(dm.getName()).print(", \"")
                 .print(dm.getName())
                 .println(" cannot be null\");");
@@ -311,7 +322,7 @@ class SourceGenerator {
   }
 
   private String getDataType(PojoDataMember dm, boolean forceWrapper) {
-    String dataType = dm.getDataType();
+    String dataType = dm.getDataType().getSimpleName();
     if (!dm.getRequired()) {
       if (primitives.contains(dataType)) {
         dataType = primitiveWrappers.get(dataType);
@@ -325,18 +336,18 @@ class SourceGenerator {
 
   private static enum PojoFlag {
     // @formatter:off
-    HAS_LOCAL_DATE(dm -> "LocalDate".equals(dm.getDataType())), 
-    HAS_LOCAL_DATE_TIME(dm -> "LocalDateTime".equals(dm.getDataType())), 
-    HAS_DATE(dm -> "Date".equals(dm.getDataType())), 
-    HAS_MAP(dm -> dm.getDataType().equals("Map") ||
-                  dm.getDataType().startsWith("Map<") ||
-                  dm.getDataType().startsWith("Map ")), 
-    HAS_SET(dm -> dm.getDataType().equals("Set") ||
-                  dm.getDataType().startsWith("Set<") ||
-                  dm.getDataType().startsWith("Set ")), 
-    HAS_LIST(dm -> dm.getDataType().equals("List") ||
-                   dm.getDataType().startsWith("List<") ||
-                   dm.getDataType().startsWith("List ")),
+    HAS_LOCAL_DATE(dm -> "LocalDate".equals(dm.getDataType().getSimpleName())), 
+    HAS_LOCAL_DATE_TIME(dm -> "LocalDateTime".equals(dm.getDataType().getSimpleName())), 
+    HAS_DATE(dm -> "Date".equals(dm.getDataType().getSimpleName())), 
+    HAS_MAP(dm -> dm.getDataType().getSimpleName().equals("Map") ||
+                  dm.getDataType().getSimpleName().startsWith("Map<") ||
+                  dm.getDataType().getSimpleName().startsWith("Map ")), 
+    HAS_SET(dm -> dm.getDataType().getSimpleName().equals("Set") ||
+                  dm.getDataType().getSimpleName().startsWith("Set<") ||
+                  dm.getDataType().getSimpleName().startsWith("Set ")), 
+    HAS_LIST(dm -> dm.getDataType().getSimpleName().equals("List") ||
+                   dm.getDataType().getSimpleName().startsWith("List<") ||
+                   dm.getDataType().getSimpleName().startsWith("List ")),
     HAS_OPTIONAL(dm -> !dm.getRequired());
     // @formatter:on
 

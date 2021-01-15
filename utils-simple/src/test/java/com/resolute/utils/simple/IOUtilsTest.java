@@ -1,17 +1,14 @@
 package com.resolute.utils.simple;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.resolute.resources.Resource;
 
@@ -25,7 +22,7 @@ public class IOUtilsTest {
       IOUtils.copy(input, output);
       byte[] bytes = output.toByteArray();
       String outputText = new String(bytes, UTF_8);
-      assertThat(outputText, equalTo(inputText));
+      assertThat(outputText).isEqualTo(inputText);
     }
   }
 
@@ -35,7 +32,7 @@ public class IOUtilsTest {
     try (ByteArrayInputStream input = new ByteArrayInputStream(inputText.getBytes(UTF_8))) {
       byte[] bytes = IOUtils.toByteArray(input);
       String outputText = new String(bytes, UTF_8);
-      assertThat(outputText, equalTo(inputText));
+      assertThat(outputText).isEqualTo(inputText);
     }
   }
 
@@ -44,22 +41,22 @@ public class IOUtilsTest {
     String inputText = "Resolute Building Intelligence xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     byte[] inputBytes = inputText.getBytes(UTF_8);
     byte[] compressedBytes = IOUtils.compress(inputBytes);
-    assertThat(compressedBytes, notNullValue());
-    assertThat(compressedBytes.length, not(equalTo(inputBytes.length)));
+    assertThat(compressedBytes).isNotNull();
+    assertThat(compressedBytes.length).isNotEqualTo(inputBytes.length);
     System.out.println("Uncompressed length: " + inputBytes.length);
     System.out.println("Compressed length: " + compressedBytes.length);
     byte[] decompressedBytes = IOUtils.decompress(compressedBytes);
     String decompressedText = new String(decompressedBytes, UTF_8);
-    assertThat(decompressedText, equalTo(inputText));
+    assertThat(decompressedText).isEqualTo(inputText);
   }
 
   @Test
   public void test_resource_to_string() throws IOException {
     String text = IOUtils.resourceToString("resource.txt", StandardCharsets.UTF_8, Resource.class);
-    assertThat(text, equalTo("Resolute"));
+    assertThat(text).isEqualTo("Resolute");
 
     text = IOUtils.resourceToString("com/resolute/resources/resource.txt", StandardCharsets.UTF_8);
-    assertThat(text, equalTo("Resolute"));
+    assertThat(text).isEqualTo("Resolute");
   }
 
 

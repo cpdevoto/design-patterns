@@ -17,6 +17,7 @@ public class TimezoneUtils {
   private static final Map<TimeZone, String> LABELS_BY_TIMEZONE;
   private static final Set<String> TIMEZONE_LABELS;
   private static final Map<String, String> TIMEZONE_OFFSETS_BY_LABEL;
+  private static final Map<TimeZone, TimeZone> TIMEZONE_ALIASES;
 
   static {
     Map<String, TimeZone> timezonesById = Maps.newTreeMap();
@@ -26,6 +27,7 @@ public class TimezoneUtils {
     TIMEZONES_BY_ID = ImmutableMap.copyOf(timezonesById);
 
     // Map data comes from http://api.rubyonrails.org/classes/ActiveSupport/TimeZone.html
+    // TODO: This list seems to be more comprehensive: https://gist.github.com/jpmckinney/767070
     Map<String, TimeZone> timezonesByLabel = Maps.newTreeMap();
     timezonesByLabel.put("Abu Dhabi", TimeZone.getTimeZone("Asia/Muscat"));
     timezonesByLabel.put("Adelaide", TimeZone.getTimeZone("Australia/Adelaide"));
@@ -197,6 +199,46 @@ public class TimezoneUtils {
     }
 
     TIMEZONE_OFFSETS_BY_LABEL = ImmutableMap.copyOf(timezoneOffsetsByLabel);
+    
+    TIMEZONE_ALIASES = Maps.newHashMap();
+    
+    TimeZone americaHalifax = TimeZone.getTimeZone("America/Halifax");
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Puerto_Rico"), americaHalifax);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/St_Barthelemy"), americaHalifax);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/St_Kitts"), americaHalifax);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/St_Lucia"), americaHalifax);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/St_Thomas"), americaHalifax);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/St_Vincent"), americaHalifax);
+    
+    TimeZone americaJuneau = TimeZone.getTimeZone("America/Juneau");
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Anchorage"), americaJuneau);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Metlakatla"), americaJuneau);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Nome"), americaJuneau);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Sitka"), americaJuneau);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Yakutat"), americaJuneau);
+    
+    TimeZone americaChicago = TimeZone.getTimeZone("America/Chicago");
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Knox"), americaChicago);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Tell_City"), americaChicago);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Menominee"), americaChicago);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/North_Dakota/Beulah"), americaChicago);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/North_Dakota/Center"), americaChicago);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/North_Dakota/New_Salem"), americaChicago);
+    
+    TimeZone americaNewYork = TimeZone.getTimeZone("America/New_York");
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Detroit"), americaNewYork);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Petersburg"), americaNewYork);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Vincennes"), americaNewYork);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Winamac"), americaNewYork);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Kentucky/Monticello"), americaNewYork);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Kentucky/Louisville"), americaNewYork);
+
+    TimeZone americaDenver = TimeZone.getTimeZone("America/Denver");
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Boise"), americaDenver);
+    
+    TimeZone americaIndianapolis = TimeZone.getTimeZone("America/Indiana/Indianapolis");
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Marengo"), americaIndianapolis);
+    TIMEZONE_ALIASES.put(TimeZone.getTimeZone("America/Indiana/Vevay"), americaIndianapolis);
   }
 
   public static TimeZone getTimezone(String label) {
@@ -211,7 +253,11 @@ public class TimezoneUtils {
   }
 
   public static String getLabel(TimeZone timezone) {
-    return LABELS_BY_TIMEZONE.get(timezone);
+    String label = LABELS_BY_TIMEZONE.get(timezone);
+    if (label == null) {
+      label = LABELS_BY_TIMEZONE.get(TIMEZONE_ALIASES.get(timezone));
+    }
+    return label;
   }
 
   public static Set<String> getLabels() {

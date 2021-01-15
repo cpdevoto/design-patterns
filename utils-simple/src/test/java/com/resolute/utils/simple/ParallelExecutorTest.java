@@ -1,10 +1,7 @@
 package com.resolute.utils.simple;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +9,7 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -31,8 +28,7 @@ public class ParallelExecutorTest {
         .withConsumer(input -> outputs.add(input))
         .execute();
 
-    assertThat(outputs.size(), equalTo(3));
-    assertThat(outputs, hasItems("one", "two", "three"));
+    assertThat(outputs).containsOnly("one", "two", "three");
   }
 
   @Test
@@ -41,7 +37,8 @@ public class ParallelExecutorTest {
     Set<String> outputs = Sets.newHashSet();
 
     ExecutorService workers = Executors.newFixedThreadPool(3);
-    try {
+
+    assertThatThrownBy(() -> {
       ParallelExecutor.<String>newParallelExecutor()
           .withWorkers(workers)
           .withInputs(inputs)
@@ -52,10 +49,8 @@ public class ParallelExecutorTest {
             outputs.add(input);
           })
           .execute();
-      fail("Expected a CompletionException");
-    } catch (CompletionException e) {
-      assertThat(e.getCause(), instanceOf(IllegalArgumentException.class));
-    }
+    }).isInstanceOf(CompletionException.class)
+        .hasCauseInstanceOf(IllegalArgumentException.class);
   }
 
 }

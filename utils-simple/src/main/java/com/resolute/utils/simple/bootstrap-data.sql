@@ -1,3 +1,13 @@
+INSERT INTO weather_stations (id, code, city, state) VALUES
+  (1, 'KDTW', 'Detroit', 'MI'),
+  (2, 'KPHN', 'Port Huron', 'MI'),
+  (3, 'KFNT', 'Flint', 'MI'),
+  (4, 'KLAN', 'Lansing', 'MI'),
+  (5, 'KHYX', 'Sagniaw', 'MI'),
+  (6, 'KPTK', 'Pontiac', 'MI'),
+  (7, 'KMOP', 'Mount Pleasant', 'MI'),
+  (8, 'KMGN', 'Petosky', 'MI');
+  
 INSERT INTO distributors (id, parent_id, name) VALUES (2, 1, 'Distributor1');
 
 INSERT INTO customers (id, distributor_id, uuid, name, resolute_start_date, fiscal_year_start) VALUES 
@@ -5,11 +15,7 @@ INSERT INTO customers (id, distributor_id, uuid, name, resolute_start_date, fisc
   (2, 2, '95ee18c1-305a-4074-bea2-04d261e8800b', 'Demo', '2014-05-01T00:00:00.000', 1);
   
 ALTER SEQUENCE customer_tbl_id_seq RESTART WITH 3;
-  
-INSERT INTO customer_timezones (customer_id, timezones ) VALUES
-  ( 1, '{Pacific Time (US & Canada), Eastern Time (US & Canada)}'),
-  ( 2, '{Pacific Time (US & Canada), Eastern Time (US & Canada)}');
-  
+
 INSERT INTO customer_utilities (customer_id, utility_id) VALUES
   (1, 1),
   (1, 2),
@@ -25,8 +31,8 @@ INSERT INTO sites (id, customer_id, parent_id, name) VALUES (2, 1, 1, 'Site1');
 
 INSERT INTO sites (id, customer_id, parent_id, name) VALUES (8, 1, 1, 'Site2');
 
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (3, 1, 2, 'Building1');
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (2020, 1, 2, '0123');
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (3, 1, 2, 'Building1', 4);
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (2020, 1, 2, '0123', 1);
 
 INSERT INTO floors (id, customer_id, parent_id, name) VALUES (50, 1, 3, 'Floor1');
 INSERT INTO floors (id, customer_id, parent_id, name) VALUES (51, 1, 3, 'FloorFoo');
@@ -40,18 +46,12 @@ INSERT INTO floors (id, customer_id, parent_id, name) VALUES (57, 1, 3, 'floor w
 INSERT INTO floors (id, customer_id, parent_id, name) VALUES (58, 1, 3, 'floor with sync point as only child');
 INSERT INTO floors (id, customer_id, parent_id, name) VALUES (59, 1, 3, 'floor with mapped point as only child but tagged');
 
-
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (9, 1, 2, 'Building2');
-
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (10, 1, 8, 'Building3');
-
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (11, 1, 8, 'Building4');
-
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (12, 1, 1, 'Building5');
-
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (13, 1, 1, 'Building6');
-
-INSERT INTO buildings (id, customer_id, parent_id, name) VALUES (15, 2, 14, 'Building7');
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (9, 1, 2, 'Building2', 1);
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (10, 1, 8, 'Building3', 1);
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (11, 1, 8, 'Building4', 1);
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (12, 1, 1, 'Building5', 1);
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (13, 1, 1, 'Building6', 1);
+INSERT INTO buildings (id, customer_id, parent_id, name, weather_station_id) VALUES (15, 2, 14, 'Building7', 1);
 
 insert into equipment (id, parent_id, customer_id, name) values (132234, 3, 1, 'foobarfoo');
 
@@ -116,17 +116,14 @@ INSERT INTO sync_computed_point_input_transformers(id, sync_computed_point_input
   (3, 3, 3, 10.0, 1),
   (4, 4, 3, 1.0, 2);
 
-INSERT INTO async_computed_points (id, customer_id, parent_id, name, data_type_id, metric_id, unit_type, "value", value_timestamp) VALUES 
-  (20, 1, 9, 'kW per 5 Minutes', 1, '/Drivers/NiagaraNetwork/ColsSteel/points/ElecMeters/Slitter72/kWH_Delta5', 'kWh', 25.0, '2016-05-13T09:58:24.738'),
-  (400, 1, 57, 'kW per 5 Minutes', 1, '/Drivers/NiagaraNetwork/ColsSteel/points/ElecMeters/Slitter72/kWH_Delta6', 'kWh', 25.0, '2016-05-13T09:58:24.738'),
-  (401, 1, 512, 'kW per 6 Minutes', 1, '/Drivers/NiagaraNetwork/ColsSteel/points/ElecMeters/Slitter72/kWH_Delta7', 'kWh', 25.0, '2016-05-13T09:58:24.738'),
-  (402, 1, 132234, 'foobarfoo template test', 1, '/foo/bar/foo/template/test', 'kWh', 25.0, '2016-05-13T09:58:24.738');
+INSERT INTO async_computed_points (subtype, id, customer_id, parent_id, name, data_type_id, metric_id, unit_type, "value", value_timestamp) VALUES 
+  ('CUSTOM', 20, 1, 9, 'kW per 5 Minutes', 1, '/Drivers/NiagaraNetwork/ColsSteel/points/ElecMeters/Slitter72/kWH_Delta5', 'kWh', 25.0, '2016-05-13T09:58:24.738'),
+  ('CUSTOM', 400, 1, 57, 'kW per 5 Minutes', 1, '/Drivers/NiagaraNetwork/ColsSteel/points/ElecMeters/Slitter72/kWH_Delta6', 'kWh', 25.0, '2016-05-13T09:58:24.738'),
+  ('CUSTOM', 401, 1, 512, 'kW per 6 Minutes', 1, '/Drivers/NiagaraNetwork/ColsSteel/points/ElecMeters/Slitter72/kWH_Delta7', 'kWh', 25.0, '2016-05-13T09:58:24.738'),
+  ('CUSTOM', 402, 1, 132234, 'foobarfoo template test', 1, '/foo/bar/foo/template/test', 'kWh', 25.0, '2016-05-13T09:58:24.738');
 
-INSERT INTO async_computed_points (
-	id, 	name, display_name,	customer_id, parent_id,	data_type_id, metric_id, unit_type,	configurable, timezone_based_rollups,
-	 "value", value_timestamp
-	) VALUES 
-  (30, 'TotalkWhPerDay', 'Total kWh per Day', 1, 9,  1, '/Async/Building2/kWH_DeltaDay', 'kWh', TRUE, TRUE, 25.0, '2016-05-13T09:58:24.738');
+INSERT INTO async_computed_points (subtype,	id,	name, display_name,	customer_id, parent_id,	data_type_id, metric_id, unit_type,	configurable, timezone_based_rollups, "value", value_timestamp) VALUES 
+  ('CUSTOM', 30, 'TotalkWhPerDay', 'Total kWh per Day', 1, 9,  1, '/Async/Building2/kWH_DeltaDay', 'kWh', TRUE, TRUE, 25.0, '2016-05-13T09:58:24.738');
   
 INSERT INTO async_computed_point_configs ( id, computation_interval ) VALUES 
 	( 30, '1dc');
@@ -168,41 +165,30 @@ INSERT INTO distributor_users (id, role_id, distributor_id, first_name, last_nam
   (108, 6, 2, 'updatetimezone', 'integrator', 'distributor108@email.com', '5771bc43-6c01-4b7f-9c33-becf8074b1d6', 'p@$$w0rd', '2016-05-13T09:58:24.738', '2016-05-13T09:58:24.738', '2016-05-13T09:58:24.738', '2016-05-13T09:58:24.738'),
   (109, 6, 2, 'updaterole', 'integrator', 'distributor109@email.com', '5771bc43-6c01-4b7f-9c33-becf8074b1d7', 'p@$$w0rd', '2016-05-13T09:58:24.738', '2016-05-13T09:58:24.738', '2016-05-13T09:58:24.738', '2016-05-13T09:58:24.738');
   
-INSERT INTO user_setting_tbl ( user_id, timezone ) VALUES
-	(1, 'Pacific Time (US & Canada)'),
-	(2, 'Pacific Time (US & Canada)'),
-	(3, 'Pacific Time (US & Canada)'),
-	(4, 'Pacific Time (US & Canada)'),
-	(7, 'Pacific Time (US & Canada)'),
-	(8, 'Pacific Time (US & Canada)'),
-	(9, 'Pacific Time (US & Canada)'),
-	(10, 'Pacific Time (US & Canada)'),
-	(11, 'Pacific Time (US & Canada)'),
-	(100, 'Pacific Time (US & Canada)'),
-	(5, 'Pacific Time (US & Canada)'),
-	(6, 'Pacific Time (US & Canada)'),
-	(101, 'Pacific Time (US & Canada)'),
-	(104, 'Pacific Time (US & Canada)'),
-	(105, 'Eastern Time (US & Canada)'),
-	(106, 'Eastern Time (US & Canada)'),
-	(107, 'Eastern Time (US & Canada)'),
-	(108, 'Eastern Time (US & Canada)'),
-	(109, 'Eastern Time (US & Canada)');
-	
-INSERT INTO user_features (user_id, feature_id) VALUES
-    (3, 10),
-    (3, 33),
-    (3, 4),
-    (4, 10),
-    (8, 10),
-    (9, 10),
-    (10, 10),
-    (11,10);
+INSERT INTO user_setting_tbl ( user_id, ruby_timezone_id ) VALUES
+	(1, 43),
+	(2, 43),
+	(3, 43),
+	(4, 43),
+	(7, 43),
+	(8, 43),
+	(9, 43),
+	(10, 43),
+	(11, 43),
+	(100, 43),
+	(5, 43),
+	(6, 43),
+	(101, 43),
+	(104, 43),
+	(105, 43),
+	(106, 43),
+	(107, 43),
+	(108, 43),
+	(109, 43);
     
 INSERT INTO customer_features (customer_id, feature_id) VALUES
     (1, 1),
     (1, 4),
-    (1, 9),
     (1, 10),
     (1, 30),
     (1, 32),
@@ -231,19 +217,9 @@ INSERT INTO export_jobs (id, customer_id, export_job_status_id, export_job_type_
 -- user 2 should get back reports 1, 2, 3, 4, and 5
 -- user 3 should get back report 1 and 4
 -- user 4 should get back reports 1, 3, and 5  
-
-INSERT INTO weather_stations (id, code, city, state) VALUES
-  (1, 'KDTW', 'Detroit', 'MI'),
-  (2, 'KPHN', 'Port Huron', 'MI'),
-  (3, 'KFNT', 'Flint', 'MI'),
-  (4, 'KLAN', 'Lansing', 'MI'),
-  (5, 'KHYX', 'Sagniaw', 'MI'),
-  (6, 'KPTK', 'Pontiac', 'MI'),
-  (7, 'KMOP', 'Mount Pleasant', 'MI'),
-  (8, 'KMGN', 'Petosky', 'MI');
   
-INSERT INTO temporal_billing_locations (id, billing_location_id, effective_date, weather_station_id, sqft, energy_star_rating, kbtu_cost_factor) VALUES 
-  (1, 3, '2017-10-17', 4, 1500, 85, 1.25);
+INSERT INTO temporal_billing_locations (id, billing_location_id, effective_date, sqft, energy_star_rating, kbtu_cost_factor) VALUES 
+  (1, 3, '2017-10-17', 1500, 85, 1.25);
   
 ALTER SEQUENCE temporal_billing_location_tbl_id_seq RESTART WITH 2;
 
