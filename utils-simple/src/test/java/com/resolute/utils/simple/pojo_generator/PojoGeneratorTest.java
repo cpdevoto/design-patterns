@@ -14,7 +14,7 @@ public class PojoGeneratorTest {
 
   @Test
   public void test() throws IOException {
-    String expected = IOUtils.resourceToString("generated-pojo.txt", StandardCharsets.UTF_8,
+    String expected = IOUtils.resourceToString("expected-pojo.txt", StandardCharsets.UTF_8,
         PojoGeneratorTest.class);
 
     // @formatter:off

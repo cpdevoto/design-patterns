@@ -1,6 +1,7 @@
 package com.resolute.utils.simple.pojo_generator;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +51,7 @@ class SourceGenerator {
     generateStaticFactoryMethods();
     generateClassConstructor();
     generateClassGetterMethods();
+    generateHashcodeAndEquals();
     generateBuilderDeclaration();
     generateBuilderDataMembers();
     generateBuilderConstructors();
@@ -77,6 +79,7 @@ class SourceGenerator {
   private void generateImports() {
     Set<String> imports = Sets.newTreeSet();
     imports.add("java.util.function.Consumer");
+    imports.add("java.util.Objects");
     if (pojo.getJacksonAnnotations()) {
       imports.add("com.fasterxml.jackson.annotation.JsonCreator");
       imports.add("com.fasterxml.jackson.annotation.JsonInclude");
@@ -175,6 +178,41 @@ class SourceGenerator {
           buf.decreaseIndent().indentAndPrintln("}");
           buf.println();
         });
+  }
+
+  private void generateHashcodeAndEquals() {
+    buf.indentAndPrintln("@Override");
+    buf.indentAndPrintln("public int hashCode() {");
+    buf.increaseIndent().indentAndPrintln("final int prime = 31;");
+    buf.indentAndPrintln("int result = 1;");
+    buf.indentAndPrint("result = prime * result + Objects.hash(")
+        .print(pojo.getDataMembers().stream()
+            .map(PojoDataMember::getName)
+            .collect(joining(", ")))
+        .println(");");
+    buf.indentAndPrintln("return result;");
+    buf.decreaseIndent().indentAndPrintln("}");
+    buf.println();
+
+    buf.indentAndPrintln("@Override");
+    buf.indentAndPrintln("public boolean equals(Object obj) {");
+    buf.increaseIndent().indentAndPrintln("if (this == obj)");
+    buf.increaseIndent().indentAndPrintln("return true;");
+    buf.decreaseIndent().indentAndPrintln("if (obj == null)");
+    buf.increaseIndent().indentAndPrintln("return false;");
+    buf.decreaseIndent().indentAndPrintln("if (getClass() != obj.getClass())");
+    buf.increaseIndent().indentAndPrintln("return false;");
+    buf.decreaseIndent().indentAndPrint(pojo.getClassName()).print(" other = (")
+        .print(pojo.getClassName()).println(") obj;");
+    buf.indentAndPrint("return ")
+        .print(pojo.getDataMembers().stream()
+            .map(member -> "Objects.equals(" + member.getName() + ", other." + member.getName()
+                + ")")
+            .collect(joining(" && ")))
+        .println(";");
+    buf.decreaseIndent().indentAndPrintln("}");
+    buf.println();
+
   }
 
   private void generateBuilderDeclaration() {

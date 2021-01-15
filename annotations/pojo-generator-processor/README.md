@@ -37,10 +37,11 @@ eclipse {
 ```
 The best practice seems to be to put the annotations in one library and the processor in another.
 
-You should also update your ``.gitignore`` file to include the following line:
+You should also update your ``.gitignore`` file to include the following lines:
 
 ```
 src/main/generated
+.factorypath
 ```
 
 To generate a set of POJOs within a specific package, create a class within that package that has the ``@PojoModule`` annotation as shown below:
