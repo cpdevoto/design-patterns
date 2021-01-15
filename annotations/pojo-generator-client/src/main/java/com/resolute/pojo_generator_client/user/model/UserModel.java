@@ -22,7 +22,7 @@ public class UserModel {
     Set<Department> departments;
   }
 
-  @Pojo // Commenting this spec out so that it doesn't get regenerated!
+  // @Pojo // Commenting this spec out so that it doesn't get regenerated!
   class Employee {
     @Required
     String username;
