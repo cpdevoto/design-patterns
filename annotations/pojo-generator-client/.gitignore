@@ -1,6 +1,4 @@
-local.env
-docker-compose-build.yml
-lnd.env
+# src/main/generated
 
 ### java https://github.com/github/gitignore.git
 *.local

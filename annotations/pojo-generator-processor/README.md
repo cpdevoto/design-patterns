@@ -28,6 +28,12 @@ eclipse {
 ```
 The best practice seems to be to put the annotations in one library and the processor in another.
 
+You should also update your ``.gitignore`` file to include the following line:
+
+```
+src/main/generated
+```
+
 To generate a set of POJOs within a specific package create a class that has the ``@PojoModule`` annotation as shown below.
 
 ```java
@@ -70,7 +76,7 @@ After you set up the client project in Eclipse, you will need to perform the fol
   * Within left tree pane of the Run Configurations dialog, right-click on the ``Gradle Project`` node and select ``New configuration`` from the resulting context menu.
   * Within the right pane of the Run Configurations dialog, select the ``Gradle Tasks`` tab, and set the following properties:
     * **Name:** Give your run configuration any name you want; I always use the name of the project.
-    * **Gradle Tasks:** ``clean build``
+    * **Gradle Tasks:** ``clean compileJava``
     * **Working Directory:** Click on the ``Workspace...`` button, and select your client project from the resulting dialog.
     * Make sure that ``Show Execution View`` and ``Show Console`` are both checked.
   *  Within the right pane of the Run Configurations dialog, select the ``Project Settings`` tab, and set the following properties:
