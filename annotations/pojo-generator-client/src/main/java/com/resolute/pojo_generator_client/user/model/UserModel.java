@@ -1,4 +1,4 @@
-package com.resolute.pojo_generator_client.model;
+package com.resolute.pojo_generator_client.user.model;
 
 import java.util.List;
 import java.util.Map;
