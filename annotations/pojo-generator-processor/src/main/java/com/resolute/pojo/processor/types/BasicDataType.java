@@ -9,15 +9,22 @@ class BasicDataType implements DataType {
   private final String packageName;
   private final String simpleName;
 
-  BasicDataType(String value) {
+  BasicDataType(ImportExclusion importExclusion, String value) {
     int lastDot = value.lastIndexOf('.');
     if (lastDot == -1) {
       this.simpleName = value;
       this.packageName = null;
     } else {
       this.simpleName = value.substring(lastDot + 1);
-      this.packageName = value.substring(0, lastDot);
-
+      String packageName = value.substring(0, lastDot);
+      if (importExclusion != null &&
+          (packageName.equals(importExclusion.getPackageName()) ||
+              packageName.equals(
+                  importExclusion.getPackageName() + "." + importExclusion.getModuleName()))) {
+        this.packageName = null;
+      } else {
+        this.packageName = packageName;
+      }
     }
   }
 

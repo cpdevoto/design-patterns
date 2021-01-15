@@ -23,42 +23,8 @@ import com.resolute.utils.simple.StringUtils;
 public class PojoModuleProcessorTest {
 
   @Test
-  public void test_generates_builder() {
+  public void test_generates_pojo() {
 
-    String s = "package com.resolute.user;\n" +
-        "\n" +
-        "import java.util.Map;\n" +
-        "import java.util.List;\n" +
-        "import com.resolute.pojo.annotations.PojoModule;\n" +
-        "import com.resolute.pojo.annotations.Pojo;\n" +
-        "import com.resolute.pojo.annotations.Required;\n" +
-        "\n" +
-        "@PojoModule\n" +
-        "public class UserModel {\n" +
-        "\n" +
-        "  @Pojo(json = true)\n" +
-        "  class Manager {\n" +
-        "    @Required\n" +
-        "    String username;\n" +
-        "    String firstname;\n" +
-        "    String lastname;\n" +
-        "    @Required\n" +
-        "    int numEmployees;\n" +
-        "  }\n" +
-        "\n" +
-        "  @Pojo\n" +
-        "  class Employee {\n" +
-        "    @Required\n" +
-        "    String username;\n" +
-        "    String firstname;\n" +
-        "    String lastname;\n" +
-        "    Map<Integer, List<String>> roles;\n" +
-        "    int [] ids;\n" +
-        "  }\n" +
-        "\n" +
-        "}";
-
-    System.out.println(s);
     JavaFileObject userModelSource =
         JavaFileObjects.forSourceString("com.resolute.user.UserModel",
             "package com.resolute.user;\n" +
@@ -335,6 +301,310 @@ public class PojoModuleProcessorTest {
         .compilesWithoutError()
         .and()
         .generatesSources(expectedManagerSource, expectedEmployeeSource);
+  }
+
+  @Test
+  public void test_module_import_exclusion() {
+
+    JavaFileObject userModelSource =
+        JavaFileObjects.forSourceString("com.resolute.user.UserModel",
+            "package com.resolute.user;\n" +
+                "\n" +
+                "import java.util.List;\n" +
+                "import com.resolute.pojo.annotations.PojoModule;\n" +
+                "import com.resolute.pojo.annotations.Pojo;\n" +
+                "import com.resolute.pojo.annotations.Required;\n" +
+                "\n" +
+                "@PojoModule\n" +
+                "public class UserModel {\n" +
+                "\n" +
+                "  @Pojo(json = true)\n" +
+                "  class Manager {\n" +
+                "    @Required\n" +
+                "    String username;\n" +
+                "    String firstname;\n" +
+                "    String lastname;\n" +
+                "    @Required\n" +
+                "    List<Department> departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Pojo\n" +
+                "  class Department {\n" +
+                "    @Required\n" +
+                "    int id;\n" +
+                "    @Required\n" +
+                "    String name;\n" +
+                "  }\n" +
+                "\n" +
+                "}");
+
+    // The source for the generated Manager class should not contain an import statement for
+    // com.resolute.user.UserModel.Department!
+    JavaFileObject expectedManagerSource =
+        JavaFileObjects.forSourceString("com.resolute.user.Manager",
+            "package com.resolute.user;\n" +
+                "\n" +
+                "import static java.util.Objects.requireNonNull;\n" +
+                "\n" +
+                "import com.fasterxml.jackson.annotation.JsonCreator;\n" +
+                "import com.fasterxml.jackson.annotation.JsonInclude;\n" +
+                "import com.fasterxml.jackson.annotation.JsonInclude.Include;\n" +
+                "import com.fasterxml.jackson.databind.annotation.JsonDeserialize;\n" +
+                "import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;\n" +
+                "import com.google.common.collect.ImmutableList;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Optional;\n" +
+                "import java.util.function.Consumer;\n" +
+                "\n" +
+                "@JsonInclude(Include.NON_NULL)\n" +
+                "@JsonDeserialize(builder = Manager.Builder.class)\n" +
+                "public class Manager {\n" +
+                "  private final String username;\n" +
+                "  private final String firstname;\n" +
+                "  private final String lastname;\n" +
+                "  private final List<Department> departments;\n" +
+                "\n" +
+                "  @JsonCreator\n" +
+                "  public static Builder builder () {\n" +
+                "    return new Builder();\n" +
+                "  }\n" +
+                "\n" +
+                "  public static Builder builder (Manager manager) {\n" +
+                "    return new Builder(manager);\n" +
+                "  }\n" +
+                "\n" +
+                "  private Manager (Builder builder) {\n" +
+                "    this.username = builder.username;\n" +
+                "    this.firstname = builder.firstname;\n" +
+                "    this.lastname = builder.lastname;\n" +
+                "    this.departments = builder.departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  public String getUsername() {\n" +
+                "    return username;\n" +
+                "  }\n" +
+                "\n" +
+                "  public Optional<String> getFirstname() {\n" +
+                "    return Optional.ofNullable(firstname);\n" +
+                "  }\n" +
+                "\n" +
+                "  public Optional<String> getLastname() {\n" +
+                "    return Optional.ofNullable(lastname);\n" +
+                "  }\n" +
+                "\n" +
+                "  public List<Department> getDepartments() {\n" +
+                "    return departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  @JsonPOJOBuilder\n" +
+                "  public static class Builder {\n" +
+                "    private String username;\n" +
+                "    private String firstname;\n" +
+                "    private String lastname;\n" +
+                "    private List<Department> departments;\n" +
+                "\n" +
+                "    private Builder() {}\n" +
+                "\n" +
+                "    private Builder(Manager manager) {\n" +
+                "      requireNonNull(manager, \"manager cannot be null\");\n" +
+                "      this.username = manager.username;\n" +
+                "      this.firstname = manager.firstname;\n" +
+                "      this.lastname = manager.lastname;\n" +
+                "      this.departments = manager.departments;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder with(Consumer<Builder> consumer) {\n" +
+                "      requireNonNull(consumer, \"consumer cannot be null\");\n" +
+                "      consumer.accept(this);\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withUsername(String username) {\n" +
+                "      requireNonNull(username, \"username cannot be null\");\n" +
+                "      this.username = username;\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withFirstname(String firstname) {\n" +
+                "      this.firstname = firstname;\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withLastname(String lastname) {\n" +
+                "      this.lastname = lastname;\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withDepartments(List<Department> departments) {\n" +
+                "      requireNonNull(departments, \"departments cannot be null\");\n" +
+                "      this.departments = ImmutableList.copyOf(departments);\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Manager build() {\n" +
+                "      requireNonNull(username, \"username cannot be null\");\n" +
+                "      requireNonNull(departments, \"departments cannot be null\");\n" +
+                "      return new Manager(this);\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+
+    printGeneratedSource(userModelSource);
+
+    assertAbout(javaSources())
+        .that(ImmutableSet.of(userModelSource))
+        .processedWith(new PojoModuleProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(expectedManagerSource);
+  }
+
+  @Test
+  public void test_package_import_exclusion() {
+
+    JavaFileObject userModelSource =
+        JavaFileObjects.forSourceString("com.resolute.user.UserModel",
+            "package com.resolute.user;\n" +
+                "\n" +
+                "import java.util.List;\n" +
+                "import com.resolute.pojo.annotations.PojoModule;\n" +
+                "import com.resolute.pojo.annotations.Pojo;\n" +
+                "import com.resolute.pojo.annotations.Required;\n" +
+                "\n" +
+                "@PojoModule\n" +
+                "public class UserModel {\n" +
+                "\n" +
+                "  @Pojo(json = true)\n" +
+                "  class Manager {\n" +
+                "    @Required\n" +
+                "    String username;\n" +
+                "    String firstname;\n" +
+                "    String lastname;\n" +
+                "    @Required\n" +
+                "    List<Department2> departments;\n" +
+                "  }\n" +
+                "\n" +
+                "}");
+
+    // The source for the generated Manager class should not contain an import statement for
+    // com.resolute.user.UserModel.Department!
+    JavaFileObject expectedManagerSource =
+        JavaFileObjects.forSourceString("com.resolute.user.Manager",
+            "package com.resolute.user;\n" +
+                "\n" +
+                "import static java.util.Objects.requireNonNull;\n" +
+                "\n" +
+                "import com.fasterxml.jackson.annotation.JsonCreator;\n" +
+                "import com.fasterxml.jackson.annotation.JsonInclude;\n" +
+                "import com.fasterxml.jackson.annotation.JsonInclude.Include;\n" +
+                "import com.fasterxml.jackson.databind.annotation.JsonDeserialize;\n" +
+                "import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;\n" +
+                "import com.google.common.collect.ImmutableList;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Optional;\n" +
+                "import java.util.function.Consumer;\n" +
+                "\n" +
+                "@JsonInclude(Include.NON_NULL)\n" +
+                "@JsonDeserialize(builder = Manager.Builder.class)\n" +
+                "public class Manager {\n" +
+                "  private final String username;\n" +
+                "  private final String firstname;\n" +
+                "  private final String lastname;\n" +
+                "  private final List<Department2> departments;\n" +
+                "\n" +
+                "  @JsonCreator\n" +
+                "  public static Builder builder () {\n" +
+                "    return new Builder();\n" +
+                "  }\n" +
+                "\n" +
+                "  public static Builder builder (Manager manager) {\n" +
+                "    return new Builder(manager);\n" +
+                "  }\n" +
+                "\n" +
+                "  private Manager (Builder builder) {\n" +
+                "    this.username = builder.username;\n" +
+                "    this.firstname = builder.firstname;\n" +
+                "    this.lastname = builder.lastname;\n" +
+                "    this.departments = builder.departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  public String getUsername() {\n" +
+                "    return username;\n" +
+                "  }\n" +
+                "\n" +
+                "  public Optional<String> getFirstname() {\n" +
+                "    return Optional.ofNullable(firstname);\n" +
+                "  }\n" +
+                "\n" +
+                "  public Optional<String> getLastname() {\n" +
+                "    return Optional.ofNullable(lastname);\n" +
+                "  }\n" +
+                "\n" +
+                "  public List<Department2> getDepartments() {\n" +
+                "    return departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  @JsonPOJOBuilder\n" +
+                "  public static class Builder {\n" +
+                "    private String username;\n" +
+                "    private String firstname;\n" +
+                "    private String lastname;\n" +
+                "    private List<Department2> departments;\n" +
+                "\n" +
+                "    private Builder() {}\n" +
+                "\n" +
+                "    private Builder(Manager manager) {\n" +
+                "      requireNonNull(manager, \"manager cannot be null\");\n" +
+                "      this.username = manager.username;\n" +
+                "      this.firstname = manager.firstname;\n" +
+                "      this.lastname = manager.lastname;\n" +
+                "      this.departments = manager.departments;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder with(Consumer<Builder> consumer) {\n" +
+                "      requireNonNull(consumer, \"consumer cannot be null\");\n" +
+                "      consumer.accept(this);\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withUsername(String username) {\n" +
+                "      requireNonNull(username, \"username cannot be null\");\n" +
+                "      this.username = username;\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withFirstname(String firstname) {\n" +
+                "      this.firstname = firstname;\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withLastname(String lastname) {\n" +
+                "      this.lastname = lastname;\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Builder withDepartments(List<Department2> departments) {\n" +
+                "      requireNonNull(departments, \"departments cannot be null\");\n" +
+                "      this.departments = ImmutableList.copyOf(departments);\n" +
+                "      return this;\n" +
+                "    }\n" +
+                "\n" +
+                "    public Manager build() {\n" +
+                "      requireNonNull(username, \"username cannot be null\");\n" +
+                "      requireNonNull(departments, \"departments cannot be null\");\n" +
+                "      return new Manager(this);\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
+
+    printGeneratedSource(userModelSource);
+
+    assertAbout(javaSources())
+        .that(ImmutableSet.of(userModelSource))
+        .processedWith(new PojoModuleProcessor())
+        .compilesWithoutError()
+        .and()
+        .generatesSources(expectedManagerSource);
   }
 
   private void printGeneratedSource(JavaFileObject source) {

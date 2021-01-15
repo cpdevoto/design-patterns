@@ -33,6 +33,7 @@ import com.resolute.pojo.annotations.Pojo;
 import com.resolute.pojo.annotations.PojoModule;
 import com.resolute.pojo.annotations.Required;
 import com.resolute.pojo.processor.types.DataTypeParser;
+import com.resolute.pojo.processor.types.ImportExclusion;
 import com.resolute.utils.simple.pojo_generator.DataType;
 import com.resolute.utils.simple.pojo_generator.PojoDataMemberBuilder;
 import com.resolute.utils.simple.pojo_generator.PojoGenerator;
@@ -84,6 +85,7 @@ public class PojoModuleProcessor extends AbstractProcessor {
   }
 
   private void processPojo(TypeElement pojo) {
+    String moduleName = pojo.getEnclosingElement().getSimpleName().toString();
     String packageName = getPackageName(pojo);
     String className = pojo.getSimpleName().toString();
     boolean jacksonAnnotations = pojo.getAnnotation(Pojo.class).json();
@@ -105,8 +107,9 @@ public class PojoModuleProcessor extends AbstractProcessor {
       generator.jacksonAnnotations();
     }
 
+    ImportExclusion importExclusion = new ImportExclusion(packageName, moduleName);
     List<PojoDataMemberBuilder> dataMemberBuilders = memberElements.stream()
-        .map(this::toDataMemberBuilder)
+        .map(member -> toDataMemberBuilder(member, importExclusion))
         .collect(toList());
 
     PojoDataMemberBuilder[] dataMemberBuilderArray =
@@ -155,12 +158,13 @@ public class PojoModuleProcessor extends AbstractProcessor {
     return packageElement.getQualifiedName().toString();
   }
 
-  private PojoDataMemberBuilder toDataMemberBuilder(VariableElement member) {
+  private PojoDataMemberBuilder toDataMemberBuilder(VariableElement member,
+      ImportExclusion importExclusion) {
     return PojoGenerator.dataMember(dm -> {
       String name = member.getSimpleName().toString();
       // String type = Util.typeToString(member.asType());
 
-      DataType type = toDataType(name, member.asType());
+      DataType type = toDataType(member.asType(), importExclusion);
 
       dm.name(name)
           .dataType(type);
@@ -171,10 +175,9 @@ public class PojoModuleProcessor extends AbstractProcessor {
     });
   }
 
-  private DataType toDataType(String name, TypeMirror type) {
+  private DataType toDataType(TypeMirror type, ImportExclusion importExclusion) {
     String fullyQualifiedType = TypeName.get(type).toString();
-    return DataTypeParser.parse(fullyQualifiedType);
-
+    return DataTypeParser.parse(fullyQualifiedType, importExclusion);
 
   }
 }

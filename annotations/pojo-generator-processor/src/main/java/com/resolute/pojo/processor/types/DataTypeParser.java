@@ -13,20 +13,22 @@ import com.resolute.utils.simple.pojo_generator.DataType;
 
 public class DataTypeParser {
 
-  private LexicalAnalyzer lexer;
+  private final ImportExclusion importExclusion;
+  private final LexicalAnalyzer lexer;
   private Token token;
 
-  public static DataType parse(String expression) {
+  public static DataType parse(String expression, ImportExclusion importExclusion) {
     requireNonNull(expression, "expression cannot be null");
     checkArgument(expression.length() > 0, "expression cannot be an empty string");
     try (StringReader in = new StringReader(expression)) {
       LexicalAnalyzer lexer = new LexicalAnalyzer(in);
-      DataTypeParser parser = new DataTypeParser(lexer);
+      DataTypeParser parser = new DataTypeParser(importExclusion, lexer);
       return parser.parse();
     }
   }
 
-  private DataTypeParser(LexicalAnalyzer lexer) {
+  private DataTypeParser(ImportExclusion importExclusion, LexicalAnalyzer lexer) {
+    this.importExclusion = importExclusion;
     this.lexer = lexer;
   }
 
@@ -58,7 +60,7 @@ public class DataTypeParser {
         return new Comma();
       case IDENTIFIER:
         String value = IdentifierToken.class.cast(tok).getValue();
-        return new BasicDataType(value);
+        return new BasicDataType(importExclusion, value);
       default:
         // This can never happen because of the surrounding if clause
         throw new AssertionError("Unexpected type: " + tok.getType());
