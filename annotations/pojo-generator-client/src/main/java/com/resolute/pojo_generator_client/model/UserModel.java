@@ -40,4 +40,19 @@ public class UserModel {
     String name;
   }
 
+  @Pojo
+  class Foo {
+    @Required
+    int id;
+    @Required
+    String name;
+  }
+
+  @Pojo
+  class Bar {
+    @Required
+    int id;
+    @Required
+    String name;
+  }
 }

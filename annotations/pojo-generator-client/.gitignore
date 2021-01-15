@@ -1,4 +1,5 @@
 src/main/generated
+.factorypath
 
 ### java https://github.com/github/gitignore.git
 *.local

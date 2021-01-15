@@ -7,6 +7,15 @@ Source code for the annotation processor tutorial found [here](https://www.youtu
 Here is the ``build.gradle`` file for clients:
 
 ```
+// Eclipse Integration --> Running ./gradlew cleanEclipse eclipse will automatically enable your annotation processor in Eclipse! 
+plugins {
+  id 'net.ltgt.apt' version '0.21'
+  id 'net.ltgt.apt-eclipse' version '0.21'   
+}
+
+apply plugin: 'eclipse'
+// End Eclipse Integration
+
 dependencies {
     annotationProcessor "com.resolute:ryanharter-annotation-processor:${rbiDepVersion}" // JAR containing processor class
     compileOnly         "com.resolute:ryanharter-annotation-processor:${rbiDepVersion}" // JAR containing annotations 
@@ -17,7 +26,7 @@ compileJava {
   options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/main/generated")
 }
 
-// Add the ${projectDir}/src/main/generated as a source folder in Eclipse
+// EclipseIntegration -> Add the ${projectDir}/src/main/generated as a source folder in Eclipse
 eclipse {
     classpath {
         file.whenMerged { cp ->
@@ -28,26 +37,50 @@ eclipse {
 ```
 The best practice seems to be to put the annotations in one library and the processor in another.
 
-After you set up the client project in Eclipse, you will need to perform the following steps in order invoke the annotation processor from within your IDE:
+You should also update your ``.gitignore`` file to include the following lines:
 
-  * Within Eclipse, make sure that you have added the Gradle Nature your project by right-clicking on the node corresponding to the project in Project Explorer and selecting ``Configure > Add Gradle Nature`` from the resulting context menu.
-  * From the main menu in Eclipse select ``Run > Run Configurations...`` to launch the Run Configurations dialog.
-  * Within left tree pane of the Run Configurations dialog, right-click on the ``Gradle Project`` node and select ``New configuration`` from the resulting context menu.
-  * Within the right pane of the Run Configurations dialog, select the ``Gradle Tasks`` tab, and set the following properties:
-    * **Name:** Give your run configuration any name you want; I always use the name of the project.
-    * **Gradle Tasks:** clean build
-    * **Working Directory:** Click on the ``Workspace...`` button, and select your client project from the resulting dialog.
-    * Make sure that ``Show Execution View`` and ``Show Console`` are both checked.
-  *  Within the right pane of the Run Configurations dialog, select the ``Project Settings`` tab, and set the following properties:
-    * **Gradle distribution:** Make sure the ``Gradle Wrapper`` radio button is selected.
-  * Within the right pane of the Run Configurations dialog, click on the ``Run`` button that appears on the bottom-right corner.
-  * After running the Gradle tasks, right-click on the project node within the Package Explorer and select ``Refresh`` within the result context menu.
-  * Use this newly created Run Configuration any time you want to invoke the annotation processor from within your IDE.
+```
+src/main/generated
+.factorypath
+```
+To generate a Builder companion class for a specific POJO class, create the POJO class so that it has the ``@PojoModule`` annotation as shown below:
+
+```
+package com.resolute.user;
+
+import com.ryanharter.example.annotations.Builder;
+
+@Builder
+public class User {
+  String username;
+  String firstname;
+  String lastname;
+  int age;
+
+  public String getUsername() {
+    return username;
+  }
+
+  public String getFirstname() {
+    return firstname;
+  }
+
+  public String getLastname() {
+    return lastname;
+  }
+
+  public int getAge() {
+    return age;
+  }
+}
+```
+After you set up the client project in Eclipse, your annotation processor will run automatically any time you save changes to a file containing the ``@Builder`` annotation.
   
 If you wish to make modifications to the generated file:
 
-  * Move the generated file from the ``src/main/generated`` directory to the ``src/main/java`` directory.
-  * Find the class containing the ``@Builder`` annotation, and just comment out the annotation. 
-  * Later on, if you want to regenerate the class, delete the generated file from the ``src/main/java`` directory, uncomment the ``@Builder`` annotation, and relaunch your Gradle Run Configuration.  
+  * Move the generated file from the ``src/main/generated`` directory to the equivalent package within the ``src/main/java`` directory.
+  * Find the class containing the ``@Builder`` annotation, and just comment out the ``@Builder`` annotation. 
+  * Later on, if you want to regenerate the class, delete the generated file from the ``src/main/java`` directory, uncomment the ``@Builder`` annotation, and save your changes.  
+
   
         

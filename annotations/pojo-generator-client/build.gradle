@@ -18,6 +18,8 @@ buildscript {
 
 plugins {
   id 'nebula.dependency-lock' version '11.1.1'
+  id 'net.ltgt.apt' version '0.21'
+  id 'net.ltgt.apt-eclipse' version '0.21'   
 }
 
 apply plugin: 'resolute-common-config'
