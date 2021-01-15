@@ -1,7 +1,7 @@
 package com.resolute.pojo_generator_client;
 
-import com.resolute.pojo_generator_client.model.Employee;
-import com.resolute.pojo_generator_client.model.Manager;
+import com.resolute.pojo_generator_client.user.model.Employee;
+import com.resolute.pojo_generator_client.user.model.Manager;
 
 public class Main {
 

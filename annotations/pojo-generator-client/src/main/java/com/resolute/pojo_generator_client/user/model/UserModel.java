@@ -22,14 +22,13 @@ public class UserModel {
     Set<Department> departments;
   }
 
-  // @Pojo Commenting this spec out so that it doesn't get regenerated!
+  @Pojo // Commenting this spec out so that it doesn't get regenerated!
   class Employee {
     @Required
     String username;
     String firstname;
     String lastname;
     Map<Integer, List<String>> roles;
-    int[] ids;
   }
 
   @Pojo(json = true)
