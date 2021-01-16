@@ -45,6 +45,8 @@ eclipse {
 ```
 The best practice seems to be to put the annotations in one library and the processor in another.
 
+To set up your project in eclipse, you will need to run ``./gradlew cleanEclipse eclipse --refresh-dependencies``.  If you have compilation errors once you import the project, just run ``Project > Clean`` for the project in question to force annotation processing for all source files.  You can add a Gradle nature to your Eclipse project by right-clicking on it in the Package Explorer, and then selecting ``Configure > Add Gradle Nature``.
+
 You should also update your ``.gitignore`` file to include the following lines:
 
 ```
