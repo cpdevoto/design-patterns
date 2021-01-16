@@ -18,7 +18,6 @@ buildscript {
 
 plugins {
   id 'nebula.dependency-lock' version '11.1.1'
-  id 'net.ltgt.apt' version '0.21'
   id 'net.ltgt.apt-eclipse' version '0.21'   
 }
 
@@ -54,20 +53,25 @@ dependencies {
 }
 
 // START - Gradle code needed to include generated source in Eclipse project
+mkdir "${projectDir}/src/main/generated"
+
 compileJava {
 	options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/main/generated")
 }
 
-
-
 eclipse {
-    classpath {
-        file.whenMerged { cp ->
-            cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
-        }
+  classpath {
+    file.whenMerged { cp ->
+      cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
     }
+  }
+  jdt {
+    apt {
+      genSrcDir = file("${projectDir}/src/main/generated")
+    }
+  }
 }
-// START - Gradle code needed to include generated source in Eclipse project
+// END - Gradle code needed to include generated source in Eclipse project
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'

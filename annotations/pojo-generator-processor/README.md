@@ -22,17 +22,25 @@ dependencies {
 }
 
 // Change the default directory where the generated files will be written to ${projectDir}/src/main/generated
+mkdir "${projectDir}/src/main/generated"
+
 compileJava {
   options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/main/generated")
 }
 
-//EclipseIntegration -> Add the ${projectDir}/src/main/generated as a source folder in Eclipse
+//EclipseIntegration -> Add the ${projectDir}/src/main/generated as a source folder in Eclipse,
+// and also as the generated sources directory in Eclipse.
 eclipse {
-    classpath {
-        file.whenMerged { cp ->
-            cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
-        }
+  classpath {
+    file.whenMerged { cp ->
+      cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
     }
+  }
+  jdt {
+    apt {
+      genSrcDir = file("${projectDir}/src/main/generated")
+    }
+  }
 }
 ```
 The best practice seems to be to put the annotations in one library and the processor in another.
@@ -44,7 +52,7 @@ src/main/generated
 .factorypath
 ```
 
-To generate a set of POJOs within a specific package, create a class within that package that has the ``@PojoModule`` annotation as shown below:
+To generate a set of POJOs within a specific package, create a class within that package that has the ``@PojoModule`` annotation as shown below (Note that **data members which are arrays are not properly supported**! The behavior of a generated class that contains arrays is not guaranteed):
 
 ```java
 package com.resolute.user;
