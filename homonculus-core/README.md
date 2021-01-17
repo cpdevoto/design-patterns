@@ -212,7 +212,7 @@ dependencies {
     compileOnly 'com.google.code.findbugs:annotations:3.0.1'       
                 
              
-    testCompile 'junit:junit:4.12', 
+    testCompile 'junit:junit:4.13.1', 
                 'org.mockito:mockito-core:1.10.19',
                 'org.hamcrest:hamcrest-all:1.3'     
 }

@@ -43,7 +43,7 @@ dependencies {
                 'org.hibernate:hibernate-validator:5.2.4.Final',
                 'org.glassfish:javax.el:3.0.0',
                 "com.resolute:jackson-utils-simple:${rbiDepVersion}"
-    testCompile 'junit:junit:4.12', 
+    testCompile 'junit:junit:4.13.1', 
                 'org.mockito:mockito-core:1.10.19',
                 'org.hamcrest:hamcrest-all:1.3'    
 }

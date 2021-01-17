@@ -27,7 +27,7 @@ targetCompatibility = '1.8'
 
 dependencies {
     compile 'com.google.guava:guava:21.0',
-            'junit:junit:4.12', 
+            'junit:junit:4.13.1', 
             'org.mockito:mockito-core:1.10.19',
             'org.hamcrest:hamcrest-all:1.3',
             'io.findify:s3mock_2.12:0.2.3',
