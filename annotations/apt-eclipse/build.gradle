@@ -10,8 +10,7 @@ buildscript {
 
         dependencies {
             classpath "com.resolutebi:GradleCommonConfigurationPlugin:1.0.+",
-                      "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release",
-                      "com.resolute:apt-eclipse:3.+"
+                      "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
              
         }
     }
@@ -19,11 +18,11 @@ buildscript {
 
 plugins {
   id 'nebula.dependency-lock' version '11.1.1'
-  id 'net.ltgt.apt-eclipse' version '0.21'   
 }
 
 apply plugin: 'resolute-common-config'
-apply plugin: 'com.resolute.apt-eclipse'
+apply plugin: 'groovy-gradle-plugin'
+apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 group = 'com.resolute'
@@ -32,14 +31,8 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 dependencies {
-    annotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}"
-    compileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}"
-
-    implementation     "com.resolute:utils-simple:${rbiDepVersion}",
-                       'org.slf4j:slf4j-api:1.7.30',
-                       'com.google.guava:guava:30.1-jre',
-                       "com.resolute:jackson-utils-simple:${rbiDepVersion}"
-                       
+    runtimeOnly        'net.ltgt.gradle:gradle-apt-plugin:0.21' 
+    implementation     'org.slf4j:slf4j-api:1.7.30'
   
 	testImplementation(platform('org.junit:junit-bom:5.7.0'))
 	testImplementation 'org.junit.jupiter:junit-jupiter',
@@ -47,8 +40,18 @@ dependencies {
                        'org.testcontainers:testcontainers:1.15.1',
                        'org.testcontainers:junit-jupiter:1.15.1',
                        'org.mockito:mockito-core:3.6.28',
-                       'org.slf4j:slf4j-simple:1.7.30'     
-                
+                       'org.slf4j:slf4j-simple:1.7.30',
+                       'net.ltgt.gradle:gradle-apt-plugin:0.21'
+}
+
+gradlePlugin {
+  plugins {
+    simplePlugin {
+      id = 'com.resolute.apt-eclipse'
+      implementationClass = 'com.resolute.gradle.plugins.eclipse.AptEclipsePlugin'
+    }
+  }
+  
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

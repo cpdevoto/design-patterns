@@ -2,46 +2,35 @@
 
 **Owner(s):** Carlos Devoto
 
-An annotation processor that can be used to generate classes from POJO specifications.
+An annotation processor that can be used to generate classes from POJO specifications.  
+
+To use incorporate this annotation processor into your build, you need Gradle 4.3+.
+
+## Usage
+
 
 Here is the ``build.gradle`` file for clients:
 
 ```
-// Eclipse Integration --> Running ./gradlew cleanEclipse eclipse will automatically enable your annotation processor in Eclipse! 
-plugins {
-  id 'net.ltgt.apt-eclipse' version '0.21'   
+buildscript {
+  repositories {
+    dependencies {
+      classpath "com.resolute:apt-eclipse:3.+"
+    }
+  }
 }
 
-apply plugin: 'eclipse'
-// End Eclipse Integration
+apply plugin: 'com.resolute.apt-eclipse'
 
 dependencies {
     annotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}" // JAR containing processor class
     compileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}" // JAR containing annotations 
-}
-
-// Change the default directory where the generated files will be written to ${projectDir}/src/main/generated
-mkdir "${projectDir}/src/main/generated"
-
-compileJava {
-  options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/main/generated")
-}
-
-//EclipseIntegration -> Add the ${projectDir}/src/main/generated as a source folder in Eclipse,
-// and also as the generated sources directory in Eclipse.
-eclipse {
-  classpath {
-    file.whenMerged { cp ->
-      cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
-    }
-  }
-  jdt {
-    apt {
-      genSrcDir = file("${projectDir}/src/main/generated")
-    }
-  }
+    
+    // If you want to use the @Pojo annotation with json = true, you should include the following dependency:
+    implementation      "com.resolute:jackson-utils-simple:${rbiDepVersion}"
 }
 ```
+
 The best practice seems to be to put the annotations in one library and the processor in another.
 
 To set up your project in Eclipse, you will need to run ``./gradlew cleanEclipse eclipse --refresh-dependencies``.  If you have compilation errors once you import the project, just run ``Project > Clean`` for the project in question to force annotation processing for all source files.  You can add a Gradle nature to your Eclipse project by right-clicking on it in the Package Explorer, and then selecting ``Configure > Add Gradle Nature``.
@@ -94,7 +83,52 @@ If you wish to make modifications to the generated file:
 
   * Move the generated file from the ``src/main/generated`` directory to the equivalent package within the ``src/main/java`` directory.
   * Find the class containing the ``@PojoModule`` annotation, and just comment out the ``@Pojo`` annotation for the POJO specification in question. 
-  * Later on, if you want to regenerate the class, delete the generated file from the ``src/main/java`` directory, uncomment the ``@Pojo`` annotation, and save your changes.  
+  * Later on, if you want to regenerate the class, delete the generated file from the ``src/main/java`` directory, uncomment the ``@Pojo`` annotation, and save your changes.
+  
+## Gradle Configuration Without com.resolute.apt-eclipse Plugin
+
+Here is the ``build.gradle`` file for clients if you do not use the ``com.resolute.apt-eclipse`` Gradle plugin. I have included it here to help understand what the plugin is doing.
+
+```
+// Eclipse Integration --> Running ./gradlew cleanEclipse eclipse will automatically enable your annotation processor in Eclipse! 
+plugins {
+  id 'net.ltgt.apt-eclipse' version '0.21'   
+}
+
+apply plugin: 'eclipse'
+// End Eclipse Integration
+
+dependencies {
+    annotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}" // JAR containing processor class
+    compileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}" // JAR containing annotations 
+    
+    // If you want to use the @Pojo annotation with json = true, you should include the following dependency:
+    implementation      "com.resolute:jackson-utils-simple:${rbiDepVersion}"
+}
+
+// Change the default directory where the generated files will be written to ${projectDir}/src/main/generated
+mkdir "${projectDir}/src/main/generated"
+
+compileJava {
+  options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/main/generated")
+}
+
+//EclipseIntegration -> Add the ${projectDir}/src/main/generated as a source folder in Eclipse,
+// and also as the generated sources directory in Eclipse.
+eclipse {
+  classpath {
+    file.whenMerged { cp ->
+      cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
+    }
+  }
+  jdt {
+    apt {
+      genSrcDir = file("${projectDir}/src/main/generated")
+    }
+  }
+}
+```
+    
 
   
         
