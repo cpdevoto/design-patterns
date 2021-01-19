@@ -2,6 +2,7 @@ package com.resolute.gradle.plugins.eclipse
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.jvm.tasks.Jar
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -27,6 +28,7 @@ class AptEclipsePlugin implements Plugin<Project> {
 
     project.mkdir("${project.projectDir}/src/main/generated")
     project.mkdir("${project.projectDir}/src/test/generated")
+
 
     project.compileJava {
       options.annotationProcessorGeneratedSourcesDirectory = project.file("${project.projectDir}/src/main/generated")
@@ -57,6 +59,14 @@ class AptEclipsePlugin implements Plugin<Project> {
         apt {
           genSrcDir = project.file("${project.projectDir}/src/main/generated")
           genTestSrcDir = project.file("${project.projectDir}/src/test/generated")
+        }
+      }
+    }
+
+    project.getTasks().each {
+      if (it instanceof Jar && "sources".equals(it.classifier)) {
+        it.getMetaInf().from('src/main/generated') {
+          include '**/*.java'
         }
       }
     }
