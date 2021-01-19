@@ -151,11 +151,12 @@ eclipse {
   }
   project.getTasks().each {
     if (it instanceof Jar && "sources".equals(it.classifier)) {
-      it.getMetaInf().from('src/main/generated') {
+      it.from('src/main/generated') {
         include '**/*.java'
       }
     }
-  }  
+}
+  
 }
 ```
     

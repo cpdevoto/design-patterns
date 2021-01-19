@@ -63,12 +63,23 @@ class AptEclipsePlugin implements Plugin<Project> {
       }
     }
 
+    project.afterEvaluate {configureJarTasks(it)}
+  }
+
+  private void configureJarTasks(Project project) {
+    List<Jar> sourcesJar = new ArrayList<>()
     project.getTasks().each {
       if (it instanceof Jar && "sources".equals(it.classifier)) {
-        it.getMetaInf().from('src/main/generated') {
+        sourcesJar.add(it)
+        logger.quiet('Updating to copy spec for task "'+ it.name + '" to include the generated source directory');
+        it.from('src/main/generated') {
           include '**/*.java'
         }
+      } else {
       }
+    }
+    if (sourcesJar.isEmpty()) {
+      logger.quiet('No Jar tasks found with the "sources" classifier, so no copy specs will be updated to include the generated source directory')
     }
   }
 
