@@ -32,6 +32,15 @@ dependencies {
     // If you want to use the @Pojo annotation with json = true, you should include the following dependency:
     implementation      "com.resolute:jackson-utils-simple:${rbiDepVersion}"
 }
+
+// If you have a sourceJar task, you will want to include source files from src/main/generated as follows:
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    from('src/main/generated') {
+      include '**/*.java'
+    }
+}
 ```
 
 The best practice seems to be to put the annotations in one library and the processor in another.
