@@ -26,6 +26,9 @@ dependencies {
     annotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}" // JAR containing processor class
     compileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}" // JAR containing annotations 
     
+    testAnnotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}"
+    testCompileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}"
+    
     // If you want to use the @Pojo annotation with json = true, you should include the following dependency:
     implementation      "com.resolute:jackson-utils-simple:${rbiDepVersion}"
 }
@@ -39,6 +42,7 @@ You should also update your ``.gitignore`` file to include the following lines:
 
 ```
 src/main/generated
+src/test/generated
 .factorypath
 ```
 
@@ -101,16 +105,25 @@ dependencies {
     annotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}" // JAR containing processor class
     compileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}" // JAR containing annotations 
     
+    testAnnotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}"
+    testCompileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}"
+
     // If you want to use the @Pojo annotation with json = true, you should include the following dependency:
     implementation      "com.resolute:jackson-utils-simple:${rbiDepVersion}"
 }
 
 // Change the default directory where the generated files will be written to ${projectDir}/src/main/generated
 mkdir "${projectDir}/src/main/generated"
+mkdir "${projectDir}/src/test/generated"
 
 compileJava {
   options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/main/generated")
 }
+
+compileTestJava {
+  options.annotationProcessorGeneratedSourcesDirectory = file("${projectDir}/src/test/generated")
+}
+
 
 //EclipseIntegration -> Add the ${projectDir}/src/main/generated as a source folder in Eclipse,
 // and also as the generated sources directory in Eclipse.
@@ -118,11 +131,22 @@ eclipse {
   classpath {
     file.whenMerged { cp ->
       cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
+      cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/test/generated', null) )
+      def testFolders = cp.entries.findAll { entry ->
+        entry.kind == 'src' && ((org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry) entry).path.startsWith("src/test")
+      }
+      testFolders.each {
+        if (it.path.equals('src/test/generated')) {
+          return
+        }
+        it.getEntryAttributes().put("test", "true")
+      }
     }
   }
   jdt {
     apt {
       genSrcDir = file("${projectDir}/src/main/generated")
+      genTestSrcDir = file("${projectDir}/src/test/generated")
     }
   }
 }

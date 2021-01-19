@@ -26,20 +26,37 @@ class AptEclipsePlugin implements Plugin<Project> {
     project.pluginManager.apply("net.ltgt.apt-eclipse")
 
     project.mkdir("${project.projectDir}/src/main/generated")
+    project.mkdir("${project.projectDir}/src/test/generated")
 
     project.compileJava {
       options.annotationProcessorGeneratedSourcesDirectory = project.file("${project.projectDir}/src/main/generated")
+    }
+
+    project.compileTestJava {
+      options.annotationProcessorGeneratedSourcesDirectory = project.file("${project.projectDir}/src/test/generated")
     }
 
     project.eclipse {
       classpath {
         file.whenMerged { cp ->
           cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/main/generated', null) )
+          cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('src/test/generated', null) )
+          def testFolders = cp.entries.findAll { entry ->
+            entry.kind == 'src' && ((org.gradle.plugins.ide.eclipse.model.AbstractClasspathEntry) entry).path.startsWith("src/test")
+          }
+          testFolders.each {
+            if (it.path.equals('src/test/generated')) {
+              return
+            }
+            logger.quiet('Test Folder: ' + it.path)
+            it.getEntryAttributes().put("test", "true")
+          }
         }
       }
       jdt {
         apt {
           genSrcDir = project.file("${project.projectDir}/src/main/generated")
+          genTestSrcDir = project.file("${project.projectDir}/src/test/generated")
         }
       }
     }

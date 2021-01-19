@@ -37,6 +37,10 @@ public class AptEclipsePluginTest {
     assertThat(generatedSourceDir)
         .exists()
         .isDirectory();
+    File generatedTestSourceDir = new File(project.getProjectDir(), "src/test/generated");
+    assertThat(generatedTestSourceDir)
+        .exists()
+        .isDirectory();
   }
 
   @Test
@@ -50,8 +54,19 @@ public class AptEclipsePluginTest {
   }
 
   @Test
+  void apt_eclipse_plugin_updates_compile_test_java_options() {
+    File expectedGeneratedTestSourceDir = new File(project.getProjectDir(), "src/test/generated");
+    CompileOptions options =
+        (CompileOptions) project.getTasks().getByName("compileTestJava").property("options");
+    File actualGeneratedTestSourceDir = options.getAnnotationProcessorGeneratedSourcesDirectory();
+    assertThat(actualGeneratedTestSourceDir)
+        .isEqualTo(expectedGeneratedTestSourceDir);
+  }
+
+  @Test
   void apt_eclipse_plugin_updates_eclipse_jdt_apt() {
     File expectedGeneratedSourceDir = new File(project.getProjectDir(), "src/main/generated");
+    File expectedGeneratedTestSourceDir = new File(project.getProjectDir(), "src/test/generated");
     EclipseModel eclipse =
         (EclipseModel) project.getExtensions().getByName("eclipse");
     ExtensionAware jdt = (ExtensionAware) eclipse.getJdt();
@@ -60,6 +75,9 @@ public class AptEclipsePluginTest {
     File actualGeneratedSourceDir = apt.getGenSrcDir();
     assertThat(actualGeneratedSourceDir)
         .isEqualTo(expectedGeneratedSourceDir);
+    File actualGeneratedTestSourceDir = apt.getGenTestSrcDir();
+    assertThat(actualGeneratedTestSourceDir)
+        .isEqualTo(expectedGeneratedTestSourceDir);
   }
 
   @Test
