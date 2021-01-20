@@ -16,6 +16,16 @@ public class Minus implements DiceRollExpression {
     return operand1.roll() - operand2.roll();
   }
 
+  @Override
+  public double average() {
+    return operand1.average() - operand2.average();
+  }
+
+  @Override
+  public double averageDiceOnly() {
+    return operand1.averageDiceOnly() - operand2.averageDiceOnly();
+  }
+
   public DiceRollExpression getOperand1() {
     return operand1;
   }

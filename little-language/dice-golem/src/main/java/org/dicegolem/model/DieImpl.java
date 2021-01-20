@@ -20,8 +20,19 @@ class DieImpl implements Die {
     return type;
   }
 
+  @Override
   public int roll() {
     return rand.nextInt(type) + 1;
+  }
+
+  @Override
+  public double average() {
+    return ((double) (1 + type)) / 2;
+  }
+
+  @Override
+  public double averageDiceOnly() {
+    return average();
   }
 
   public String toString() {

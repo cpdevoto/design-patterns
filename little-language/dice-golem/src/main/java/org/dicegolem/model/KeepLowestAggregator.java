@@ -1,8 +1,10 @@
 package org.dicegolem.model;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Comparator.reverseOrder;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class KeepLowestAggregator implements DieRollAggregator {
 
@@ -21,6 +23,29 @@ public class KeepLowestAggregator implements DieRollAggregator {
         .mapToInt(Integer::intValue)
         .limit(numRolls)
         .sum();
+  }
+
+  @Override
+  public double aggregateAverages(int numDice, Die die, DieRollModifier modifier) {
+    double total = 0;
+    int sampleSize = SAMPLE_SIZE;
+    for (int i = 0; i < sampleSize; i++) {
+      total += IntStream.range(0, numDice)
+          .boxed()
+          .map(idx -> {
+            int roll = die.roll();
+            if (modifier != null) {
+              roll = modifier.modify(die, roll);
+            }
+            return roll;
+          })
+          .sorted(reverseOrder())
+          .mapToInt(Integer::intValue)
+          .limit(numRolls)
+          .sum();
+    }
+
+    return total / sampleSize;
   }
 
   public int getNumRolls() {

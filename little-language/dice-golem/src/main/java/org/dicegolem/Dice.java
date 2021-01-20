@@ -40,6 +40,16 @@ public class Dice {
     return exp.roll();
   }
 
+  public static double average(String expression) {
+    DiceRollExpression exp = parse(expression);
+    return exp.average();
+  }
+
+  public static double averageDiceOnly(String expression) {
+    DiceRollExpression exp = parse(expression);
+    return exp.averageDiceOnly();
+  }
+
   public static DiceRollExpression parse(String expression) {
     requireNonNull(expression, "expression cannot be null");
     try (StringReader in = new StringReader(expression)) {

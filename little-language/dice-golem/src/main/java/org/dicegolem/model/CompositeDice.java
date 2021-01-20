@@ -39,6 +39,16 @@ public class CompositeDice implements DiceRollExpression {
     return aggregator.aggregate(rolls);
   }
 
+  @Override
+  public double average() {
+    return aggregator.aggregateAverages(numDice, die, modifier);
+  }
+
+  @Override
+  public double averageDiceOnly() {
+    return average();
+  }
+
   public int getNumDice() {
     return numDice;
   }

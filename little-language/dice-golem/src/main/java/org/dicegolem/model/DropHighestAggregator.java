@@ -3,6 +3,7 @@ package org.dicegolem.model;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class DropHighestAggregator implements DieRollAggregator {
 
@@ -21,6 +22,29 @@ public class DropHighestAggregator implements DieRollAggregator {
         .mapToInt(Integer::intValue)
         .limit(Math.max(0, rolls.size() - numRolls))
         .sum();
+  }
+
+  @Override
+  public double aggregateAverages(int numDice, Die die, DieRollModifier modifier) {
+    double total = 0;
+    int sampleSize = SAMPLE_SIZE;
+    for (int i = 0; i < sampleSize; i++) {
+      total += IntStream.range(0, numDice)
+          .boxed()
+          .map(idx -> {
+            int roll = die.roll();
+            if (modifier != null) {
+              roll = modifier.modify(die, roll);
+            }
+            return roll;
+          })
+          .sorted()
+          .mapToInt(Integer::intValue)
+          .limit(Math.max(0, numDice - numRolls))
+          .sum();
+    }
+
+    return total / sampleSize;
   }
 
   public int getNumRolls() {

@@ -12,6 +12,17 @@ public class NumericLiteral implements DiceRollExpression {
     return value;
   }
 
+  @Override
+  public double average() {
+    return value;
+  }
+
+  @Override
+  public double averageDiceOnly() {
+    return 0;
+  }
+
+
   public int getValue() {
     return value;
   }

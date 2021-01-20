@@ -1,6 +1,7 @@
 package org.dicegolem.model;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class SumAggregator implements DieRollAggregator {
 
@@ -12,6 +13,26 @@ public class SumAggregator implements DieRollAggregator {
         .mapToInt(Integer::intValue)
         .sum();
   }
+
+  @Override
+  public double aggregateAverages(int numDice, Die die, DieRollModifier modifier) {
+    double total = 0;
+    int sampleSize = SAMPLE_SIZE;
+    for (int i = 0; i < sampleSize; i++) {
+      total += IntStream.range(0, numDice)
+          .map(idx -> {
+            int roll = die.roll();
+            if (modifier != null) {
+              roll = modifier.modify(die, roll);
+            }
+            return roll;
+          })
+          .sum();
+    }
+
+    return total / sampleSize;
+  }
+
 
   @Override
   public int hashCode() {

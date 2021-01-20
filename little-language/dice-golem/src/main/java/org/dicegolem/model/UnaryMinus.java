@@ -14,6 +14,16 @@ public class UnaryMinus implements DiceRollExpression {
     return -1 * operand.roll();
   }
 
+  @Override
+  public double average() {
+    return -1 * operand.average();
+  }
+
+  @Override
+  public double averageDiceOnly() {
+    return -1 * operand.averageDiceOnly();
+  }
+
   public DiceRollExpression getOperand() {
     return operand;
   }

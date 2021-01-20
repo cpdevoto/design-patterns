@@ -1,6 +1,7 @@
 package org.dicegolem;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 import static org.dicegolem.model.fixtures.Assertions.assertRollRange;
 import static org.dicegolem.model.fixtures.Assertions.assertSyntaxError;
 
@@ -16,6 +17,7 @@ import org.dicegolem.model.Plus;
 import org.dicegolem.model.RerollOnceModifier;
 import org.dicegolem.model.SumAggregator;
 import org.dicegolem.model.UnaryMinus;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class DiceTest {
@@ -24,6 +26,86 @@ public class DiceTest {
   public void test_roll() {
     // Testing Dice.roll("1d6 + 3")
     assertRollRange(() -> Dice.roll("1d6 + 3"), 4, 9);
+  }
+
+  @Nested
+  class Average {
+
+    @Test
+    public void test_die_average() {
+      // Testing Dice.average("1d6")
+      assertThat(Dice.average("1d6")).isCloseTo(3.5, within(0.01));
+
+    }
+
+    @Test
+    public void test_number_average() {
+      // Testing Dice.average("3")
+      assertThat(Dice.average("3")).isCloseTo(3, within(0.01));
+
+    }
+
+    @Test
+    public void test_composite_average() {
+      // Testing Dice.average("1d6 + 3")
+      assertThat(Dice.average("1d6 + 3")).isCloseTo(6.5, within(0.01));
+
+    }
+
+    @Test
+    public void test_average_with_aggregator() {
+      // Testing Dice.average("4d6dl1")
+      assertThat(Dice.parse("4d6dl1").average()).isCloseTo(12.24, within(0.01));
+
+    }
+
+    @Test
+    public void test_average_with_modifier() {
+      // Testing Dice.average("1d8ro<2")
+      assertThat(Dice.parse("1d8ro<2").average()).isCloseTo(5.25, within(0.01));
+
+    }
+
+  }
+
+  @Nested
+  class AverageDiceOnly {
+
+    @Test
+    public void test_die_average() {
+      // Testing Dice.averageDiceOnly("1d6")
+      assertThat(Dice.averageDiceOnly("1d6")).isCloseTo(3.5, within(0.01));
+
+    }
+
+    @Test
+    public void test_number_average() {
+      // Testing Dice.averageDiceOnly("3")
+      assertThat(Dice.averageDiceOnly("3")).isCloseTo(0, within(0.01));
+
+    }
+
+    @Test
+    public void test_composite_average() {
+      // Testing Dice.averageDiceOnly("1d6 + 3")
+      assertThat(Dice.averageDiceOnly("1d6 + 3")).isCloseTo(3.5, within(0.01));
+
+    }
+
+    @Test
+    public void test_average_with_aggregator() {
+      // Testing Dice.averageDiceOnly("4d6dl1")
+      assertThat(Dice.averageDiceOnly("4d6dl1")).isCloseTo(12.24, within(0.01));
+
+    }
+
+    @Test
+    public void test_average_with_modifier() {
+      // Testing Dice.averageDiceOnly("1d8ro<2")
+      assertThat(Dice.averageDiceOnly("1d8ro<2")).isCloseTo(5.25, within(0.01));
+
+    }
+
   }
 
   @Test
