@@ -16,6 +16,11 @@ public class SumAggregator implements DieRollAggregator {
 
   @Override
   public double aggregateAverages(int numDice, Die die, DieRollModifier modifier) {
+    if (modifier == null) {
+      return IntStream.range(0, numDice)
+          .mapToDouble(i -> die.average())
+          .sum();
+    }
     double total = 0;
     int sampleSize = SAMPLE_SIZE;
     for (int i = 0; i < sampleSize; i++) {

@@ -36,6 +36,8 @@ public interface Attack extends AttackStatGenerator {
 
     Builder toHitModifier(int hitModifier);
 
+    Builder toHitModifier(String hitModifier);
+
     Builder critOn(int critOn);
 
     Builder damage(String damage);

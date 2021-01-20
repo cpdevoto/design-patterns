@@ -10,7 +10,7 @@ import org.dicegolem.model.DiceRollExpression;
 class AttackImpl implements Attack {
 
   private final Integer targetAc;
-  private final int hitModifier;
+  private final DiceRollExpression hitModifierExpression;
   private final int critOn;
   private final boolean advantage;
   private final boolean disadvantage;
@@ -28,7 +28,7 @@ class AttackImpl implements Attack {
 
   private AttackImpl(Builder builder) {
     this.targetAc = builder.targetAc;
-    this.hitModifier = builder.hitModifier;
+    this.hitModifierExpression = builder.hitModifierExpression;
     this.critOn = builder.critOn;
     this.advantage = builder.advantage;
     this.disadvantage = builder.disadvantage;
@@ -61,8 +61,8 @@ class AttackImpl implements Attack {
     return computeTargetAc();
   }
 
-  int getHitModifier() {
-    return hitModifier;
+  double getHitModifier() {
+    return computeHitModifier();
   }
 
   int getCritOn() {
@@ -123,25 +123,34 @@ class AttackImpl implements Attack {
   }
 
   private double computeBaseHitProbability() {
-    return Math.min(0.95, (21 - computeTargetAc() + hitModifier) * 0.05);
+    return Math.min(0.95, (21 - computeTargetAc() + computeHitModifier()) * 0.05);
   }
 
   private double computeBaseCritProbability(double baseHitProbability) {
     return Math.min(baseHitProbability, (21 - critOn) * 0.05);
   }
 
+  private double computeHitModifier() {
+    double modifier = 0;
+    if (hitModifierExpression != null) {
+      // Default the target AC such that the hit probability is x
+      modifier += hitModifierExpression.average();
+    }
+    return modifier;
+  }
+
   private int computeTargetAc() {
     Integer ac = this.targetAc;
     if (ac == null) {
-      // Default the target AC such that the hit probability is x
-      ac = Math.max(1, 9 + hitModifier);
+      // Default the target AC such that the hit probability is 60%
+      ac = Math.max(1, 9 + (int) Math.round(computeHitModifier()));
     }
     return ac;
   }
 
   static class Builder implements Attack.Builder {
     private Integer targetAc;
-    private int hitModifier = 0;
+    private DiceRollExpression hitModifierExpression;
     private int critOn = 20;
     private boolean advantage = false;
     private boolean disadvantage = false;
@@ -152,7 +161,7 @@ class AttackImpl implements Attack {
       AttackImpl attackImpl =
           AttackImpl.class.cast(requireNonNull(attack, "attack cannot be null"));
       this.targetAc = attackImpl.targetAc;
-      this.hitModifier = attackImpl.hitModifier;
+      this.hitModifierExpression = attackImpl.hitModifierExpression;
       this.critOn = attackImpl.critOn;
       this.advantage = attackImpl.advantage;
       this.disadvantage = attackImpl.disadvantage;
@@ -171,7 +180,13 @@ class AttackImpl implements Attack {
 
     @Override
     public Builder toHitModifier(int hitModifier) {
-      this.hitModifier = hitModifier;
+      return toHitModifier(String.valueOf(hitModifier));
+    }
+
+    @Override
+    public Builder toHitModifier(String hitModifier) {
+      requireNonNull(hitModifier, "hitModifier cannot be null");
+      this.hitModifierExpression = Dice.parse(hitModifier);
       return this;
     }
 
