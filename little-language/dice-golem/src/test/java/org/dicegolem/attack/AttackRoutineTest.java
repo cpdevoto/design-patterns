@@ -41,7 +41,6 @@ public class AttackRoutineTest {
         .dpr();
     // @formatter:off
     
-    System.out.println("Computed DPR is: " + actualDpr);
     assertThat(actualDpr).isCloseTo(expectedDpr, within(0.01));
   }
 
@@ -67,7 +66,6 @@ public class AttackRoutineTest {
         .hitProbability();
     // @formatter:off
     
-    System.out.println("Computed Hit Probability is: " + actualHitProbability);
     assertThat(actualHitProbability).isCloseTo(expectedHitProbability, within(0.01));
   }
 
@@ -93,7 +91,6 @@ public class AttackRoutineTest {
         .critProbability();
     // @formatter:off
     
-    System.out.println("Computed Crit Probability is: " + actualCritProbability);
     assertThat(actualCritProbability).isCloseTo(expectedCritProbability, within(0.01));
   }
 
