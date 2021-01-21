@@ -52,6 +52,7 @@ class SourceGenerator {
     generateClassConstructor();
     generateClassGetterMethods();
     generateHashcodeAndEquals();
+    generateToString();
     generateBuilderDeclaration();
     generateBuilderDataMembers();
     generateBuilderConstructors();
@@ -210,6 +211,20 @@ class SourceGenerator {
                 + ")")
             .collect(joining(" && ")))
         .println(";");
+    buf.decreaseIndent().indentAndPrintln("}");
+    buf.println();
+
+  }
+
+  private void generateToString() {
+
+    buf.indentAndPrintln("@Override");
+    buf.indentAndPrintln("public String toString() {");
+    buf.increaseIndent().indentAndPrint("return \"").print(pojo.getClassName()).print(" [")
+        .print(pojo.getDataMembers().stream()
+            .map(member -> member.getName() + "=\" + " + member.getName())
+            .collect(joining(" + \", ")))
+        .println(" + \"]\";");
     buf.decreaseIndent().indentAndPrintln("}");
     buf.println();
 

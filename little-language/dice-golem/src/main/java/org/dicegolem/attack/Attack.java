@@ -25,7 +25,6 @@ public interface Attack extends AttackStatGenerator {
     return attack;
   }
 
-
   static Builder builder() {
     return AttackImpl.builder();
   }

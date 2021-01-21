@@ -88,6 +88,11 @@ public class User {
     return Objects.equals(id, other.id) && Objects.equals(age, other.age) && Objects.equals(name, other.name) && Objects.equals(startDate, other.startDate) && Objects.equals(roles, other.roles) && Objects.equals(addresses, other.addresses);
   }
 
+  @Override
+  public String toString() {
+    return "User [id=" + id + ", age=" + age + ", name=" + name + ", startDate=" + startDate + ", roles=" + roles + ", addresses=" + addresses + "]";
+  }
+
   @JsonPOJOBuilder
   public static class Builder {
     private Integer id;

@@ -86,6 +86,7 @@ public class PojoModuleProcessorTest {
                 "import com.fasterxml.jackson.annotation.JsonInclude.Include;\n" +
                 "import com.fasterxml.jackson.databind.annotation.JsonDeserialize;\n" +
                 "import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;\n" +
+                "import java.util.Objects;\n" +
                 "import java.util.Optional;\n" +
                 "import java.util.function.Consumer;\n" +
                 "\n" +
@@ -127,6 +128,34 @@ public class PojoModuleProcessorTest {
                 "\n" +
                 "  public int getNumEmployees() {\n" +
                 "    return numEmployees;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public int hashCode() {\n" +
+                "    final int prime = 31;\n" +
+                "    int result = 1;\n" +
+                "    result = prime * result + Objects.hash(username, firstname, lastname, numEmployees);\n"
+                +
+                "    return result;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public boolean equals(Object obj) {\n" +
+                "    if (this == obj)\n" +
+                "      return true;\n" +
+                "    if (obj == null)\n" +
+                "      return false;\n" +
+                "    if (getClass() != obj.getClass())\n" +
+                "      return false;\n" +
+                "    Manager other = (Manager) obj;\n" +
+                "    return Objects.equals(username, other.username) && Objects.equals(firstname, other.firstname) && Objects.equals(lastname, other.lastname) && Objects.equals(numEmployees, other.numEmployees);\n"
+                +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public String toString() {\n" +
+                "    return \"Manager [username=\" + username + \", firstname=\" + firstname + \", lastname=\" + lastname + \", numEmployees=\" + numEmployees + \"]\";\n"
+                +
                 "  }\n" +
                 "\n" +
                 "  @JsonPOJOBuilder\n" +
@@ -190,6 +219,7 @@ public class PojoModuleProcessorTest {
                 "import com.google.common.collect.ImmutableMap;\n" +
                 "import java.util.List;\n" +
                 "import java.util.Map;\n" +
+                "import java.util.Objects;\n" +
                 "import java.util.Optional;\n" +
                 "import java.util.function.Consumer;\n" +
                 "\n" +
@@ -234,6 +264,34 @@ public class PojoModuleProcessorTest {
                 "\n" +
                 "  public Optional<int[]> getIds() {\n" +
                 "    return Optional.ofNullable(ids);\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public int hashCode() {\n" +
+                "    final int prime = 31;\n" +
+                "    int result = 1;\n" +
+                "    result = prime * result + Objects.hash(username, firstname, lastname, roles, ids);\n"
+                +
+                "    return result;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public boolean equals(Object obj) {\n" +
+                "    if (this == obj)\n" +
+                "      return true;\n" +
+                "    if (obj == null)\n" +
+                "      return false;\n" +
+                "    if (getClass() != obj.getClass())\n" +
+                "      return false;\n" +
+                "    Employee other = (Employee) obj;\n" +
+                "    return Objects.equals(username, other.username) && Objects.equals(firstname, other.firstname) && Objects.equals(lastname, other.lastname) && Objects.equals(roles, other.roles) && Objects.equals(ids, other.ids);\n"
+                +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public String toString() {\n" +
+                "    return \"Employee [username=\" + username + \", firstname=\" + firstname + \", lastname=\" + lastname + \", roles=\" + roles + \", ids=\" + ids + \"]\";\n"
+                +
                 "  }\n" +
                 "\n" +
                 "  public static class Builder {\n" +
@@ -353,6 +411,7 @@ public class PojoModuleProcessorTest {
                 "import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;\n" +
                 "import com.google.common.collect.ImmutableList;\n" +
                 "import java.util.List;\n" +
+                "import java.util.Objects;\n" +
                 "import java.util.Optional;\n" +
                 "import java.util.function.Consumer;\n" +
                 "\n" +
@@ -394,6 +453,34 @@ public class PojoModuleProcessorTest {
                 "\n" +
                 "  public List<Department> getDepartments() {\n" +
                 "    return departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public int hashCode() {\n" +
+                "    final int prime = 31;\n" +
+                "    int result = 1;\n" +
+                "    result = prime * result + Objects.hash(username, firstname, lastname, departments);\n"
+                +
+                "    return result;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public boolean equals(Object obj) {\n" +
+                "    if (this == obj)\n" +
+                "      return true;\n" +
+                "    if (obj == null)\n" +
+                "      return false;\n" +
+                "    if (getClass() != obj.getClass())\n" +
+                "      return false;\n" +
+                "    Manager other = (Manager) obj;\n" +
+                "    return Objects.equals(username, other.username) && Objects.equals(firstname, other.firstname) && Objects.equals(lastname, other.lastname) && Objects.equals(departments, other.departments);\n"
+                +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public String toString() {\n" +
+                "    return \"Manager [username=\" + username + \", firstname=\" + firstname + \", lastname=\" + lastname + \", departments=\" + departments + \"]\";\n"
+                +
                 "  }\n" +
                 "\n" +
                 "  @JsonPOJOBuilder\n" +
@@ -501,6 +588,7 @@ public class PojoModuleProcessorTest {
                 "import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;\n" +
                 "import com.google.common.collect.ImmutableList;\n" +
                 "import java.util.List;\n" +
+                "import java.util.Objects;\n" +
                 "import java.util.Optional;\n" +
                 "import java.util.function.Consumer;\n" +
                 "\n" +
@@ -542,6 +630,34 @@ public class PojoModuleProcessorTest {
                 "\n" +
                 "  public List<Department2> getDepartments() {\n" +
                 "    return departments;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public int hashCode() {\n" +
+                "    final int prime = 31;\n" +
+                "    int result = 1;\n" +
+                "    result = prime * result + Objects.hash(username, firstname, lastname, departments);\n"
+                +
+                "    return result;\n" +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public boolean equals(Object obj) {\n" +
+                "    if (this == obj)\n" +
+                "      return true;\n" +
+                "    if (obj == null)\n" +
+                "      return false;\n" +
+                "    if (getClass() != obj.getClass())\n" +
+                "      return false;\n" +
+                "    Manager other = (Manager) obj;\n" +
+                "    return Objects.equals(username, other.username) && Objects.equals(firstname, other.firstname) && Objects.equals(lastname, other.lastname) && Objects.equals(departments, other.departments);\n"
+                +
+                "  }\n" +
+                "\n" +
+                "  @Override\n" +
+                "  public String toString() {\n" +
+                "    return \"Manager [username=\" + username + \", firstname=\" + firstname + \", lastname=\" + lastname + \", departments=\" + departments + \"]\";\n"
+                +
                 "  }\n" +
                 "\n" +
                 "  @JsonPOJOBuilder\n" +
@@ -635,3 +751,4 @@ public class PojoModuleProcessorTest {
   }
 
 }
+
