@@ -14,9 +14,9 @@ public class Main {
   public void test() {
     // Configure your own test here by copying from the sample test!
     AttackRoutine attackRoutine = newAttackRoutine()
-        .extraDamageOnHit("2d6")
+        .extraDamageOnHit("2d6") // Sneak Attack
         .attacks(
-            attack(a -> a.advantage()
+            attack(a -> a.advantage() // Assuming bonus action Hide, Steady Aim, or familiar w/Help
                 .targetAc(18)
                 .toHitModifier("6 + 1d4") // Assuming Bless!
                 .damage("1d8 + 4")))

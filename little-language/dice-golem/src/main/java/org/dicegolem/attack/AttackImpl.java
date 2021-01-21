@@ -6,6 +6,7 @@ import static java.util.Objects.requireNonNull;
 
 import org.dicegolem.Dice;
 import org.dicegolem.model.DiceRollExpression;
+import org.dicegolem.model.NumericLiteral;
 
 class AttackImpl implements Attack {
 
@@ -180,7 +181,8 @@ class AttackImpl implements Attack {
 
     @Override
     public Builder toHitModifier(int hitModifier) {
-      return toHitModifier(String.valueOf(hitModifier));
+      this.hitModifierExpression = new NumericLiteral(hitModifier);
+      return this;
     }
 
     @Override
