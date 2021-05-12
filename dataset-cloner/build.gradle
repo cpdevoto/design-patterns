@@ -1,0 +1,109 @@
+buildscript {
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}" + '/repo'
+            credentials {
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+            }
+        }
+
+        dependencies {
+           classpath "com.resolutebi:GradleCommonConfigurationPlugin:1.143.530",
+                     "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release",
+                     "com.resolute:apt-eclipse:3.+"
+        }
+    }
+}
+
+plugins {
+  id 'nebula.dependency-lock' version '11.1.1'
+}
+
+
+apply plugin: 'resolute-common-config'
+apply plugin: 'maven-publish'
+apply plugin: 'com.resolute.apt-eclipse'
+
+group = 'com.resolute'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+dependencies {
+    annotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}"
+    compileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}"
+
+    testAnnotationProcessor "com.resolute:pojo-generator-processor:${rbiDepVersion}"
+    testCompileOnly         "com.resolute:pojo-generator-annotations:${rbiDepVersion}"
+    
+    api            "com.resolute:jdbc-simple:${rbiDepVersion}",
+                   "com.resolute:utils-simple:${rbiDepVersion}",
+                   "com.resolute:database-crawler:${rbiDepVersion}"
+
+    implementation 'com.google.guava:guava:30.1-jre',
+                   'org.slf4j:slf4j-api:1.7.30',
+                   'org.postgresql:postgresql:9.4.1212'
+                   
+   testImplementation(platform('org.junit:junit-bom:5.7.0'))
+   testImplementation 'org.junit.jupiter:junit-jupiter',
+                      'org.assertj:assertj-core:3.18.1',
+                      'org.mockito:mockito-core:3.6.28',
+                      'org.slf4j:slf4j-simple:1.7.30',
+                      'org.testcontainers:testcontainers:1.15.1',
+                      'org.testcontainers:junit-jupiter:1.15.1',
+                      "com.resolute:postgres-test-utils:${rbiDepVersion}",
+                      "com.resolute:testcontainer-utils:${rbiDepVersion}"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+resoluteDocker {
+  dependencies = [
+    postgres: 'postgres-schema'
+  ]
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+javadoc {
+  options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives javadocJar
+  archives sourcesJar
+}
+
+publishing {
+  publications {
+      mavenJava(MavenPublication) {
+          from components.java
+          artifact (sourcesJar) {
+              classifier = 'sources'
+          }
+          artifact (javadocJar) {
+              classifier = 'javadoc'
+          }
+      }
+  }
+}
+
+artifactoryPublish {
+    publications('mavenJava')
+}
+
+

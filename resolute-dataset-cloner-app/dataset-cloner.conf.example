@@ -1,0 +1,12 @@
+host=localhost
+port=<DATABASE_PORT>
+database=<DATABASE_NAME>
+user=<DATABASE_ADMIN_USER>
+password=<DATABASE_ADMIN_PASSWORD>
+logFile=dataset-cloner.log
+numCopies=1
+debug=false
+pureCopyMode=false
+outputFile=dataset-cloner.sql
+entityType=BUILDING
+entityId=<ID_OF_ENTITY_TO_BE_CLONED>

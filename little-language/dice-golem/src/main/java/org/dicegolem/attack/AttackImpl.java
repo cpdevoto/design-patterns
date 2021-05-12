@@ -134,7 +134,6 @@ class AttackImpl implements Attack {
   private double computeHitModifier() {
     double modifier = 0;
     if (hitModifierExpression != null) {
-      // Default the target AC such that the hit probability is x
       modifier += hitModifierExpression.average();
     }
     return modifier;
