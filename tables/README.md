@@ -18,6 +18,9 @@ dependencies {
   implementation 'com.resolute:tables:3.24.3'
 }
 ```
+
+For an example, see https://raw.githubusercontent.com/cpdevoto/design-patterns/master/name-generator/build.gradle
+
 ## Building
 
 To build a new version of this library and publish the resulting artifacts to GitHub:
