@@ -3,12 +3,17 @@ package org.devoware.table;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.google.common.collect.ImmutableRangeMap;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
 
 public class Table {
+
+  private static final Pattern DIE_ROLL = Pattern.compile("([1-9][0-9]*)[dD]([1-9][0-9]*)");
 
   private final String name;
   private final RangeMap<Integer, String> entries;
@@ -32,13 +37,16 @@ public class Table {
 
   public String roll() {
     int roll = (int) (Math.random() * (upperEndpoint - lowerEndpoint + 1) + lowerEndpoint);
-    return entries.get(roll);
+    String result = entries.get(roll);
+    result = parseDieRolls(result);
+    return result;
   }
 
   public String get(int roll) {
     checkArgument(roll >= lowerEndpoint && roll <= upperEndpoint,
         String.format("roll must be between %d and %d", lowerEndpoint, upperEndpoint));
-    return entries.get(roll);
+    String result = entries.get(roll);
+    return result;
   }
 
   public int getLowerEndpoint() {
@@ -52,6 +60,37 @@ public class Table {
   public int size() {
     return entries.asMapOfRanges().size();
   }
+
+  private String parseDieRolls(String s) {
+    Matcher m = DIE_ROLL.matcher(s);
+    int start = 0;
+    StringBuilder buf = new StringBuilder();
+    while (m.find(start)) {
+      int mStart = m.start();
+      int mEnd = m.end();
+      int numDice = Integer.parseInt(m.group(1));
+      int dieType = Integer.parseInt(m.group(2));
+      int roll = roll(numDice, dieType);
+      if (start < mStart) {
+        buf.append(s.substring(start, mStart));
+      }
+      buf.append(roll);
+      start = mEnd;
+    }
+    if (start < s.length()) {
+      buf.append(s.substring(start));
+    }
+    return buf.toString();
+  }
+
+  private int roll(int numDice, int dieType) {
+    int total = 0;
+    for (int i = 0; i < numDice; i++) {
+      total += (int) (Math.random() * dieType + 1);
+    }
+    return total;
+  }
+
 
   public static class Builder {
     private boolean tableEmpty = true;
@@ -96,5 +135,4 @@ public class Table {
     }
 
   }
-
 }

@@ -74,25 +74,25 @@ public class TablesTest {
 
     Distribution distribution = new Distribution(() -> tables.roll("Table 4"));
 
-    assertThat(distribution.getPercentage("Result 2-1; Result 2-1")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-1; Result 2-2")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-1; Result 2-3")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-1; Result 2-4")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-1\nResult 2-1")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-1\nResult 2-2")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-1\nResult 2-3")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-1\nResult 2-4")).isCloseTo(6.25, within(0.25));
 
-    assertThat(distribution.getPercentage("Result 2-2; Result 2-1")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-2; Result 2-2")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-2; Result 2-3")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-2; Result 2-4")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-2\nResult 2-1")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-2\nResult 2-2")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-2\nResult 2-3")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-2\nResult 2-4")).isCloseTo(6.25, within(0.25));
 
-    assertThat(distribution.getPercentage("Result 2-3; Result 2-1")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-3; Result 2-2")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-3; Result 2-3")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-3; Result 2-4")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-3\nResult 2-1")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-3\nResult 2-2")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-3\nResult 2-3")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-3\nResult 2-4")).isCloseTo(6.25, within(0.25));
 
-    assertThat(distribution.getPercentage("Result 2-4; Result 2-1")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-4; Result 2-2")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-4; Result 2-3")).isCloseTo(6.25, within(0.25));
-    assertThat(distribution.getPercentage("Result 2-4; Result 2-4")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-4\nResult 2-1")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-4\nResult 2-2")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-4\nResult 2-3")).isCloseTo(6.25, within(0.25));
+    assertThat(distribution.getPercentage("Result 2-4\nResult 2-4")).isCloseTo(6.25, within(0.25));
 
   }
 
@@ -104,7 +104,7 @@ public class TablesTest {
 
     Set<String> resultSet = Sets.newTreeSet(distribution.getResultSet());
     Map<Integer, Long> resultsByNumberOfSemiColons = resultSet.stream()
-        .collect(groupingBy(this::numSemicolons, Collectors.counting()));
+        .collect(groupingBy(this::numSeparators, Collectors.counting()));
 
     assertThat(resultsByNumberOfSemiColons.get(0)).isEqualTo(2);
     assertThat(resultsByNumberOfSemiColons.get(1)).isEqualTo(4);
@@ -124,8 +124,8 @@ public class TablesTest {
     assertThat(remainingPercentage).isCloseTo(2, within(0.25));
   }
 
-  private int numSemicolons(String result) {
-    return result.length() - result.replace(";", "").length();
+  private int numSeparators(String result) {
+    return result.length() - result.replace("\n", "").length();
   }
 
   private void copyFilesToTempDir() throws IOException {

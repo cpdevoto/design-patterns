@@ -29,7 +29,7 @@ public class Tables {
 
   private final Map<String, Table> tables;
 
-  public static Tables loadFromClasspath(String packageName) throws IOException {
+  public static Tables loadFromClasspath(String packageName) {
     requireNonNull(packageName, "packageName cannot be null");
     Reflections reflections = new Reflections(new ConfigurationBuilder()
         .setUrls(ClasspathHelper.forPackage(packageName))
@@ -42,23 +42,33 @@ public class Tables {
       try (InputStream in = Tables.class.getClassLoader().getResourceAsStream(tableFile)) {
         Table table = TableFileParser.parse(in);
         temp.put(table.getName(), table);
+      } catch (IOException e) {
+        throw new TableLoadException(e);
       }
     }
     return new Tables(temp);
   }
 
-  public static Tables loadFromDirectory(String directoryName) throws IOException {
+  public static Tables loadFromDirectory(String directoryName) {
     requireNonNull(directoryName, "directoryName cannot be null");
     return loadFromDirectory(new File(directoryName));
   }
 
-  public static Tables loadFromDirectory(File directory) throws IOException {
+  public static Tables loadFromDirectory(File directory) {
     requireNonNull(directory, "directory cannot be null");
     checkArgument(directory.isDirectory(), "expected a directory");
     Map<String, Table> temp = Maps.newHashMap();
     for (File f : directory.listFiles()) {
-      Table table = TableFileParser.parse(f);
-      temp.put(table.getName(), table);
+      try {
+        Table table = TableFileParser.parse(f);
+        temp.put(table.getName(), table);
+      } catch (TableFileParseException e) {
+        if (e.getCause() != null) {
+          throw new TableLoadException(e.getCause());
+        } else {
+          throw new TableLoadException(e);
+        }
+      }
     }
     return new Tables(temp);
   }
@@ -101,7 +111,7 @@ public class Tables {
       results.add(s);
     }
     return results.stream()
-        .collect(Collectors.joining("; "));
+        .collect(Collectors.joining("\n"));
   }
 
 }
