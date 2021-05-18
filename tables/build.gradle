@@ -24,6 +24,7 @@ apply plugin: 'resolute-common-config'
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'maven'
 apply plugin: "com.jfrog.artifactory"
 
 group = 'com.resolute'
@@ -79,13 +80,17 @@ publishing {
     }
 }
 
-artifactoryPublish {
-    publications('mavenJava')
-}
-
 test {
     useJUnitPlatform()
 	testLogging {
 		events "passed", "skipped", "failed"
 	}
 }
+
+uploadArchives {
+  repositories.mavenDeployer {
+      repository(url: "file:///Users/cdevoto/GitHub/maven-repository/")
+  }
+}
+
+
