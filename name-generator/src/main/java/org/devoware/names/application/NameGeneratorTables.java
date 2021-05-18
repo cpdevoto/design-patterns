@@ -2,10 +2,7 @@ package org.devoware.names.application;
 
 import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
-
 import org.devoware.table.Table;
-import org.devoware.table.TableFileParseException;
 import org.devoware.table.Tables;
 
 public enum NameGeneratorTables {
@@ -75,11 +72,7 @@ public enum NameGeneratorTables {
   private final String resource;
 
   static {
-    try {
-      TABLES = Tables.loadFromClasspath("org.devoware.names.application");
-    } catch (IOException e) {
-      throw new TableFileParseException(e);
-    }
+    TABLES = Tables.loadFromClasspath("org.devoware.names.application");
   }
 
   public static Table get(NameGeneratorTables table) {

@@ -7,11 +7,10 @@ buildscript {
                 password = "${artifactory_password}"
             }
         }
-
+        
         dependencies {
             classpath "com.resolutebi:GradleCommonConfigurationPlugin:1.0.+",
                       "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
-             
         }
     }
 }
@@ -31,10 +30,17 @@ group = 'com.resolute'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
+repositories {
+  maven {
+    url 'https://raw.githubusercontent.com/cpdevoto/maven-repository/master'
+  }
+}
+
 dependencies {
     implementation     'org.slf4j:slf4j-api:1.7.30',
                        'com.google.guava:guava:30.1-jre',
-                       'org.reflections:reflections:0.9.11'
+                       'org.reflections:reflections:0.9.11',
+                       'com.resolute:tables:3.24.3'
   
 	testImplementation(platform('org.junit:junit-bom:5.7.0'))
 	testImplementation 'org.junit.jupiter:junit-jupiter',
