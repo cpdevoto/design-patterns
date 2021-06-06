@@ -1,6 +1,30 @@
 package org.devoware.names.application;
 
 public enum NameGenerator {
+  BAROVIAN_MALE("Barovian, Male") {
+    @Override
+    protected String doGenerate() {
+      String firstName = NameGeneratorTables.get(NameGeneratorTables.BAROVIAN_MALE).roll();
+      String secondName = NameGeneratorTables.get(NameGeneratorTables.BAROVIAN_FAMILY).roll();
+      int pos = secondName.indexOf('/');
+      if (pos != -1) {
+        secondName = secondName.substring(0, pos).trim();
+      }
+      return String.format("%s %s", firstName, secondName);
+    }
+  },
+  BAROVIAN_FEMALE("Barovian, Female") {
+    @Override
+    protected String doGenerate() {
+      String firstName = NameGeneratorTables.get(NameGeneratorTables.BAROVIAN_FEMALE).roll();
+      String secondName = NameGeneratorTables.get(NameGeneratorTables.BAROVIAN_FAMILY).roll();
+      int pos = secondName.indexOf('/');
+      if (pos != -1) {
+        secondName = secondName.substring(pos + 1).trim();
+      }
+      return String.format("%s %s", firstName, secondName);
+    }
+  },
   DRAGONBORN_MALE("Dragonborn, Male") {
     @Override
     protected String doGenerate() {
@@ -165,7 +189,8 @@ public enum NameGenerator {
     @Override
     protected String doGenerate() {
       String firstName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_CHULTAN_FEMALE).roll();
-      String secondName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_CHULTAN_DYNASTIC).roll();
+      String secondName =
+          NameGeneratorTables.get(NameGeneratorTables.HUMAN_CHULTAN_DYNASTIC).roll();
       return String.format("%s %s", firstName, secondName);
     }
   },
@@ -173,7 +198,8 @@ public enum NameGenerator {
     @Override
     protected String doGenerate() {
       String firstName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_CHULTAN_MALE).roll();
-      String secondName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_CHULTAN_DYNASTIC).roll();
+      String secondName =
+          NameGeneratorTables.get(NameGeneratorTables.HUMAN_CHULTAN_DYNASTIC).roll();
       return String.format("%s %s", firstName, secondName);
     }
   },
@@ -278,21 +304,24 @@ public enum NameGenerator {
   HUMAN_MESOAMERICAN_FEMALE("Human - Mesoamerican, Female") {
     @Override
     protected String doGenerate() {
-      String firstName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_MESOAMERICAN_FEMALE).roll();
+      String firstName =
+          NameGeneratorTables.get(NameGeneratorTables.HUMAN_MESOAMERICAN_FEMALE).roll();
       return firstName;
     }
   },
   HUMAN_MESOAMERICAN_MALE("Human - Mesoamerican, Male") {
     @Override
     protected String doGenerate() {
-      String firstName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_MESOAMERICAN_MALE).roll();
+      String firstName =
+          NameGeneratorTables.get(NameGeneratorTables.HUMAN_MESOAMERICAN_MALE).roll();
       return firstName;
     }
   },
   HUMAN_NIGER_CONGO_FEMALE("Human - Niger-Congo, Female") {
     @Override
     protected String doGenerate() {
-      String firstName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_NIGER_CONGO_FEMALE).roll();
+      String firstName =
+          NameGeneratorTables.get(NameGeneratorTables.HUMAN_NIGER_CONGO_FEMALE).roll();
       return firstName;
     }
   },
@@ -320,7 +349,8 @@ public enum NameGenerator {
   HUMAN_POLYNESIAN_FEMALE("Human - Polynesian, Female") {
     @Override
     protected String doGenerate() {
-      String firstName = NameGeneratorTables.get(NameGeneratorTables.HUMAN_POLYNESIAN_FEMALE).roll();
+      String firstName =
+          NameGeneratorTables.get(NameGeneratorTables.HUMAN_POLYNESIAN_FEMALE).roll();
       return firstName;
     }
   },

@@ -17,6 +17,8 @@ buildscript {
 
 plugins {
   id 'nebula.dependency-lock' version '11.1.1'
+  id "org.openjfx.javafxplugin" version "0.0.10"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 apply plugin: 'resolute-common-config'
@@ -26,9 +28,6 @@ apply plugin: 'maven-publish'
 apply plugin: "com.jfrog.artifactory"
 
 group = 'com.resolute'
-
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
 
 repositories {
   maven {
@@ -52,35 +51,30 @@ dependencies {
                 
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+
+javafx {
+  modules = [ 'javafx.controls' ]
+  version = '11.0.2'
 }
 
-javadoc {
-    options.addStringOption('Xdoclint:none', '-quiet')
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.devoware.names.application.NameGeneratorMain'
+    }
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+shadowJar {
+  mergeServiceFiles()
+  exclude 'META-INF/*.DSA'
+  exclude 'META-INF/*.RSA'
 
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}	
+  archiveName = "${project.name}-all.${extension}"
+}
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifact (sourcesJar) { 
-                classifier = 'sources'
-            }
-            artifact (javadocJar) {
-                classifier = 'javadoc'	            
-            }
         }
     }
 }

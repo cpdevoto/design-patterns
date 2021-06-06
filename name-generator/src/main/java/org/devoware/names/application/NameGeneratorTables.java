@@ -7,6 +7,9 @@ import org.devoware.table.Tables;
 
 public enum NameGeneratorTables {
   // @formatter:off
+  BAROVIAN_FAMILY("Barovian, Family"),
+  BAROVIAN_FEMALE("Barovian, Female"),
+  BAROVIAN_MALE("Barovian, Male"),
   DRAGONBORN_CLAN("Dragonborn, Clan"),
   DRAGONBORN_FEMALE("Dragonborn, Female"),
   DRAGONBORN_MALE("Dragonborn, Male"),
