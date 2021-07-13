@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -20,8 +21,10 @@ import com.fasterxml.jackson.core.JsonToken;
 public class StreamingJsonParser {
 
   private final JsonParser jParser;
+  private final AtomicBoolean executed = new AtomicBoolean(false);
   private Action head;
   private Action tail;
+
 
   public static StreamingJsonParser create(String json) throws IOException {
     return new StreamingJsonParser(json);
@@ -134,6 +137,9 @@ public class StreamingJsonParser {
 
   public void execute() {
     checkState(head != null, "expected at least one action");
+    if (!executed.compareAndSet(false, true)) {
+      throw new IllegalStateException("stream has already been operated upon and closed");
+    }
     try {
       jParser.nextToken();
     } catch (IOException e) {

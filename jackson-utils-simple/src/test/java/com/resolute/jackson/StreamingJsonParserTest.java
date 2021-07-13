@@ -8,6 +8,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -153,4 +154,84 @@ public class StreamingJsonParserTest {
     assertThat(entry.getDescriptor()).isEqualTo("ON");
 
   }
+
+  @Test
+  public void test_execute_cannot_be_called_twice() throws IOException {
+
+    // 1. Execute
+    List<DesigoNode> nodes = Lists.newArrayList();
+
+    DesigoNode.Builder builder = DesigoNode.builder();
+
+    try (InputStream in =
+        StreamingJsonParserTest.class.getResourceAsStream("system-browser-endpoint.json")) {
+
+      StreamingJsonParser sjp = StreamingJsonParser.create(in)
+          .parseObject()
+          .find(attribute("Nodes"))
+          .parseArray()
+          .parseObject(
+              onObjectStart(() -> builder.clear()),
+              onObjectEnd(() -> {
+                if (builder.isValid()) {
+                  nodes.add(builder.build());
+                } else {
+                  System.err.println("Invalid node: " + builder);
+                }
+              }))
+          .find(
+              attribute("Designation", parser -> {
+                builder.withDesignation(parser.getText());
+              }),
+              attribute("Attributes"))
+          .parseObject()
+          .find(
+              attribute("ManagedType", parser -> {
+                builder.withManagedType(parser.getLongValue());
+              }),
+              attribute("ManagedTypeName", parser -> {
+                builder.withManagedTypeName(parser.getText());
+              }),
+              attribute("SubTypeDescriptor", parser -> {
+                builder.withSubtypeDescriptor(parser.getText());
+              }));
+
+      // Call execute()
+      sjp.execute();
+
+      // Call execute() again (should throw exception)
+      assertThatThrownBy(() -> {
+        sjp.execute();
+      }).isInstanceOf(IllegalStateException.class)
+          .hasMessage("stream has already been operated upon and closed");
+
+    }
+
+    // 2. Assert
+    Collections.reverse(nodes);
+
+    DesigoNode node;
+
+    List<DesigoNode> bacnetPoints =
+        nodes.stream().filter(n -> "BACnetPoint".equals(n.getManagedTypeName()))
+            .collect(toList());
+
+    assertThat(bacnetPoints).hasSizeGreaterThan(0);
+    node = bacnetPoints.get(0);
+    assertThat(node.getDesignation()).isEqualTo(
+        "System1.ManagementView:ManagementView.FieldNetworks.BACnet.Hardware.CHW.Local_IO.CHW_SPT_RST_DEL");
+    assertThat(node.getManagedType()).isEqualTo(80);
+    assertThat(node.getManagedTypeName()).isEqualTo("BACnetPoint");
+
+    List<DesigoNode> points = nodes.stream().filter(n -> "Point".equals(n.getManagedTypeName()))
+        .collect(toList());
+
+    assertThat(points).hasSizeGreaterThan(4);
+    node = points.get(4);
+    assertThat(node.getDesignation()).isEqualTo(
+        "System1.ManagementView:ManagementView.SystemSettings.OrganizationModes.OccupancyStatus");
+    assertThat(node.getManagedType()).isEqualTo(0);
+    assertThat(node.getManagedTypeName()).isEqualTo("Point");
+  }
+
 }
