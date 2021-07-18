@@ -280,6 +280,7 @@ public class PecsTest {
 
   private <T extends Comparable<T>> T processGenericTypeDefWithoutPecs(List<? extends T> list) {
     requireNonNull(list);
+    // Find the minimum element in a list of Comparable objects
     return list.stream()
         .sorted()
         .findFirst()
@@ -288,6 +289,7 @@ public class PecsTest {
 
   private <T extends Comparable<? super T>> T processGenericTypeDefWithPecs(
       List<? extends T> list) {
+    // Find the minimum element in a list of Comparable objects
     requireNonNull(list);
     return list.stream()
         .sorted()
