@@ -148,12 +148,14 @@ public class PecsTest {
   }
 
   private Canine processCanineFunctionWithoutPecs(Function<Canine, Canine> function) {
-    return function.apply(new Canine());
+    Canine c = function.apply(new Canine());
+    return c;
   }
 
   private Canine processCanineFunctionWithPecs(
       Function<? super Canine, ? extends Canine> function) {
-    return function.apply(new Canine());
+    Canine c = function.apply(new Canine());
+    return c;
   }
 
   @Test
