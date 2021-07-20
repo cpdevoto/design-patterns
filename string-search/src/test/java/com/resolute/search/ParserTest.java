@@ -9,12 +9,23 @@ public class ParserTest {
 
   @Test
   public void test() {
-    Expression e = Parser.parse("fox and not\n    (brown or BLACK)");
+    Expression e = Parser.parse("fox aND not\n    (brown or BLACK)");
 
     assertThat(e.matches("The red fox raced across the road.")).isTrue();
     assertThat(e.matches("The brown fox hid under a bush.")).isFalse();
     assertThat(e.matches("The black fox snuck into the hen-house.")).isFalse();
-    assertThat(e.matches("The red hen clucked and squawked.")).isFalse();
+    assertThat(e.matches("The black hen clucked and squawked.")).isFalse();
+
+  }
+
+  @Test
+  public void test_operator_precedence() {
+    Expression e = Parser.parse("fox aND not brown or BLACK");
+
+    assertThat(e.matches("The red fox raced across the road.")).isTrue();
+    assertThat(e.matches("The brown fox hid under a bush.")).isFalse();
+    assertThat(e.matches("The black fox snuck into the hen-house.")).isTrue();
+    assertThat(e.matches("The black hen clucked and squawked.")).isTrue();
 
   }
 

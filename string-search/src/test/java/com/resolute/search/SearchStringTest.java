@@ -9,7 +9,7 @@ public class SearchStringTest {
 
   @Test
   public void test() {
-    SearchString s = new SearchString("fox and not (brown or black)");
+    SearchString s = new SearchString("fox aND not (brown or BLACK)");
 
     assertThat(s.matches("The red fox raced across the road.")).isTrue();
     assertThat(s.matches("The brown fox hid under a bush.")).isFalse();
@@ -17,6 +17,18 @@ public class SearchStringTest {
     assertThat(s.matches("The red hen clucked and squawked.")).isFalse();
 
   }
+  
+  @Test
+  public void test_operator_precedence() {
+    SearchString s = new SearchString("fox aND not brown or BLACK");
+
+    assertThat(s.matches("The red fox raced across the road.")).isTrue();
+    assertThat(s.matches("The brown fox hid under a bush.")).isFalse();
+    assertThat(s.matches("The black fox snuck into the hen-house.")).isTrue();
+    assertThat(s.matches("The black hen clucked and squawked.")).isTrue();
+
+  }
+  
 
   @Test
   public void test_syntax_exception() {
