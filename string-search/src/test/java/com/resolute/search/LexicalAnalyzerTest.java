@@ -106,6 +106,17 @@ public class LexicalAnalyzerTest {
         assertThat(pos.getCharacter()).isEqualTo(18);
       });
     });
+
+    // Validate next token: end of string
+    assertThat(lexer.nextToken()).satisfies(tok -> {
+      assertThat(tok.getType()).isEqualTo(TokenType.EOS);
+      assertThat(tok.getLexeme()).isEmpty();
+      assertThat(tok.getPosition()).satisfies(pos -> {
+        assertThat(pos.getLine()).isEqualTo(2);
+        assertThat(pos.getCharacter()).isEqualTo(19);
+      });
+    });
+  
   }
 
 
