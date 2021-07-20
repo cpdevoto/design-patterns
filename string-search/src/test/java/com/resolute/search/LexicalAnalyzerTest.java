@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class LexicalAnalyzerTest {
 
   @Test
-  public void test_simple() {
+  public void test_complex_expression() {
     String s = "fox and not\n  (brown or black)";
     StringReader in = new StringReader(s);
     LexicalAnalyzer lexer = new LexicalAnalyzer(in);
@@ -18,7 +18,7 @@ public class LexicalAnalyzerTest {
   }
 
   @Test
-  public void test_reserved_words_case_insensitive() {
+  public void test_case_insensitivity() {
     String s = "fox AND nOt\n  (brown Or black)";
     StringReader in = new StringReader(s);
     LexicalAnalyzer lexer = new LexicalAnalyzer(in);
