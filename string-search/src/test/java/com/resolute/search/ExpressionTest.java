@@ -7,7 +7,20 @@ import org.junit.jupiter.api.Test;
 public class ExpressionTest {
 
   @Test
-  public void test() {
+  public void test_simple_expression() {
+    // Equivalent to "fox"
+    Expression e = new WordExpression("fox");
+
+    assertThat(e.matches("The red fox raced across the road.")).isTrue();
+    assertThat(e.matches("The brown fox hid under a bush.")).isTrue();
+    assertThat(e.matches("The black fox snuck into the hen-house.")).isTrue();
+    assertThat(e.matches("The black hen clucked and squawked.")).isFalse();
+
+  }
+
+  
+  @Test
+  public void test_complex_expression() {
     // @formatter:off
     // Equivalent to "fox and not (brown or BLACK)"
     Expression e = new AndExpression(

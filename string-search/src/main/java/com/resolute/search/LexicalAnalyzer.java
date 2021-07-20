@@ -53,7 +53,7 @@ class LexicalAnalyzer {
     do {
       buf.append((char) peek);
       readChar();
-    } while (!Character.isWhitespace(peek) && !isReservedCharacter());
+    } while (!Character.isWhitespace(peek) && !isReservedSymbol());
 
     String lexeme = buf.toString();
     if (RESERVED_WORDS.containsKey(lexeme.toLowerCase())) {
@@ -81,7 +81,7 @@ class LexicalAnalyzer {
     return new Token(startPosition, TokenType.WORD, lexeme);
   }
 
-  private boolean isReservedCharacter() {
+  private boolean isReservedSymbol() {
     return peek == -1 || peek == '(' || peek == ')';
   }
 }
