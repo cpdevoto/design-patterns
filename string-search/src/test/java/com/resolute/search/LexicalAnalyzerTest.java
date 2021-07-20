@@ -11,19 +11,21 @@ public class LexicalAnalyzerTest {
   @Test
   public void test_complex_expression() {
     String s = "fox and not\n  (brown or black)";
-    StringReader in = new StringReader(s);
-    LexicalAnalyzer lexer = new LexicalAnalyzer(in);
+    try (StringReader in = new StringReader(s)) {
+      LexicalAnalyzer lexer = new LexicalAnalyzer(in);
 
-    validateTokens(lexer);
+      validateTokens(lexer);
+    }
   }
 
   @Test
   public void test_case_insensitivity() {
     String s = "fox AND nOt\n  (brown Or black)";
-    StringReader in = new StringReader(s);
-    LexicalAnalyzer lexer = new LexicalAnalyzer(in);
+    try (StringReader in = new StringReader(s)) {
+      LexicalAnalyzer lexer = new LexicalAnalyzer(in);
 
-    validateTokens(lexer);
+      validateTokens(lexer);
+    }
   }
 
   private void validateTokens(LexicalAnalyzer lexer) {
