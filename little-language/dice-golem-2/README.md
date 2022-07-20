@@ -21,6 +21,22 @@ This library exists for educational purposes, to show some best practices for au
         .generatesNumbersBetween(1, 4);
   ```
 
-  * **Test Readability 2:** Comparing an Abstract Syntax Tree (AST) produced by a parse operation to an expected AST can be cumbersome and hard to follow.  In order to improve the readability of such tests, I created an overridden version of the ``hashCode()``, ``equals(Object)``, and ``toString()`` method for each model object used in the AST.  This allows for tests in which I manually construct an expected AST and compare it to the actual AST using a very simple ``assertThat(actual).isEqualTo(expected)`` method.  Moreover, the overridden. ``toString()`` method allows for good, descriptive error messages when a test fails such as "Expected (17 + (9 - (4 + 1))), but found ((((17 + 9) - 4) + 1))". Within these messages, an AST tree structure is depicted using nested parentheses. 
+  * **Test Readability 2:** Comparing an Abstract Syntax Tree (AST) produced by a parse operation to an expected AST can be cumbersome and hard to follow.  In order to improve the readability of such tests, I created an overridden version of the ``hashCode()``, ``equals(Object)``, and ``toString()`` method for each model object used in the AST.  This allows for tests in which I manually construct an expected AST and compare it to the actual AST using a very simple ``assertThat(actual).isEqualTo(expected)`` method.  Moreover, the overridden. ``toString()`` method allows for good, descriptive error messages when a test fails such as "Expected (17 + (9 - (4 + 1))), but found ((((17 + 9) - 4) + 1))". Within these messages, an AST tree structure is depicted using nested parentheses. The entire approach is shown below:
+
+```java
+  @Test
+  public void parentheses_can_override_default_precedence() {
+    // When
+    Expression actual = Parser.parse("17 + (9 - (4 + 1))");
+
+    // Then -> expect the result to equal (17 + (9 - (4 + 1)))
+    Expression expected = new PlusExpression(
+        new ValueExpression(17),
+        new MinusExpression(new ValueExpression(9),
+            new PlusExpression(new ValueExpression(4), new ValueExpression(1))));
+    assertThat(actual).isEqualTo(expected);
+
+  }
+```
   
   
