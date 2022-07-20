@@ -27,13 +27,16 @@ This library exists for educational purposes, to show some best practices for au
   @Test
   public void parentheses_can_override_default_precedence() {
     // When
+    
     Expression actual = Parser.parse("17 + (9 - (4 + 1))");
 
     // Then -> expect the result to equal (17 + (9 - (4 + 1)))
+    
     Expression expected = new PlusExpression(
         new ValueExpression(17),
         new MinusExpression(new ValueExpression(9),
             new PlusExpression(new ValueExpression(4), new ValueExpression(1))));
+    
     assertThat(actual).isEqualTo(expected);
 
   }
