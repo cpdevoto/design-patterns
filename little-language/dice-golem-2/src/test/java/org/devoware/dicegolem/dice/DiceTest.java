@@ -24,7 +24,8 @@ public class DiceTest {
   @Test
   public void end_to_end_test() {
     // This test illustrates all aspects of the little language, including:
-    // 1. Support for dice roll expressions such as 3d4 or d8 (the latter is interpreted as 1d8).
+    // 1. Support for dice roll expressions such as 3D4, 2d6, or d8 (the latter is interpreted as
+    // 1d8).
     // 2. Support for positive and negative integer values such as 1, 12, or -3.
     // 2. Support for multiplication, division, addition, and subtraction.
     // 3. Multiplication and division have higher precedence than addition and subtraction
@@ -33,7 +34,7 @@ public class DiceTest {
     // 6. All whitespace is ignored.
 
     // When
-    int actual = Dice.roll(" (   1 +   \n  3d4)*((12- 2d6) / -   3) + d8");
+    int actual = Dice.roll(" (   1 +   \n  3D4)*((12- 2d6) / -   3) + d8");
     // == (1 + 3d4) * ((12 - 2d6) / -3) + d8
     // == (1 + 9) * ((12 - 6) / -3) + 3 ==> since every die is configured to roll a 3
     // == 10 * (6 / -3) + 3
