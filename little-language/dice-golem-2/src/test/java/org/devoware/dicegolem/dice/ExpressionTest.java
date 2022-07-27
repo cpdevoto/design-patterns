@@ -1,6 +1,7 @@
 package org.devoware.dicegolem.dice;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.devoware.dicegolem.dice.Die.D6;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,6 +32,18 @@ public class ExpressionTest {
 
     // Then
     assertThat(actual).isEqualTo(9);
+  }
+
+  @Test
+  public void should_roll_6_when_expression_is_2d6() {
+    // Given
+    Expression expression = new DiceExpression(2, D6);
+
+    // When
+    int actual = expression.roll();
+
+    // Then
+    assertThat(actual).isEqualTo(6);
   }
 
   @Test
