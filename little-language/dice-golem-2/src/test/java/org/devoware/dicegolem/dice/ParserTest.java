@@ -61,6 +61,28 @@ public class ParserTest {
   }
 
   @Test
+  public void should_parse_multiply_expression() {
+    // When
+    Expression actual = Parser.parse("5 * 4");
+
+    // Then
+    Expression expected = new MultiplyExpression(new ValueExpression(5), new ValueExpression(4));
+    assertThat(actual).isEqualTo(expected);
+
+  }
+
+  @Test
+  public void should_parse_divide_expression() {
+    // When
+    Expression actual = Parser.parse("10 / 2");
+
+    // Then
+    Expression expected = new DivideExpression(new ValueExpression(10), new ValueExpression(2));
+    assertThat(actual).isEqualTo(expected);
+
+  }
+
+  @Test
   public void should_parse_plus_expression() {
     // When
     Expression actual = Parser.parse("7 + 20");
@@ -97,11 +119,6 @@ public class ParserTest {
 
   }
 
-  /**
-   * NOTE: Parentheses do not impact the result of dice rolls currently, but may in future, if
-   * decide to introduce mathematical operators with a higher precedence than addition and
-   * subtraction (e.g. multiplication and division).
-   */
   @Test
   public void parentheses_can_override_default_precedence() {
     // When
@@ -115,6 +132,37 @@ public class ParserTest {
     assertThat(actual).isEqualTo(expected);
 
   }
+
+  @Test
+  public void multiplication_has_precedence_over_addition() {
+    // When
+    Expression actual = Parser.parse("17 + 9 * 4 - 6 / 3");
+
+    // Then -> expect the result to equal ((17 + (9 * 4)) - (6 / 3))
+    Expression expected = new MinusExpression(
+        new PlusExpression(
+            new ValueExpression(17),
+            new MultiplyExpression(new ValueExpression(9), new ValueExpression(4))),
+        new DivideExpression(new ValueExpression(6), new ValueExpression(3)));
+    assertThat(actual).isEqualTo(expected);
+
+  }
+
+  @Test
+  public void parentheses_can_override_operator_precedence() {
+    // When
+    Expression actual = Parser.parse("(17 + 9) * ((4 - 6) / 3)");
+
+    // Then -> expect the result to equal ((17 + 9) * ((4 - 6) / 3))
+    Expression expected = new MultiplyExpression(
+        new PlusExpression(new ValueExpression(17), new ValueExpression(9)),
+        new DivideExpression(
+            new MinusExpression(new ValueExpression(4), new ValueExpression(6)),
+            new ValueExpression(3)));
+    assertThat(actual).isEqualTo(expected);
+
+  }
+
 
   @Test
   public void should_throw_unexpected_token_exception_when_expression_starts_with_plus() {

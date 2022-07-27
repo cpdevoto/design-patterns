@@ -2,9 +2,11 @@ package org.devoware.dicegolem.dice;
 
 import static java.util.Objects.requireNonNull;
 import static org.devoware.dicegolem.dice.Token.Type.DIE;
+import static org.devoware.dicegolem.dice.Token.Type.DIVIDE;
 import static org.devoware.dicegolem.dice.Token.Type.EOS;
 import static org.devoware.dicegolem.dice.Token.Type.LEFT_PAREN;
 import static org.devoware.dicegolem.dice.Token.Type.MINUS;
+import static org.devoware.dicegolem.dice.Token.Type.MULTIPLY;
 import static org.devoware.dicegolem.dice.Token.Type.NUMBER;
 import static org.devoware.dicegolem.dice.Token.Type.PLUS;
 import static org.devoware.dicegolem.dice.Token.Type.RIGHT_PAREN;
@@ -34,29 +36,43 @@ class Parser {
 
   private Expression parse() {
     nextToken();
-    Expression result = binaryExpression();
+    Expression result = addExpression();
     expect(EOS);
     return result;
   }
 
-  private Expression binaryExpression() {
-    Expression c = simpleExpression();
+  private Expression addExpression() {
+    Expression c = multiplyExpression();
     while (token.getType() == PLUS || token.getType() == MINUS) {
       if (token.getType() == PLUS) {
         nextToken();
-        c = new PlusExpression(c, simpleExpression());
+        c = new PlusExpression(c, multiplyExpression());
       } else {
         nextToken();
-        c = new MinusExpression(c, simpleExpression());
+        c = new MinusExpression(c, multiplyExpression());
       }
     }
     return c;
   }
 
-  private Expression simpleExpression() {
+  private Expression multiplyExpression() {
+    Expression c = parenthesisExpression();
+    while (token.getType() == MULTIPLY || token.getType() == DIVIDE) {
+      if (token.getType() == MULTIPLY) {
+        nextToken();
+        c = new MultiplyExpression(c, parenthesisExpression());
+      } else {
+        nextToken();
+        c = new DivideExpression(c, parenthesisExpression());
+      }
+    }
+    return c;
+  }
+
+  private Expression parenthesisExpression() {
     if (token.getType() == LEFT_PAREN) {
       nextToken();
-      Expression c = binaryExpression();
+      Expression c = addExpression();
       expect(RIGHT_PAREN);
       nextToken();
       return c;
@@ -74,7 +90,7 @@ class Parser {
         expect(NUMBER);
       }
       return new UnaryMinusExpression(new ValueExpression(value));
-    } else if (token.getType() == DIE) {
+    } else if (token.getType() == DIE) { // e.g. d4
       nextToken();
       expect(NUMBER);
       Die die = numericTokenToDie();

@@ -2,9 +2,11 @@ package org.devoware.dicegolem.dice;
 
 import static java.util.Objects.requireNonNull;
 import static org.devoware.dicegolem.dice.Token.Type.DIE;
+import static org.devoware.dicegolem.dice.Token.Type.DIVIDE;
 import static org.devoware.dicegolem.dice.Token.Type.EOS;
 import static org.devoware.dicegolem.dice.Token.Type.LEFT_PAREN;
 import static org.devoware.dicegolem.dice.Token.Type.MINUS;
+import static org.devoware.dicegolem.dice.Token.Type.MULTIPLY;
 import static org.devoware.dicegolem.dice.Token.Type.PLUS;
 import static org.devoware.dicegolem.dice.Token.Type.RIGHT_PAREN;
 
@@ -50,6 +52,10 @@ class LexicalAnalyzerImpl implements LexicalAnalyzer {
       case 'd':
       case 'D':
         return getToken(DIE);
+      case '*':
+        return getToken(MULTIPLY);
+      case '/':
+        return getToken(DIVIDE);
       case '+':
         return getToken(PLUS);
       case '-':

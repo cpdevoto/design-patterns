@@ -6,6 +6,8 @@ class Token {
   static enum Type {
     // @formatter:off
     DIE("a dice roll expression"), 
+    MULTIPLY("'*'"), 
+    DIVIDE("'/'"), 
     PLUS("'+'"), 
     MINUS("'-'"), 
     NUMBER("a number"), 

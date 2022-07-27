@@ -46,6 +46,34 @@ public class ExpressionTest {
   }
 
   @Test
+  public void should_roll_15_when_expression_is_1d20_multiply_by_5() {
+    // Given
+    Expression expression = new MultiplyExpression(
+        new DiceExpression(1, Die.D20),
+        new ValueExpression(5));
+
+    // When
+    int actual = expression.roll();
+
+    // Then
+    assertThat(actual).isEqualTo(15);
+  }
+
+  @Test
+  public void should_roll_3_when_expression_is_2d20_divide_by_2() {
+    // Given
+    Expression expression = new DivideExpression(
+        new DiceExpression(2, Die.D20),
+        new ValueExpression(2));
+
+    // When
+    int actual = expression.roll();
+
+    // Then
+    assertThat(actual).isEqualTo(3);
+  }
+
+  @Test
   public void should_roll_8_when_expression_is_1d20_plus_5() {
     // Given
     Expression expression = new PlusExpression(

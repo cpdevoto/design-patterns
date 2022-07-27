@@ -182,6 +182,51 @@ public class LexicalAnalyzerTest {
   }
 
   @Test
+  public void should_recognize_multiply_token() {
+    // Given
+    try (StringReader reader = new StringReader("*")) {
+      LexicalAnalyzer lex = new LexicalAnalyzerImpl(reader);
+
+      // When
+      Token tok = lex.nextToken();
+
+      // Then
+      assertThat(tok)
+          .isNotNull()
+          .satisfies(t -> {
+            assertThat(t.getType()).isEqualTo(Token.Type.MULTIPLY);
+            assertThat(t.getPosition()).satisfies(p -> {
+              assertThat(p.getLine()).isEqualTo(1);
+              assertThat(p.getCharacter()).isEqualTo(1);
+            });
+          });
+    }
+  }
+
+  @Test
+  public void should_recognize_divide_token() {
+    // Given
+    try (StringReader reader = new StringReader("/")) {
+      LexicalAnalyzer lex = new LexicalAnalyzerImpl(reader);
+
+      // When
+      Token tok = lex.nextToken();
+
+      // Then
+      assertThat(tok)
+          .isNotNull()
+          .satisfies(t -> {
+            assertThat(t.getType()).isEqualTo(Token.Type.DIVIDE);
+            assertThat(t.getPosition()).satisfies(p -> {
+              assertThat(p.getLine()).isEqualTo(1);
+              assertThat(p.getCharacter()).isEqualTo(1);
+            });
+          });
+    }
+  }
+
+
+  @Test
   public void should_recognize_plus_token() {
     // Given
     try (StringReader reader = new StringReader("+")) {

@@ -41,6 +41,25 @@ public class DiceTest {
   }
 
   @Test
+  public void should_roll_15_when_expression_is_1d20_multiply_by_5() {
+    // When
+    int actual = Dice.roll("1d20 * 5");
+
+    // Then
+    assertThat(actual).isEqualTo(15);
+  }
+
+  @Test
+  public void should_roll_3_when_expression_is_2d20_divide_by_2() {
+    // When
+    int actual = Dice.roll("2d20 / 2");
+
+    // Then
+    assertThat(actual).isEqualTo(3);
+  }
+
+
+  @Test
   public void should_roll_8_when_expression_is_1d20_plus_5() {
     // When
     int actual = Dice.roll("1d20 + 5");
