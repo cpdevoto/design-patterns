@@ -1,4 +1,4 @@
-package org.devoware.dicegolem.dice;
+package org.devoware.dicegolem;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

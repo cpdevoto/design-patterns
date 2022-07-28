@@ -6,6 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.io.StringReader;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.devoware.dicegolem.LexicalAnalysisException;
+import org.devoware.dicegolem.LexicalAnalyzer;
+import org.devoware.dicegolem.LexicalAnalyzerImpl;
+import org.devoware.dicegolem.NumberToken;
+import org.devoware.dicegolem.Token;
 import org.junit.jupiter.api.Test;
 
 public class LexicalAnalyzerTest {

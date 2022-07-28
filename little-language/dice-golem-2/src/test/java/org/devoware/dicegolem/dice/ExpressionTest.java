@@ -1,8 +1,17 @@
 package org.devoware.dicegolem.dice;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.devoware.dicegolem.dice.Die.D6;
+import static org.devoware.dicegolem.Die.D6;
 
+import org.devoware.dicegolem.DiceExpression;
+import org.devoware.dicegolem.Die;
+import org.devoware.dicegolem.DivideExpression;
+import org.devoware.dicegolem.Expression;
+import org.devoware.dicegolem.MinusExpression;
+import org.devoware.dicegolem.MultiplyExpression;
+import org.devoware.dicegolem.PlusExpression;
+import org.devoware.dicegolem.UnaryMinusExpression;
+import org.devoware.dicegolem.ValueExpression;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

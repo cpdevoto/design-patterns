@@ -1,22 +1,22 @@
-package org.devoware.dicegolem.dice;
+package org.devoware.dicegolem;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
-class MultiplyExpression implements Expression {
+class DivideExpression implements Expression {
 
   private final Expression left;
   private final Expression right;
 
-  MultiplyExpression(Expression left, Expression right) {
+  DivideExpression(Expression left, Expression right) {
     this.left = requireNonNull(left, "left cannot be null");
     this.right = requireNonNull(right, "right cannot be null");
   }
 
   @Override
   public int roll() {
-    return left.roll() * right.roll();
+    return left.roll() / right.roll();
   }
 
   @Override
@@ -32,12 +32,12 @@ class MultiplyExpression implements Expression {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    MultiplyExpression other = (MultiplyExpression) obj;
+    DivideExpression other = (DivideExpression) obj;
     return Objects.equals(left, other.left) && Objects.equals(right, other.right);
   }
 
   @Override
   public String toString() {
-    return "(" + left.toString() + " * " + right.toString() + ")";
+    return "(" + left.toString() + " / " + right.toString() + ")";
   }
 }

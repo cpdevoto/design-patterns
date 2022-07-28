@@ -3,6 +3,7 @@ package org.devoware.dicegolem.dice;
 import static org.devoware.dicegolem.testinfra.AssertRandomNumberGenerator.assertThat;
 
 import org.assertj.core.api.Assertions;
+import org.devoware.dicegolem.Die;
 import org.junit.jupiter.api.Test;
 
 public class DieTest {

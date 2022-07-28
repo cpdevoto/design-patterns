@@ -1,8 +1,8 @@
-package org.devoware.dicegolem.dice;
+package org.devoware.dicegolem;
 
 import static java.util.Objects.requireNonNull;
 
-import org.devoware.dicegolem.dice.Token.Type;
+import org.devoware.dicegolem.Token.Type;
 
 public class UnexpectedTokenException extends SyntaxException {
 

@@ -2,6 +2,8 @@ package org.devoware.dicegolem.dice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.devoware.dicegolem.Dice;
+import org.devoware.dicegolem.Die;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

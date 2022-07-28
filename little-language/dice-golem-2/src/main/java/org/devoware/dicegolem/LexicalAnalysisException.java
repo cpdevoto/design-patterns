@@ -1,4 +1,4 @@
-package org.devoware.dicegolem.dice;
+package org.devoware.dicegolem;
 
 import java.util.Objects;
 

@@ -1,22 +1,22 @@
-package org.devoware.dicegolem.dice;
+package org.devoware.dicegolem;
 
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
 
-class DivideExpression implements Expression {
+class MinusExpression implements Expression {
 
   private final Expression left;
   private final Expression right;
 
-  DivideExpression(Expression left, Expression right) {
+  MinusExpression(Expression left, Expression right) {
     this.left = requireNonNull(left, "left cannot be null");
     this.right = requireNonNull(right, "right cannot be null");
   }
 
   @Override
   public int roll() {
-    return left.roll() / right.roll();
+    return left.roll() - right.roll();
   }
 
   @Override
@@ -32,12 +32,13 @@ class DivideExpression implements Expression {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    DivideExpression other = (DivideExpression) obj;
+    MinusExpression other = (MinusExpression) obj;
     return Objects.equals(left, other.left) && Objects.equals(right, other.right);
   }
 
   @Override
   public String toString() {
-    return "(" + left.toString() + " / " + right.toString() + ")";
+    return "(" + left.toString() + " - " + right.toString() + ")";
   }
+
 }

@@ -2,16 +2,28 @@ package org.devoware.dicegolem.dice;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.devoware.dicegolem.dice.Die.D4;
-import static org.devoware.dicegolem.dice.Die.D6;
-import static org.devoware.dicegolem.dice.Token.Type.DIE;
-import static org.devoware.dicegolem.dice.Token.Type.EOS;
-import static org.devoware.dicegolem.dice.Token.Type.LEFT_PAREN;
-import static org.devoware.dicegolem.dice.Token.Type.NUMBER;
-import static org.devoware.dicegolem.dice.Token.Type.PLUS;
-import static org.devoware.dicegolem.dice.Token.Type.RIGHT_PAREN;
+import static org.devoware.dicegolem.Die.D4;
+import static org.devoware.dicegolem.Die.D6;
+import static org.devoware.dicegolem.Token.Type.DIE;
+import static org.devoware.dicegolem.Token.Type.EOS;
+import static org.devoware.dicegolem.Token.Type.LEFT_PAREN;
+import static org.devoware.dicegolem.Token.Type.NUMBER;
+import static org.devoware.dicegolem.Token.Type.PLUS;
+import static org.devoware.dicegolem.Token.Type.RIGHT_PAREN;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.devoware.dicegolem.DiceExpression;
+import org.devoware.dicegolem.DivideExpression;
+import org.devoware.dicegolem.Expression;
+import org.devoware.dicegolem.InvalidDieTypeException;
+import org.devoware.dicegolem.MinusExpression;
+import org.devoware.dicegolem.MultiplyExpression;
+import org.devoware.dicegolem.NumberToken;
+import org.devoware.dicegolem.Parser;
+import org.devoware.dicegolem.PlusExpression;
+import org.devoware.dicegolem.UnaryMinusExpression;
+import org.devoware.dicegolem.UnexpectedTokenException;
+import org.devoware.dicegolem.ValueExpression;
 import org.junit.jupiter.api.Test;
 
 public class ParserTest {

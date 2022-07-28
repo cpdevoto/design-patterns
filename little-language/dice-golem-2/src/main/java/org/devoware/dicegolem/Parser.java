@@ -1,19 +1,19 @@
-package org.devoware.dicegolem.dice;
+package org.devoware.dicegolem;
 
 import static java.util.Objects.requireNonNull;
-import static org.devoware.dicegolem.dice.Token.Type.DIE;
-import static org.devoware.dicegolem.dice.Token.Type.DIVIDE;
-import static org.devoware.dicegolem.dice.Token.Type.EOS;
-import static org.devoware.dicegolem.dice.Token.Type.LEFT_PAREN;
-import static org.devoware.dicegolem.dice.Token.Type.MINUS;
-import static org.devoware.dicegolem.dice.Token.Type.MULTIPLY;
-import static org.devoware.dicegolem.dice.Token.Type.NUMBER;
-import static org.devoware.dicegolem.dice.Token.Type.PLUS;
-import static org.devoware.dicegolem.dice.Token.Type.RIGHT_PAREN;
+import static org.devoware.dicegolem.Token.Type.DIE;
+import static org.devoware.dicegolem.Token.Type.DIVIDE;
+import static org.devoware.dicegolem.Token.Type.EOS;
+import static org.devoware.dicegolem.Token.Type.LEFT_PAREN;
+import static org.devoware.dicegolem.Token.Type.MINUS;
+import static org.devoware.dicegolem.Token.Type.MULTIPLY;
+import static org.devoware.dicegolem.Token.Type.NUMBER;
+import static org.devoware.dicegolem.Token.Type.PLUS;
+import static org.devoware.dicegolem.Token.Type.RIGHT_PAREN;
 
 import java.io.StringReader;
 
-import org.devoware.dicegolem.dice.Token.Type;
+import org.devoware.dicegolem.Token.Type;
 
 class Parser {
 
