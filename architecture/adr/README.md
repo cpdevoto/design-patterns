@@ -21,9 +21,11 @@ The status of an ADR can be marked as Proposed, Accepted, or Superseded. Propose
 The Superseded status is a powerful way of keeping a historical record of what decisions were made, why they were made at that time, and what the new decision is and why it was changed. Usually, when an ADR has been superseded, it is marked with the decision that superseded it. Similarly, the decision that supersedes another ADR is marked with the ADR it superseded. For example, assume ADR 42 (“Use of Asynchronous Messaging Between Order and Payment Services”) was previously approved, but due to later changes to the implementation and location of the Payment Service, REST must now be used between the two services (ADR 68). The status would look as follows:
 
 *ADR 42. Use of Asynchronous Messaging Between Order and Payment Services* 
+
 Status: Superseded by 68 
 
 *ADR 68. Use of REST Between Order and Payment Services*
+
 Status: Accepted, supersedes 42
 
 The link and history trail between ADRs 42 and 68 avoid the inevitable “what about using messaging?” question regarding ADR 68.
